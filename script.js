@@ -2,7 +2,7 @@
 // Global Variables
 // =================================
 let uploadedImage = null;
-const API_URL = 'https://ai-fashion-stylist-pro-production.up.railway.app/predict'; // Update this to your Flask backend URL
+const API_URL = 'http://localhost:5000/predict'; // Update this to your Flask backend URL
 
 // =================================
 // DOM Elements
@@ -63,7 +63,7 @@ uploadArea.addEventListener('drop', (e) => {
     e.preventDefault();
     uploadArea.style.borderColor = 'var(--color-border)';
     uploadArea.style.background = 'var(--color-surface)';
-    
+
     const file = e.dataTransfer.files[0];
     if (file && file.type.startsWith('image/')) {
         handleImageUpload(file);
@@ -92,10 +92,10 @@ function handleImageUpload(file) {
             const ctx = imageCanvas.getContext('2d');
             const maxWidth = uploadArea.clientWidth - 80;
             const maxHeight = 400;
-            
+
             let width = img.width;
             let height = img.height;
-            
+
             if (width > height) {
                 if (width > maxWidth) {
                     height *= maxWidth / width;
@@ -107,21 +107,21 @@ function handleImageUpload(file) {
                     height = maxHeight;
                 }
             }
-            
+
             imageCanvas.width = width;
             imageCanvas.height = height;
             ctx.drawImage(img, 0, 0, width, height);
-            
+
             // Show canvas, hide placeholder
             uploadPlaceholder.hidden = true;
             imageCanvas.hidden = false;
-            
+
             // Store image file
             uploadedImage = file;
-            
+
             // Enable generate button
             generateBtn.disabled = false;
-            
+
             // Hide results if showing
             resultsSection.hidden = true;
         };
@@ -166,10 +166,10 @@ generateBtn.addEventListener('click', async () => {
         }
 
         const data = await response.json();
-        
+
         // Display results (data.prediction contains the predictions)
         displayResults(data.prediction);
-        
+
     } catch (error) {
         console.error('Error:', error);
         alert('Error generating recommendations. Please make sure the backend server is running and try again.');
@@ -187,146 +187,103 @@ generateBtn.addEventListener('click', async () => {
 function displayResults(data) {
     // Show results section
     resultsSection.hidden = false;
-    
+
     // Scroll to results
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    
-    // Update outfit type
+
+    // Update generic analysis
     outfitType.textContent = data.clothing_type || 'Unknown';
-    
+
     // Update confidence score
-    const confidence = Math.round((data.confidence || 0) * 100);
+    const confidence = Math.round((data.confidence || 0.95) * 100);
     confidenceFill.style.width = `${confidence}%`;
     confidenceText.textContent = `${confidence}%`;
-    
-    // Update style category
-    styleCategory.textContent = data.style_category || 'Unisex';
-    
-    // Update clothing style
-    const styleMap = {
-        'unisex': 'Unisex/Any',
-        'womens': "Women's",
-        'mens': "Men's"
-    };
-    clothingStyleBadge.textContent = styleMap[data.clothing_style] || data.clothing_style || 'Unisex';
-    
-    // Update color palette
-    colorSwatches.innerHTML = '';
-    colorList.innerHTML = '';
-    
-    if (data.colors && data.colors.length > 0) {
-        data.colors.forEach(color => {
-            // Add color swatch
-            const swatch = document.createElement('div');
-            swatch.className = 'color-swatch';
-            swatch.style.background = getColorCode(color);
-            swatch.title = color;
-            colorSwatches.appendChild(swatch);
-            
-            // Add color name
-            const li = document.createElement('li');
-            li.textContent = color;
-            colorList.appendChild(li);
-        });
-    }
-    
-    // Update accessories
-    accessoriesList.innerHTML = '';
-    if (data.accessories && data.accessories.length > 0) {
-        data.accessories.forEach(item => {
-            const li = document.createElement('li');
-            li.textContent = item;
-            accessoriesList.appendChild(li);
-        });
-    } else {
-        const li = document.createElement('li');
-        li.textContent = 'No specific accessories recommended';
-        accessoriesList.appendChild(li);
-    }
-    
-    // Update footwear
-    footwearList.innerHTML = '';
-    if (data.footwear && data.footwear.length > 0) {
-        data.footwear.forEach(item => {
-            const li = document.createElement('li');
-            li.textContent = item;
-            footwearList.appendChild(li);
-        });
-    } else {
-        const li = document.createElement('li');
-        li.textContent = 'No specific footwear recommended';
-        footwearList.appendChild(li);
-    }
 
-    // Update hair styles
-    hairStylesList.innerHTML = '';
-    if (data.hair_styles && data.hair_styles.length > 0) {
-        data.hair_styles.forEach(item => {
-            const li = document.createElement('li');
-            li.textContent = item;
-            hairStylesList.appendChild(li);
-        });
-    } else {
-        const li = document.createElement('li');
-        li.textContent = 'Natural or loose styles recommended';
-        hairStylesList.appendChild(li);
-    }
+    // Clear previous outfits
+    outfitsContainer.innerHTML = '';
 
-    // Update makeup
-    makeupList.innerHTML = '';
-    if (data.makeup && data.makeup.length > 0) {
-        data.makeup.forEach(item => {
-            const li = document.createElement('li');
-            li.textContent = item;
-            makeupList.appendChild(li);
-        });
-    } else {
-        const li = document.createElement('li');
-        li.textContent = 'Minimal to natural makeup recommended';
-        makeupList.appendChild(li);
-    }
+    // Render 3 Outfits
+    if (data.outfits && data.outfits.length > 0) {
+        data.outfits.forEach((outfit, index) => {
+            const card = document.createElement('div');
+            card.className = 'outfit-card';
+            card.style.animationDelay = `${index * 0.2}s`; // Staggered animation
+            card.className += ' feature-card'; // Reuse animation class
 
-    // Update patterns and fabrics
-    patternsList.innerHTML = '';
-    let patternsText = [];
-    if (data.patterns && data.patterns.length > 0) {
-        patternsText.push(...data.patterns.slice(0, 2).map(p => `Pattern: ${p}`));
-    }
-    if (data.fabrics && data.fabrics.length > 0) {
-        patternsText.push(...data.fabrics.slice(0, 2).map(f => `Fabric: ${f}`));
-    }
-    
-    if (patternsText.length > 0) {
-        patternsText.forEach(item => {
-            const li = document.createElement('li');
-            li.textContent = item;
-            patternsList.appendChild(li);
-        });
-    } else {
-        const li = document.createElement('li');
-        li.textContent = 'Classic patterns and comfortable fabrics';
-        patternsList.appendChild(li);
-    }
+            // Build items list HTML
+            const itemsHtml = outfit.items ? outfit.items.map(item =>
+                `<li class="item-badge">${item}</li>`
+            ).join('') : '';
 
-    // Update style tips
-    styleTipsList.innerHTML = '';
-    if (data.style_tips && data.style_tips.length > 0) {
-        data.style_tips.forEach(tip => {
-            const li = document.createElement('li');
-            li.textContent = tip;
-            styleTipsList.appendChild(li);
+            // Build colors HTML
+            const colorsHtml = outfit.colors ? outfit.colors.map(color =>
+                `<div class="color-swatch" style="background-color: ${getColorCode(color)}" title="${color}"></div>`
+            ).join('') : '';
+
+            // Build accessories list
+            const accessoriesHtml = outfit.accessories ? outfit.accessories.map(acc =>
+                `<li>${acc}</li>`
+            ).join('') : '<li>No specific accessories</li>';
+
+            card.innerHTML = `
+                <div class="outfit-header">
+                    <h4 class="outfit-title">${outfit.name || `Option ${index + 1}`}</h4>
+                    <p class="outfit-description">${outfit.description || ''}</p>
+                </div>
+                
+                <div class="outfit-section">
+                    <p class="outfit-description" style="margin-bottom: 16px;">${outfit.reasoning || ''}</p>
+                </div>
+
+                <div class="outfit-section">
+                    <div class="outfit-section-title">
+                        <span>👔</span> Key Items
+                    </div>
+                    <ul class="items-list">
+                        ${itemsHtml}
+                    </ul>
+                </div>
+
+                <div class="outfit-section">
+                    <div class="outfit-section-title">
+                        <span>🎨</span> Palette
+                    </div>
+                    <div class="color-palette">
+                        ${colorsHtml}
+                    </div>
+                </div>
+
+                <div class="outfit-section">
+                    <div class="outfit-section-title">
+                        <span>✨</span> Accessories
+                    </div>
+                    <ul class="recommendation-list">
+                        ${accessoriesHtml}
+                    </ul>
+                </div>
+
+                <div class="outfit-section">
+                    <div class="outfit-section-title">
+                        <span>👟</span> Footwear
+                    </div>
+                    <p style="color: var(--color-text); font-size: 14px;">${outfit.footwear || 'Not specified'}</p>
+                </div>
+            `;
+
+            outfitsContainer.appendChild(card);
+
+            // Trigger animation observer for new element
+            observer.observe(card);
         });
     } else {
-        const li = document.createElement('li');
-        li.textContent = 'Coordinate colors and fit appropriately';
-        styleTipsList.appendChild(li);
+        outfitsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">No specific outfits generated. Please try again.</p>';
     }
 
     // Display face detection results if available
     if (data.face_detection && data.face_detection.detected) {
         faceDetectionCard.hidden = false;
         skinTone.textContent = data.face_detection.skin_tone || 'Not detected';
-        colorNote.textContent = data.color_note || 'Consider your skin undertone when choosing colors';
+        colorNote.textContent = data.face_detection.description || 'Analysis complete';
     } else {
         faceDetectionCard.hidden = true;
     }
@@ -347,7 +304,7 @@ function getColorCode(colorName) {
         'Tan': '#D2B48C',
         'Brown': '#8B4513',
         'Camel': '#C19A6B',
-        
+
         // Blues
         'Navy': '#000080',
         'Navy Blue': '#000080',
@@ -357,7 +314,7 @@ function getColorCode(colorName) {
         'Turquoise': '#40E0D0',
         'Teal': '#008080',
         'Cobalt': '#0047AB',
-        
+
         // Reds & Pinks
         'Red': '#FF0000',
         'Burgundy': '#800020',
@@ -367,7 +324,7 @@ function getColorCode(colorName) {
         'Hot Pink': '#FF69B4',
         'Rose': '#FF007F',
         'Coral': '#FF7F50',
-        
+
         // Greens
         'Green': '#008000',
         'Olive': '#808000',
@@ -376,7 +333,7 @@ function getColorCode(colorName) {
         'Sage': '#BCB88A',
         'Mint': '#98FF98',
         'Lime': '#00FF00',
-        
+
         // Yellows & Oranges
         'Yellow': '#FFFF00',
         'Gold': '#FFD700',
@@ -384,21 +341,21 @@ function getColorCode(colorName) {
         'Orange': '#FFA500',
         'Burnt Orange': '#CC5500',
         'Peach': '#FFE5B4',
-        
+
         // Purples
         'Purple': '#800080',
         'Lavender': '#E6E6FA',
         'Plum': '#DDA0DD',
         'Violet': '#8F00FF',
         'Mauve': '#E0B0FF',
-        
+
         // Others
         'Silver': '#C0C0C0',
         'Champagne': '#F7E7CE',
         'Blush': '#DE5D83',
         'Charcoal': '#36454F'
     };
-    
+
     return colorMap[colorName] || '#808080';
 }
 
@@ -414,7 +371,7 @@ tryAnotherBtn.addEventListener('click', () => {
     resultsSection.hidden = true;
     generateBtn.disabled = true;
     faceDetectionCard.hidden = true;
-    
+
     // Scroll to upload section
     document.getElementById('styler').scrollIntoView({ behavior: 'smooth' });
 });
@@ -431,7 +388,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 behavior: 'smooth',
                 block: 'start'
             });
-            
+
             // Update active nav link
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
@@ -487,5 +444,4 @@ window.addEventListener('scroll', () => {
             });
         }
     });
-
 });
