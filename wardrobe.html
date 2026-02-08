@@ -549,7 +549,7 @@
 
             if (response.status === 401) {
                 localStorage.removeItem('token');
-                window.location.href = '/login.html';
+                window.location.href = '/wardrobe.html';
                 throw new Error('Unauthorized');
             }
 
