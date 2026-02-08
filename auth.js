@@ -1,374 +1,653 @@
 /**
- * Authentication Module for AI Fashion Stylist Pro Frontend
- * Handles JWT tokens, login, registration, magic links, and user state
+ * Authentication Module
+ * Handles user registration, login, JWT tokens, and wardrobe operations
  */
 
-const API_URL = 'https://ai-fashion-stylist-pro-production.up.railway.app';
-const TOKEN_KEY = 'fashion_stylist_token';
-const USER_KEY = 'fashion_stylist_user';
+const API_BASE_URL = 'https://ai-fashion-stylist-pro-production.up.railway.app';
 
-// ============================================
-// TOKEN MANAGEMENT
-// ============================================
+// ============================================================================
+// STORAGE KEYS
+// ============================================================================
 
-export function saveToken(token) {
-    localStorage.setItem(TOKEN_KEY, token);
-}
+const STORAGE_KEYS = {
+    USER: 'fashion_user',
+    TOKEN: 'fashion_token',
+    WARDROBE: 'fashion_wardrobe'
+};
 
-export function getToken() {
-    return localStorage.getItem(TOKEN_KEY);
-}
+// ============================================================================
+// USER AUTHENTICATION STATE
+// ============================================================================
 
-export function clearToken() {
-    localStorage.removeItem(TOKEN_KEY);
-}
+let currentUser = null;
+let currentToken = null;
 
-export function isTokenValid() {
-    const token = getToken();
-    if (!token) return false;
-
+// Load from localStorage on module load
+function loadAuthState() {
     try {
-        const parts = token.split('.');
-        if (parts.length !== 3) return false;
+        const userStr = localStorage.getItem(STORAGE_KEYS.USER);
+        const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
         
-        const payload = JSON.parse(atob(parts[1]));
-        return payload.exp * 1000 > Date.now();
-    } catch {
-        return false;
+        if (userStr && token) {
+            currentUser = JSON.parse(userStr);
+            currentToken = token;
+            console.log('✅ Auth state restored:', currentUser.email);
+        }
+    } catch (error) {
+        console.error('Error loading auth state:', error);
+        localStorage.clear();
     }
 }
 
-// ============================================
-// USER MANAGEMENT
-// ============================================
+// Initial load
+loadAuthState();
 
-export function saveUser(user) {
-    localStorage.setItem(USER_KEY, JSON.stringify(user));
-}
+// ============================================================================
+// AUTHENTICATION FUNCTIONS
+// ============================================================================
 
-export function getUser() {
-    const user = localStorage.getItem(USER_KEY);
-    return user ? JSON.parse(user) : null;
-}
-
-export function clearUser() {
-    localStorage.removeItem(USER_KEY);
-}
-
-export function logout() {
-    clearToken();
-    clearUser();
-    triggerAuthStateChange();
-    window.location.href = '/';
-}
-
-export function isLoggedIn() {
-    return isTokenValid() && getUser() !== null;
-}
-
-// ============================================
-// API REQUESTS WITH AUTHENTICATION
-// ============================================
-
-export async function authenticatedFetch(endpoint, options = {}) {
-    const token = getToken();
-    
-    if (!token) {
-        throw new Error('No authentication token found');
-    }
-
-    const headers = {
-        ...options.headers,
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-    };
-
-    const response = await fetch(`${API_URL}${endpoint}`, {
-        ...options,
-        headers
-    });
-
-    if (response.status === 401) {
-        clearToken();
-        clearUser();
-        triggerAuthStateChange();
-        window.location.href = '/login';
-        throw new Error('Session expired. Please log in again.');
-    }
-
-    return response;
-}
-
-// ============================================
-// AUTHENTICATION ENDPOINTS
-// ============================================
-
+/**
+ * Register a new user
+ */
 export async function register(email, password, profile = {}) {
-    const response = await fetch(`${API_URL}/auth/register`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            email,
-            password,
-            profile: {
-                body_type: profile.body_type || 'regular',
-                lifestyle: profile.lifestyle || 'mixed',
-                budget_preference: profile.budget_preference || 'medium',
-                age_group: profile.age_group || 'adult',
-                ...profile
-            }
-        })
-    });
+    try {
+        console.log('📝 Registering user:', email);
+        
+        const response = await fetch(`${API_BASE_URL}/auth/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email.toLowerCase().trim(),
+                password,
+                profile: {
+                    body_type: profile.body_type || 'regular',
+                    lifestyle: profile.lifestyle || 'mixed',
+                    budget_preference: profile.budget_preference || 'medium',
+                    age_group: profile.age_group || 'adult',
+                    ...profile
+                }
+            })
+        });
 
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Registration failed');
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Registration failed');
+        }
+
+        console.log('✅ Registration successful:', data.user.email);
+        
+        // Store auth state
+        currentUser = data.user;
+        currentToken = data.token;
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(currentUser));
+        localStorage.setItem(STORAGE_KEYS.TOKEN, data.token);
+        
+        // Dispatch auth change event
+        dispatchAuthChange();
+        
+        return {
+            status: 'success',
+            message: 'Registration successful',
+            user: currentUser,
+            token: data.token
+        };
+    } catch (error) {
+        console.error('❌ Registration error:', error.message);
+        return {
+            status: 'error',
+            message: error.message
+        };
     }
-
-    const data = await response.json();
-    
-    if (data.token) {
-        saveToken(data.token);
-        saveUser(data.user);
-        triggerAuthStateChange();
-    }
-
-    return data;
 }
 
+/**
+ * Login user with email and password
+ */
 export async function login(email, password) {
-    const response = await fetch(`${API_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-    });
+    try {
+        console.log('🔑 Logging in user:', email);
+        
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email.toLowerCase().trim(),
+                password
+            })
+        });
 
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Login failed');
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Login failed');
+        }
+
+        console.log('✅ Login successful:', data.user.email);
+        
+        // Store auth state
+        currentUser = data.user;
+        currentToken = data.token;
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(currentUser));
+        localStorage.setItem(STORAGE_KEYS.TOKEN, data.token);
+        
+        // Dispatch auth change event
+        dispatchAuthChange();
+        
+        return {
+            status: 'success',
+            message: 'Login successful',
+            user: currentUser,
+            token: data.token
+        };
+    } catch (error) {
+        console.error('❌ Login error:', error.message);
+        return {
+            status: 'error',
+            message: error.message
+        };
     }
-
-    const data = await response.json();
-    
-    if (data.token) {
-        saveToken(data.token);
-        saveUser(data.user);
-        triggerAuthStateChange();
-    }
-
-    return data;
 }
 
+/**
+ * Request magic link for passwordless login
+ */
 export async function requestMagicLink(email) {
-    const response = await fetch(`${API_URL}/auth/magic-link`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email })
-    });
+    try {
+        console.log('📧 Requesting magic link for:', email);
+        
+        const response = await fetch(`${API_BASE_URL}/auth/magic-link`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email.toLowerCase().trim()
+            })
+        });
 
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to send magic link');
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to send magic link');
+        }
+
+        console.log('✅ Magic link sent to:', email);
+        
+        return {
+            status: 'success',
+            message: 'Magic link sent to your email',
+            dev_token: data.dev_token
+        };
+    } catch (error) {
+        console.error('❌ Magic link error:', error.message);
+        return {
+            status: 'error',
+            message: error.message
+        };
     }
-
-    return await response.json();
 }
 
+/**
+ * Verify magic link token
+ */
 export async function verifyMagicLink(token) {
-    const response = await fetch(`${API_URL}/auth/verify-magic`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ token })
-    });
+    try {
+        console.log('✔️ Verifying magic link token');
+        
+        const response = await fetch(`${API_BASE_URL}/auth/verify-magic`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ token })
+        });
 
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Invalid or expired magic link');
-    }
-
-    const data = await response.json();
-    
-    if (data.token) {
-        saveToken(data.token);
-        saveUser(data.user);
-        triggerAuthStateChange();
-    }
-
-    return data;
-}
-
-export async function getCurrentUser() {
-    const response = await authenticatedFetch('/auth/me');
-
-    if (!response.ok) {
-        throw new Error('Failed to fetch user data');
-    }
-
-    const data = await response.json();
-    saveUser(data.user);
-    return data.user;
-}
-
-export async function updateProfile(profileData) {
-    const response = await authenticatedFetch('/auth/profile', {
-        method: 'PUT',
-        body: JSON.stringify({ profile: profileData })
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to update profile');
-    }
-
-    const data = await response.json();
-    saveUser(data.user);
-    return data.user;
-}
-
-// ============================================
-// WARDROBE ENDPOINTS
-// ============================================
-
-export async function getWardrobeItems(filters = {}) {
-    const params = new URLSearchParams();
-    
-    if (filters.category) params.append('category', filters.category);
-    if (filters.occasion) params.append('occasion', filters.occasion);
-    if (filters.owned !== undefined) params.append('owned', filters.owned);
-
-    const response = await authenticatedFetch(
-        `/wardrobe/items?${params.toString()}`
-    );
-
-    if (!response.ok) {
-        throw new Error('Failed to fetch wardrobe items');
-    }
-
-    return await response.json();
-}
-
-export async function addWardrobeItem(itemData) {
-    const response = await authenticatedFetch('/wardrobe/add', {
-        method: 'POST',
-        body: JSON.stringify(itemData)
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to add item');
-    }
-
-    return await response.json();
-}
-
-export async function markItemOwned(itemId, owned = true) {
-    const response = await authenticatedFetch(
-        `/wardrobe/mark-owned/${itemId}`,
-        {
-            method: 'PUT',
-            body: JSON.stringify({ owned })
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Invalid or expired token');
         }
-    );
 
-    if (!response.ok) {
-        throw new Error('Failed to update item');
+        console.log('✅ Magic link verified for:', data.user.email);
+        
+        // Store auth state
+        currentUser = data.user;
+        currentToken = data.token;
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(currentUser));
+        localStorage.setItem(STORAGE_KEYS.TOKEN, data.token);
+        
+        // Dispatch auth change event
+        dispatchAuthChange();
+        
+        return {
+            status: 'success',
+            message: 'Login successful',
+            user: currentUser,
+            token: data.token
+        };
+    } catch (error) {
+        console.error('❌ Magic link verification error:', error.message);
+        return {
+            status: 'error',
+            message: error.message
+        };
     }
-
-    return await response.json();
 }
 
-export async function removeWardrobeItem(itemId) {
-    const response = await authenticatedFetch(
-        `/wardrobe/remove/${itemId}`,
-        {
-            method: 'DELETE'
-        }
-    );
-
-    if (!response.ok) {
-        throw new Error('Failed to remove item');
-    }
-
-    return await response.json();
-}
-
-export async function getWardrobeStats() {
-    const response = await authenticatedFetch('/wardrobe/stats');
-
-    if (!response.ok) {
-        throw new Error('Failed to fetch wardrobe statistics');
-    }
-
-    return await response.json();
-}
-
-// ============================================
-// INSIGHTS ENDPOINTS
-// ============================================
-
-export async function getWardrobeGaps() {
-    const response = await authenticatedFetch('/insights/gaps');
-
-    if (!response.ok) {
-        throw new Error('Failed to fetch wardrobe gaps');
-    }
-
-    return await response.json();
-}
-
-export async function getWardrobeBalance() {
-    const response = await authenticatedFetch('/insights/balance');
-
-    if (!response.ok) {
-        throw new Error('Failed to fetch balance metrics');
-    }
-
-    return await response.json();
-}
-
-// ============================================
-// UTILITY FUNCTIONS
-// ============================================
-
-export function getUserProfile() {
-    const user = getUser();
-    return user?.profile || {
-        body_type: 'regular',
-        lifestyle: 'mixed',
-        budget_preference: 'medium',
-        age_group: 'adult'
+/**
+ * Logout user
+ */
+export function logout() {
+    console.log('👋 Logging out user');
+    
+    currentUser = null;
+    currentToken = null;
+    localStorage.removeItem(STORAGE_KEYS.USER);
+    localStorage.removeItem(STORAGE_KEYS.TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.WARDROBE);
+    
+    // Dispatch auth change event
+    dispatchAuthChange();
+    
+    return {
+        status: 'success',
+        message: 'Logged out successfully'
     };
 }
 
-export function triggerAuthStateChange() {
-    window.dispatchEvent(new CustomEvent('authStateChanged', {
-        detail: {
-            isLoggedIn: isLoggedIn(),
-            user: getUser()
+// ============================================================================
+// USER PROFILE FUNCTIONS
+// ============================================================================
+
+/**
+ * Get current user
+ */
+export function getUser() {
+    return currentUser;
+}
+
+/**
+ * Get current token
+ */
+export function getToken() {
+    return currentToken;
+}
+
+/**
+ * Check if user is logged in
+ */
+export function isLoggedIn() {
+    return currentUser !== null && currentToken !== null;
+}
+
+/**
+ * Update user profile
+ */
+export async function updateProfile(profile) {
+    try {
+        if (!currentToken) {
+            throw new Error('Not authenticated');
         }
-    }));
+
+        console.log('📝 Updating user profile');
+        
+        const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify({ profile })
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to update profile');
+        }
+
+        console.log('✅ Profile updated');
+        
+        // Update current user
+        currentUser = data.user;
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(currentUser));
+        
+        return {
+            status: 'success',
+            message: 'Profile updated',
+            user: currentUser
+        };
+    } catch (error) {
+        console.error('❌ Profile update error:', error.message);
+        return {
+            status: 'error',
+            message: error.message
+        };
+    }
 }
 
-export function ensureAuthenticated() {
-    if (!isLoggedIn()) {
-        window.location.href = '/login';
-        return false;
+// ============================================================================
+// WARDROBE FUNCTIONS
+// ============================================================================
+
+/**
+ * Add item to wardrobe
+ */
+export async function addWardrobeItem(itemData) {
+    try {
+        if (!currentToken) {
+            throw new Error('Not authenticated');
+        }
+
+        console.log('➕ Adding wardrobe item:', itemData.name);
+        
+        const response = await fetch(`${API_BASE_URL}/wardrobe/add`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify(itemData)
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to add item');
+        }
+
+        console.log('✅ Item added to wardrobe');
+        
+        // Update local wardrobe cache
+        updateLocalWardrobe(data.item);
+        
+        return {
+            status: 'success',
+            message: 'Item added to wardrobe',
+            item: data.item
+        };
+    } catch (error) {
+        console.error('❌ Add wardrobe item error:', error.message);
+        return {
+            status: 'error',
+            message: error.message
+        };
     }
-    return true;
 }
 
-export function ensureNotAuthenticated() {
-    if (isLoggedIn()) {
-        window.location.href = '/dashboard';
-        return false;
+/**
+ * Get wardrobe items
+ */
+export async function getWardrobeItems(filters = {}) {
+    try {
+        if (!currentToken) {
+            throw new Error('Not authenticated');
+        }
+
+        console.log('📦 Fetching wardrobe items');
+        
+        let url = `${API_BASE_URL}/wardrobe/items`;
+        const params = new URLSearchParams();
+        
+        if (filters.category) params.append('category', filters.category);
+        if (filters.owned !== undefined) params.append('owned', filters.owned);
+        if (filters.occasion) params.append('occasion', filters.occasion);
+        
+        if (params.toString()) {
+            url += `?${params.toString()}`;
+        }
+        
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${currentToken}`
+            }
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to fetch items');
+        }
+
+        console.log('✅ Fetched', data.count, 'wardrobe items');
+        
+        return {
+            status: 'success',
+            items: data.items,
+            count: data.count
+        };
+    } catch (error) {
+        console.error('❌ Get wardrobe items error:', error.message);
+        return {
+            status: 'error',
+            message: error.message,
+            items: [],
+            count: 0
+        };
     }
-    return true;
 }
+
+/**
+ * Remove wardrobe item
+ */
+export async function removeWardrobeItem(itemId) {
+    try {
+        if (!currentToken) {
+            throw new Error('Not authenticated');
+        }
+
+        console.log('🗑️ Removing wardrobe item:', itemId);
+        
+        const response = await fetch(`${API_BASE_URL}/wardrobe/remove/${itemId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${currentToken}`
+            }
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to remove item');
+        }
+
+        console.log('✅ Item removed from wardrobe');
+        
+        return {
+            status: 'success',
+            message: 'Item removed'
+        };
+    } catch (error) {
+        console.error('❌ Remove item error:', error.message);
+        return {
+            status: 'error',
+            message: error.message
+        };
+    }
+}
+
+/**
+ * Get wardrobe statistics
+ */
+export async function getWardrobeStats() {
+    try {
+        if (!currentToken) {
+            throw new Error('Not authenticated');
+        }
+
+        console.log('📊 Fetching wardrobe stats');
+        
+        const response = await fetch(`${API_BASE_URL}/wardrobe/stats`, {
+            headers: {
+                'Authorization': `Bearer ${currentToken}`
+            }
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to fetch stats');
+        }
+
+        console.log('✅ Stats fetched');
+        
+        return {
+            status: 'success',
+            stats: data.stats
+        };
+    } catch (error) {
+        console.error('❌ Get stats error:', error.message);
+        return {
+            status: 'error',
+            message: error.message,
+            stats: {}
+        };
+    }
+}
+
+/**
+ * Get wardrobe gaps
+ */
+export async function getWardrobeGaps() {
+    try {
+        if (!currentToken) {
+            throw new Error('Not authenticated');
+        }
+
+        console.log('🔍 Analyzing wardrobe gaps');
+        
+        const response = await fetch(`${API_BASE_URL}/insights/gaps`, {
+            headers: {
+                'Authorization': `Bearer ${currentToken}`
+            }
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to analyze gaps');
+        }
+
+        console.log('✅ Gap analysis complete:', data.count, 'gaps found');
+        
+        return {
+            status: 'success',
+            gaps: data.gaps,
+            count: data.count
+        };
+    } catch (error) {
+        console.error('❌ Get gaps error:', error.message);
+        return {
+            status: 'error',
+            message: error.message,
+            gaps: [],
+            count: 0
+        };
+    }
+}
+
+/**
+ * Get wardrobe balance
+ */
+export async function getWardrobeBalance() {
+    try {
+        if (!currentToken) {
+            throw new Error('Not authenticated');
+        }
+
+        console.log('⚖️ Calculating wardrobe balance');
+        
+        const response = await fetch(`${API_BASE_URL}/insights/balance`, {
+            headers: {
+                'Authorization': `Bearer ${currentToken}`
+            }
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to calculate balance');
+        }
+
+        console.log('✅ Balance calculated');
+        
+        return {
+            status: 'success',
+            balance: data.balance
+        };
+    } catch (error) {
+        console.error('❌ Get balance error:', error.message);
+        return {
+            status: 'error',
+            message: error.message,
+            balance: {}
+        };
+    }
+}
+
+// ============================================================================
+// LOCAL STORAGE HELPERS
+// ============================================================================
+
+/**
+ * Update local wardrobe cache
+ */
+function updateLocalWardrobe(item) {
+    try {
+        const wardrobeStr = localStorage.getItem(STORAGE_KEYS.WARDROBE) || '[]';
+        const wardrobe = JSON.parse(wardrobeStr);
+        wardrobe.push(item);
+        localStorage.setItem(STORAGE_KEYS.WARDROBE, JSON.stringify(wardrobe));
+    } catch (error) {
+        console.warn('Warning: Could not update local wardrobe cache:', error);
+    }
+}
+
+/**
+ * Get local wardrobe cache
+ */
+export function getLocalWardrobe() {
+    try {
+        const wardrobeStr = localStorage.getItem(STORAGE_KEYS.WARDROBE) || '[]';
+        return JSON.parse(wardrobeStr);
+    } catch (error) {
+        console.warn('Warning: Could not read local wardrobe cache:', error);
+        return [];
+    }
+}
+
+// ============================================================================
+// EVENT DISPATCHING
+// ============================================================================
+
+/**
+ * Dispatch auth state change event
+ */
+function dispatchAuthChange() {
+    const event = new Event('authStateChanged');
+    window.dispatchEvent(event);
+    console.log('📢 Auth state changed');
+}
+
+/**
+ * Listen for auth changes (for external listeners)
+ */
+export function onAuthStateChanged(callback) {
+    window.addEventListener('authStateChanged', callback);
+    
+    // Return unsubscribe function
+    return () => {
+        window.removeEventListener('authStateChanged', callback);
+    };
+}
+
+// ============================================================================
+// EXPORTS SUMMARY
+// ============================================================================
+
+console.log('✅ Auth module loaded');
