@@ -511,19 +511,9 @@
             <div id="wardrobeGrid" class="wardrobe-grid" style="display: none;"></div>
         </div>
     </main>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-    const token = localStorage.getItem("token");
 
-    if (!token) {
-        window.location.replace("/login.html");
-        return;
-    }
-
-    init();
-});
-
-    </script>
+    <!-- ✅ FIXED: Removed the duplicate auth check and init() call -->
+    <!-- Auth and initialization are handled by the module script below -->
 
     <script type="module">
         const API_BASE = 'https://ai-fashion-stylist-pro-production.up.railway.app';
@@ -542,7 +532,14 @@
             return localStorage.getItem('token');
         }
 
-        
+        function checkAuth() {
+            const token = getToken();
+            if (!token) {
+                window.location.replace('/login.html');
+                return false;
+            }
+            return true;
+        }
 
         async function fetchWardrobe() {
             const token = getToken();
@@ -555,7 +552,7 @@
 
             if (response.status === 401) {
                 localStorage.removeItem('token');
-                window.location.href = '/login.html';
+                window.location.replace('/login.html');
                 throw new Error('Unauthorized');
             }
 
@@ -670,6 +667,7 @@
         }
 
         async function init() {
+            // ✅ Auth check happens here - only once
             if (!checkAuth()) return;
 
             const loadingSection = document.getElementById('loadingSection');
@@ -708,10 +706,11 @@
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
-                window.location.href = '/login.html';
+                window.location.replace('/login.html');
             }
         });
 
+        // ✅ Initialize the page - single call
         init();
     </script>
 </body>
