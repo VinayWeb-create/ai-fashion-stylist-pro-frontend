@@ -1,9 +1,18 @@
 import * as Auth from './auth.js';
 
+// ============================================================================
+// GLOBAL VARIABLES
+// ============================================================================
+
 let uploadedImage = null;
 let currentPrediction = null;
 const API_URL = 'https://ai-fashion-stylist-pro-production.up.railway.app/predict';
 
+// ============================================================================
+// DOM ELEMENT REFERENCES
+// ============================================================================
+
+// Image Upload Elements
 const imageInput = document.getElementById('imageInput');
 const uploadArea = document.getElementById('uploadArea');
 const uploadPlaceholder = document.getElementById('uploadPlaceholder');
@@ -12,6 +21,7 @@ const generateBtn = document.getElementById('generateBtn');
 const resultsSection = document.getElementById('resultsSection');
 const tryAnotherBtn = document.getElementById('tryAnotherBtn');
 
+// Form Elements
 const occasionSelect = document.getElementById('occasion');
 const occasionSubtypeSelect = document.getElementById('occasionSubtype');
 const occasionSubtypeGroup = document.getElementById('occasionSubtypeGroup');
@@ -21,10 +31,15 @@ const bodyTypeSelect = document.getElementById('bodyType');
 const budgetSelect = document.getElementById('budget');
 const detectFaceCheckbox = document.getElementById('detectFace');
 
+// Results Elements
 const outfitType = document.getElementById('outfitType');
 const confidenceFill = document.getElementById('confidenceFill');
 const confidenceText = document.getElementById('confidenceText');
 const outfitsContainer = document.getElementById('outfitsContainer');
+
+// ============================================================================
+// OCCASION SUBTYPES MAPPING
+// ============================================================================
 
 const occasionSubtypes = {
     casual: [
@@ -48,67 +63,203 @@ const occasionSubtypes = {
     ]
 };
 
-// ============================================
+// ============================================================================
+// COLOR MAPPING
+// ============================================================================
+
+const colorMap = {
+    'Black': '#000000',
+    'White': '#FFFFFF',
+    'Gray': '#808080',
+    'Grey': '#808080',
+    'Beige': '#F5F5DC',
+    'Cream': '#FFFDD0',
+    'Ivory': '#FFFFF0',
+    'Tan': '#D2B48C',
+    'Brown': '#8B4513',
+    'Camel': '#C19A6B',
+    'Navy': '#000080',
+    'Navy Blue': '#000080',
+    'Royal Blue': '#4169E1',
+    'Sky Blue': '#87CEEB',
+    'Light Blue': '#ADD8E6',
+    'Turquoise': '#40E0D0',
+    'Teal': '#008080',
+    'Cobalt': '#0047AB',
+    'Red': '#FF0000',
+    'Burgundy': '#800020',
+    'Maroon': '#800000',
+    'Wine': '#722F37',
+    'Pink': '#FFC0CB',
+    'Hot Pink': '#FF69B4',
+    'Rose': '#FF007F',
+    'Coral': '#FF7F50',
+    'Green': '#008000',
+    'Olive': '#808000',
+    'Emerald': '#50C878',
+    'Forest Green': '#228B22',
+    'Sage': '#BCB88A',
+    'Mint': '#98FF98',
+    'Lime': '#00FF00',
+    'Yellow': '#FFFF00',
+    'Gold': '#FFD700',
+    'Mustard': '#FFDB58',
+    'Orange': '#FFA500',
+    'Burnt Orange': '#CC5500',
+    'Peach': '#FFE5B4',
+    'Purple': '#800080',
+    'Lavender': '#E6E6FA',
+    'Plum': '#DDA0DD',
+    'Violet': '#8F00FF',
+    'Mauve': '#E0B0FF',
+    'Silver': '#C0C0C0',
+    'Champagne': '#F7E7CE',
+    'Blush': '#DE5D83',
+    'Charcoal': '#36454F',
+    'Floral Print': '#FFB6C1',
+    'Denim Blue': '#1560BD',
+    'Khaki': '#C3B091',
+    'Blue': '#0000FF'
+};
+
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
+function getColorCode(colorName) {
+    return colorMap[colorName] || '#808080';
+}
+
+// ============================================================================
+// AUTHENTICATION UI INITIALIZATION
+// ============================================================================
+
+function initAuthUI() {
+    const authNav = document.getElementById('authNav');
+    const userNav = document.getElementById('userNav');
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const userInitial = document.getElementById('userInitial');
+
+    function updateAuthUI() {
+        if (Auth.isLoggedIn()) {
+            const user = Auth.getUser();
+            if (authNav) authNav.hidden = true;
+            if (userNav) userNav.hidden = false;
+            
+            if (user && user.email && userInitial) {
+                userInitial.textContent = user.email.charAt(0).toUpperCase();
+            }
+        } else {
+            if (authNav) authNav.hidden = false;
+            if (userNav) userNav.hidden = true;
+            if (userDropdown) userDropdown.hidden = true;
+        }
+    }
+
+    // Toggle dropdown
+    userMenuBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (userDropdown) {
+            userDropdown.hidden = !userDropdown.hidden;
+        }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (userMenuBtn && !userMenuBtn.contains(e.target) && userDropdown && !userDropdown.contains(e.target)) {
+            userDropdown.hidden = true;
+        }
+    });
+
+    // Logout handler
+    logoutBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (confirm('Are you sure you want to logout?')) {
+            Auth.logout();
+            window.location.href = '/';
+        }
+    });
+
+    // Listen for auth state changes
+    window.addEventListener('authStateChanged', updateAuthUI);
+
+    // Initial UI update
+    updateAuthUI();
+}
+
+// ============================================================================
 // OCCASION SUBTYPE HANDLING
-// ============================================
+// ============================================================================
 
-occasionSelect.addEventListener('change', () => {
-    const occasion = occasionSelect.value;
-    const subtypes = occasionSubtypes[occasion];
+function setupOccasionSubtypes() {
+    occasionSelect?.addEventListener('change', () => {
+        const occasion = occasionSelect.value;
+        const subtypes = occasionSubtypes[occasion];
 
-    if (subtypes) {
-        occasionSubtypeSelect.innerHTML = '';
-        subtypes.forEach(subtype => {
-            const option = document.createElement('option');
-            option.value = subtype.value;
-            option.textContent = subtype.label;
-            occasionSubtypeSelect.appendChild(option);
-        });
-        occasionSubtypeGroup.hidden = false;
-    } else {
-        occasionSubtypeGroup.hidden = true;
-    }
-});
+        if (subtypes) {
+            occasionSubtypeSelect.innerHTML = '';
+            subtypes.forEach(subtype => {
+                const option = document.createElement('option');
+                option.value = subtype.value;
+                option.textContent = subtype.label;
+                occasionSubtypeSelect.appendChild(option);
+            });
+            if (occasionSubtypeGroup) occasionSubtypeGroup.hidden = false;
+        } else {
+            if (occasionSubtypeGroup) occasionSubtypeGroup.hidden = true;
+        }
+    });
 
-occasionSelect.dispatchEvent(new Event('change'));
+    if (occasionSelect) occasionSelect.dispatchEvent(new Event('change'));
+}
 
-// ============================================
+// ============================================================================
 // IMAGE UPLOAD HANDLING
-// ============================================
+// ============================================================================
 
-uploadArea.addEventListener('click', () => {
-    imageInput.click();
-});
+function setupImageUpload() {
+    uploadArea?.addEventListener('click', () => {
+        imageInput?.click();
+    });
 
-uploadArea.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    uploadArea.style.borderColor = 'var(--color-secondary)';
-    uploadArea.style.background = 'rgba(139, 115, 85, 0.1)';
-});
+    uploadArea?.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if (uploadArea) {
+            uploadArea.style.borderColor = 'var(--color-secondary)';
+            uploadArea.style.background = 'rgba(139, 115, 85, 0.1)';
+        }
+    });
 
-uploadArea.addEventListener('dragleave', () => {
-    uploadArea.style.borderColor = 'var(--color-border)';
-    uploadArea.style.background = 'var(--color-surface)';
-});
+    uploadArea?.addEventListener('dragleave', () => {
+        if (uploadArea) {
+            uploadArea.style.borderColor = 'var(--color-border)';
+            uploadArea.style.background = 'var(--color-surface)';
+        }
+    });
 
-uploadArea.addEventListener('drop', (e) => {
-    e.preventDefault();
-    uploadArea.style.borderColor = 'var(--color-border)';
-    uploadArea.style.background = 'var(--color-surface)';
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-        handleImageUpload(file);
-    } else {
-        alert('Please drop an image file');
-    }
-});
+    uploadArea?.addEventListener('drop', (e) => {
+        e.preventDefault();
+        if (uploadArea) {
+            uploadArea.style.borderColor = 'var(--color-border)';
+            uploadArea.style.background = 'var(--color-surface)';
+        }
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            handleImageUpload(file);
+        } else {
+            alert('Please drop an image file');
+        }
+    });
 
-imageInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        handleImageUpload(file);
-    }
-});
+    imageInput?.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            handleImageUpload(file);
+        }
+    });
+}
 
 function handleImageUpload(file) {
     if (file.size > 5 * 1024 * 1024) {
@@ -120,7 +271,9 @@ function handleImageUpload(file) {
     reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
-            const ctx = imageCanvas.getContext('2d');
+            const ctx = imageCanvas?.getContext('2d');
+            if (!ctx || !uploadArea) return;
+
             const maxWidth = uploadArea.clientWidth - 80;
             const maxHeight = 400;
 
@@ -144,82 +297,87 @@ function handleImageUpload(file) {
             imageCanvas.height = height;
             ctx.drawImage(img, 0, 0, width, height);
 
-            uploadPlaceholder.hidden = true;
-            imageCanvas.hidden = false;
+            if (uploadPlaceholder) uploadPlaceholder.hidden = true;
+            if (imageCanvas) imageCanvas.hidden = false;
 
             uploadedImage = file;
-            generateBtn.disabled = false;
-            resultsSection.hidden = true;
+            if (generateBtn) generateBtn.disabled = false;
+            if (resultsSection) resultsSection.hidden = true;
         };
         img.src = e.target.result;
     };
     reader.readAsDataURL(file);
 }
 
-// ============================================
+// ============================================================================
 // PREDICTION & RESULTS
-// ============================================
+// ============================================================================
 
-generateBtn.addEventListener('click', async () => {
-    if (!uploadedImage) {
-        alert('Please upload an image first');
-        return;
-    }
-
-    const btnText = generateBtn.querySelector('.btn-text');
-    const btnLoader = generateBtn.querySelector('.btn-loader');
-    btnText.hidden = true;
-    btnLoader.hidden = false;
-    generateBtn.disabled = true;
-
-    try {
-        const formData = new FormData();
-        formData.append('image', uploadedImage);
-        formData.append('occasion', occasionSelect.value);
-        formData.append('occasion_subtype', occasionSubtypeSelect.value || '');
-        formData.append('climate', climateSelect.value);
-        formData.append('clothing_style', clothingStyleSelect.value);
-        formData.append('body_type', bodyTypeSelect.value);
-        formData.append('budget', budgetSelect.value);
-        formData.append('detect_face', detectFaceCheckbox.checked);
-
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            body: formData
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+function setupPrediction() {
+    generateBtn?.addEventListener('click', async () => {
+        if (!uploadedImage) {
+            alert('Please upload an image first');
+            return;
         }
 
-        const data = await response.json();
-        console.log('Received data:', data);
-        displayResults(data.prediction);
+        const btnText = generateBtn?.querySelector('.btn-text');
+        const btnLoader = generateBtn?.querySelector('.btn-loader');
+        
+        if (btnText) btnText.hidden = true;
+        if (btnLoader) btnLoader.hidden = false;
+        if (generateBtn) generateBtn.disabled = true;
 
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Error generating recommendations. Please make sure the backend server is running and try again.');
-    } finally {
-        btnText.hidden = false;
-        btnLoader.hidden = true;
-        generateBtn.disabled = false;
-    }
-});
+        try {
+            const formData = new FormData();
+            formData.append('image', uploadedImage);
+            formData.append('occasion', occasionSelect?.value || 'casual');
+            formData.append('occasion_subtype', occasionSubtypeSelect?.value || '');
+            formData.append('climate', climateSelect?.value || 'moderate');
+            formData.append('clothing_style', clothingStyleSelect?.value || 'unisex');
+            formData.append('body_type', bodyTypeSelect?.value || 'regular');
+            formData.append('budget', budgetSelect?.value || 'medium');
+            formData.append('detect_face', detectFaceCheckbox?.checked || false);
+
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Received data:', data);
+            displayResults(data.prediction);
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error generating recommendations. Please try again.');
+        } finally {
+            if (btnText) btnText.hidden = false;
+            if (btnLoader) btnLoader.hidden = true;
+            if (generateBtn) generateBtn.disabled = false;
+        }
+    });
+}
 
 function displayResults(data) {
+    if (!resultsSection) return;
+
     resultsSection.hidden = false;
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     // Display detected item type
-    outfitType.textContent = data.clothing_type || 'Unknown';
+    if (outfitType) outfitType.textContent = data.clothing_type || 'Unknown';
 
     // Display confidence
     const confidence = Math.round((data.confidence || 0.95) * 100);
-    confidenceFill.style.width = `${confidence}%`;
-    confidenceText.textContent = `${confidence}%`;
+    if (confidenceFill) confidenceFill.style.width = `${confidence}%`;
+    if (confidenceText) confidenceText.textContent = `${confidence}%`;
 
     // Clear previous results
-    outfitsContainer.innerHTML = '';
+    if (outfitsContainer) outfitsContainer.innerHTML = '';
 
     console.log('Number of outfits:', data.outfits ? data.outfits.length : 0);
 
@@ -274,21 +432,21 @@ function displayResults(data) {
                                 <span class="shopping-item-name">${linkObj.item}</span>
                                 <div class="shopping-buttons">
                                     <a href="${linkObj.links.amazon}" target="_blank" class="btn-shop btn-amazon" rel="noopener noreferrer">
-                                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width: 16px; height: 16px;">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
                                             <path d="M14.12 17.09c-2.62 1.93-6.43 2.96-9.71 2.96-4.59 0-8.73-1.7-11.86-4.52-.25-.22-.02-.53.27-.36 3.45 2.01 7.71 3.22 12.12 3.22 2.97 0 6.24-.62 9.25-1.9.45-.19.83.3.4.6zm1.09-1.24c-.34-.43-2.23-.21-3.08-.1-.26.03-.3-.19-.07-.36 1.51-1.06 3.99-.75 4.28-.4.29.36-.08 2.85-1.5 4.04-.22.18-.43.09-.33-.16.32-.8 1.04-2.59.7-3.02z"/>
                                             <path d="M13.52 9.09c0 .74.02 1.36-.35 2.02-.3.54-.78.87-1.31.87-.73 0-1.16-.55-1.16-1.37 0-1.61 1.45-1.91 2.82-1.91v.39zm1.74 4.22c-.11.1-.28.11-.41.04-.58-.48-.68-.7-1-1.16-.95.97-1.63 1.27-2.86 1.27-1.46 0-2.6-.9-2.6-2.71 0-1.41.76-2.37 1.85-2.84 .94-.42 2.25-.49 3.25-.61v-.23c0-.43.03-.94-.22-1.31-.22-.33-.63-.47-.99-.47-.67 0-1.27.35-1.42 1.06-.03.16-.15.31-.31.32l-1.68-.18c-.15-.03-.31-.15-.27-.37.4-2.11 2.31-2.75 4.02-2.75.87 0 2.01.23 2.7.89.87.82.79 1.91.79 3.1v2.81c0 .84.35 1.21.68 1.67.12.16.14.35-.01.47-.37.31-.99.85-1.34 1.16l-.02-.02z"/>
                                         </svg>
                                         Amazon
                                     </a>
                                     <a href="${linkObj.links.flipkart}" target="_blank" class="btn-shop btn-flipkart" rel="noopener noreferrer">
-                                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width: 16px; height: 16px;">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
                                             <path d="M3.833 5.333h3.334v13.334H3.833V5.333zm13.334 0H20.5v13.334h-3.333V5.333zM10.5 2h3v20h-3V2z"/>
                                             <path d="M8.5 8.5h7v7h-7v-7z" fill="#FFD700"/>
                                         </svg>
                                         Flipkart
                                     </a>
                                     <a href="${linkObj.links.meesho}" target="_blank" class="btn-shop btn-meesho" rel="noopener noreferrer">
-                                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width: 16px; height: 16px;">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
                                             <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
                                             <circle cx="12" cy="13" r="4"/>
                                         </svg>
@@ -342,36 +500,44 @@ function displayResults(data) {
 
         console.log('Total cards in container:', outfitsContainer.children.length);
     } else {
-        outfitsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">No specific outfits generated. Please try again.</p>';
+        if (outfitsContainer) {
+            outfitsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">No specific outfits generated. Please try again.</p>';
+        }
     }
 
     // Display style tips
     const styleTipsList = document.getElementById('styleTipsList');
-    if (data.style_tips && data.style_tips.length > 0) {
-        styleTipsList.innerHTML = data.style_tips.map(tip => `<li>${tip}</li>`).join('');
-    } else {
-        styleTipsList.innerHTML = `
-            <li>Keep your look fresh and confident</li>
-            <li>Coordinate colors for a cohesive appearance</li>
-            <li>Pay attention to fabric quality and fit</li>
-            <li>Accessorize appropriately for the occasion</li>
-        `;
+    if (styleTipsList) {
+        if (data.style_tips && data.style_tips.length > 0) {
+            styleTipsList.innerHTML = data.style_tips.map(tip => `<li>${tip}</li>`).join('');
+        } else {
+            styleTipsList.innerHTML = `
+                <li>Keep your look fresh and confident</li>
+                <li>Coordinate colors for a cohesive appearance</li>
+                <li>Pay attention to fabric quality and fit</li>
+                <li>Accessorize appropriately for the occasion</li>
+            `;
+        }
     }
 
     // Display face detection results if available
     const faceDetectionCard = document.getElementById('faceDetectionCard');
-    if (data.skin_tone) {
-        faceDetectionCard.hidden = false;
-        document.getElementById('skinTone').textContent = data.skin_tone;
-        document.getElementById('colorNote').textContent = `Colors that complement your ${data.skin_tone} skin tone`;
-    } else {
-        faceDetectionCard.hidden = true;
+    if (faceDetectionCard) {
+        if (data.skin_tone) {
+            faceDetectionCard.hidden = false;
+            const skinToneEl = document.getElementById('skinTone');
+            const colorNoteEl = document.getElementById('colorNote');
+            if (skinToneEl) skinToneEl.textContent = data.skin_tone;
+            if (colorNoteEl) colorNoteEl.textContent = `Colors that complement your ${data.skin_tone} skin tone`;
+        } else {
+            faceDetectionCard.hidden = true;
+        }
     }
 }
 
-// ============================================
+// ============================================================================
 // WARDROBE INTEGRATION
-// ============================================
+// ============================================================================
 
 async function saveOutfitToWardrobe(outfit) {
     if (!Auth.isLoggedIn()) {
@@ -382,7 +548,7 @@ async function saveOutfitToWardrobe(outfit) {
     }
 
     try {
-        const occasion = document.getElementById('occasion').value;
+        const occasion = occasionSelect?.value || 'casual';
         const itemData = {
             name: outfit.name,
             category: 'top',
@@ -406,184 +572,88 @@ async function saveOutfitToWardrobe(outfit) {
     }
 }
 
-// ============================================
-// COLOR MAPPING
-// ============================================
-
-function getColorCode(colorName) {
-    const colorMap = {
-        'Black': '#000000',
-        'White': '#FFFFFF',
-        'Gray': '#808080',
-        'Grey': '#808080',
-        'Beige': '#F5F5DC',
-        'Cream': '#FFFDD0',
-        'Ivory': '#FFFFF0',
-        'Tan': '#D2B48C',
-        'Brown': '#8B4513',
-        'Camel': '#C19A6B',
-        'Navy': '#000080',
-        'Navy Blue': '#000080',
-        'Royal Blue': '#4169E1',
-        'Sky Blue': '#87CEEB',
-        'Light Blue': '#ADD8E6',
-        'Turquoise': '#40E0D0',
-        'Teal': '#008080',
-        'Cobalt': '#0047AB',
-        'Red': '#FF0000',
-        'Burgundy': '#800020',
-        'Maroon': '#800000',
-        'Wine': '#722F37',
-        'Pink': '#FFC0CB',
-        'Hot Pink': '#FF69B4',
-        'Rose': '#FF007F',
-        'Coral': '#FF7F50',
-        'Green': '#008000',
-        'Olive': '#808000',
-        'Emerald': '#50C878',
-        'Forest Green': '#228B22',
-        'Sage': '#BCB88A',
-        'Mint': '#98FF98',
-        'Lime': '#00FF00',
-        'Yellow': '#FFFF00',
-        'Gold': '#FFD700',
-        'Mustard': '#FFDB58',
-        'Orange': '#FFA500',
-        'Burnt Orange': '#CC5500',
-        'Peach': '#FFE5B4',
-        'Purple': '#800080',
-        'Lavender': '#E6E6FA',
-        'Plum': '#DDA0DD',
-        'Violet': '#8F00FF',
-        'Mauve': '#E0B0FF',
-        'Silver': '#C0C0C0',
-        'Champagne': '#F7E7CE',
-        'Blush': '#DE5D83',
-        'Charcoal': '#36454F',
-        'Floral Print': '#FFB6C1',
-        'Denim Blue': '#1560BD',
-        'Khaki': '#C3B091',
-        'Blue': '#0000FF'
-    };
-    return colorMap[colorName] || '#808080';
-}
-
-// ============================================
+// ============================================================================
 // TRY ANOTHER OUTFIT
-// ============================================
+// ============================================================================
 
-tryAnotherBtn.addEventListener('click', () => {
-    uploadedImage = null;
-    imageInput.value = '';
-    uploadPlaceholder.hidden = false;
-    imageCanvas.hidden = true;
-    resultsSection.hidden = true;
-    generateBtn.disabled = true;
-    document.getElementById('styler').scrollIntoView({ behavior: 'smooth' });
-});
-
-// ============================================
-// NAVIGATION
-// ============================================
-
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            this.classList.add('active');
+function setupTryAnother() {
+    tryAnotherBtn?.addEventListener('click', () => {
+        uploadedImage = null;
+        if (imageInput) imageInput.value = '';
+        if (uploadPlaceholder) uploadPlaceholder.hidden = false;
+        if (imageCanvas) imageCanvas.hidden = true;
+        if (resultsSection) resultsSection.hidden = true;
+        if (generateBtn) generateBtn.disabled = true;
+        
+        const stylerSection = document.getElementById('styler');
+        if (stylerSection) {
+            stylerSection.scrollIntoView({ behavior: 'smooth' });
         }
     });
-});
-
-window.addEventListener('scroll', () => {
-    const sections = document.querySelectorAll('section[id]');
-    const scrollPosition = window.scrollY + 100;
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.offsetHeight;
-        const sectionId = section.getAttribute('id');
-        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${sectionId}`) {
-                    link.classList.add('active');
-                }
-            });
-        }
-    });
-});
-
-// ============================================
-// AUTHENTICATION UI INITIALIZATION
-// ============================================
-
-function initAuthUI() {
-    const authNav = document.getElementById('authNav');
-    const userNav = document.getElementById('userNav');
-    const userMenuBtn = document.getElementById('userMenuBtn');
-    const userDropdown = document.getElementById('userDropdown');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const userInitial = document.getElementById('userInitial');
-
-    function updateAuthUI() {
-        if (Auth.isLoggedIn()) {
-            const user = Auth.getUser();
-            if (authNav) authNav.hidden = true;
-            if (userNav) userNav.hidden = false;
-            
-            if (user && user.email && userInitial) {
-                userInitial.textContent = user.email.charAt(0).toUpperCase();
-            }
-        } else {
-            if (authNav) authNav.hidden = false;
-            if (userNav) userNav.hidden = true;
-            if (userDropdown) userDropdown.hidden = true;
-        }
-    }
-
-    // Toggle dropdown
-    userMenuBtn?.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (userDropdown) {
-            userDropdown.hidden = !userDropdown.hidden;
-        }
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-        if (userMenuBtn && !userMenuBtn.contains(e.target) && userDropdown && !userDropdown.contains(e.target)) {
-            userDropdown.hidden = true;
-        }
-    });
-
-    // Logout handler
-    logoutBtn?.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (confirm('Are you sure you want to logout?')) {
-            Auth.logout();
-        }
-    });
-
-    // Listen for auth state changes
-    window.addEventListener('authStateChanged', updateAuthUI);
-
-    // Initial UI update
-    updateAuthUI();
 }
 
-// ============================================
+// ============================================================================
+// NAVIGATION
+// ============================================================================
+
+function setupNavigation() {
+    // Smooth scroll to sections
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                this.classList.add('active');
+            }
+        });
+    });
+
+    // Update active nav link on scroll
+    window.addEventListener('scroll', () => {
+        const sections = document.querySelectorAll('section[id]');
+        const scrollPosition = window.scrollY + 100;
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            const sectionId = section.getAttribute('id');
+            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${sectionId}`) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    });
+}
+
+// ============================================================================
 // PAGE INITIALIZATION
-// ============================================
+// ============================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('Initializing Fashion Stylist App...');
+    
+    // Initialize auth UI first
     initAuthUI();
-    console.log('✅ Fashion Stylist App Initialized');
+    
+    // Setup all components
+    setupOccasionSubtypes();
+    setupImageUpload();
+    setupPrediction();
+    setupTryAnother();
+    setupNavigation();
+    
+    console.log('✅ Fashion Stylist App Initialized Successfully');
 });
 
-// Export for module usage
+// ============================================================================
+// EXPORTS
+// ============================================================================
+
 export { initAuthUI };
