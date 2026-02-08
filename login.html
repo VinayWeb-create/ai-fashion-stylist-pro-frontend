@@ -671,6 +671,7 @@
             }
         }
 
+        // ✅ LOGIN: Redirect only happens AFTER successful authentication
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessages();
@@ -713,6 +714,7 @@
             }
         });
 
+        // ✅ REGISTER: Redirect only happens AFTER successful registration
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessages();
@@ -759,7 +761,6 @@
                     showSuccess('Account created! Redirecting...');
                     setTimeout(() => {
                         window.location.replace('/index.html');
-
                     }, 800);
                 } else {
                     showError(result.message || 'Registration failed. Please try again.');
@@ -773,7 +774,7 @@
             }
         });
 
-       
+        // ✅ NO automatic redirect on page load - this is a public page
 
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
