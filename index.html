@@ -771,18 +771,17 @@
 
                 // Login
                 const result = await Auth.login(email, password);
-                {
-               if (result.status === 'success') {
-    showSuccess('Login successful! Redirecting...');
-    setTimeout(() => {
-        window.location.href = '/dashboard.html';
-    }, 800);
-} else {
-    showError(result.message || 'Login failed. Please check your credentials.');
-    setButtonLoading('loginBtn', false);
-    clearMessages();
-}
 
+                if (result.status === 'success') {
+                    showSuccess('Login successful! Redirecting...');
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html';
+                    }, 800);
+                } else {
+                    showError(result.message || 'Login failed. Please check your credentials.');
+                    setButtonLoading('loginBtn', false);
+                    clearMessages();
+                }
             } catch (error) {
                 showError(error.message || 'An error occurred. Please try again.');
                 setButtonLoading('loginBtn', false);
@@ -839,12 +838,10 @@
                 const result = await Auth.register(email, password, profile);
 
                 if (result.status === 'success') {
-    showSuccess('Login successful! Redirecting...');
-    setTimeout(() => {
-        window.location.href = '/dashboard.html';
-    }, 800);
-}
-
+                    showSuccess('Account created! Redirecting...');
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html';
+                    }, 800);
                 } else {
                     showError(result.message || 'Registration failed. Please try again.');
                     setButtonLoading('registerBtn', false);
