@@ -51,19 +51,19 @@
             </div>
             <div class="hero-visual">
                 <div class="visual-card card-1">
-                    <img src="model-dress.webp" alt="Model wearing dress" class="card-image">
+                    <img src="assests/model-dress.webp" alt="Model wearing dress" class="card-image">
                     <div class="card-overlay">
                         <span class="card-label">Dress</span>
                     </div>
                 </div>
                 <div class="visual-card card-2">
-                    <img src="model-shirt.webp" alt="Model wearing shirt" class="card-image">
+                    <img src="assests/model-shirt.webp" alt="Model wearing shirt" class="card-image">
                     <div class="card-overlay">
                         <span class="card-label">Shirt</span>
                     </div>
                 </div>
                 <div class="visual-card card-3">
-                    <img src="model-pants.webp" alt="Model wearing pants" class="card-image">
+                    <img src="assests/model-pants.webp" alt="Model wearing pants" class="card-image">
                     <div class="card-overlay">
                         <span class="card-label">Pants</span>
                     </div>
@@ -99,8 +99,8 @@
                         </svg>
                     </div>
                     <h3 class="feature-title">2. Select Context</h3>
-                    <p class="feature-description">Choose your occasion (casual, formal, party, ethnic) and climate
-                        preference for personalized suggestions.</p>
+                    <p class="feature-description">Choose your occasion, climate, body type, and budget for personalized
+                        suggestions.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
@@ -111,8 +111,8 @@
                         </svg>
                     </div>
                     <h3 class="feature-title">3. Get AI Recommendations</h3>
-                    <p class="feature-description">Receive instant style suggestions including color palettes,
-                        accessories, and footwear recommendations.</p>
+                    <p class="feature-description">Receive ranked style suggestions with shopping links and grooming
+                        tips.</p>
                 </div>
             </div>
         </div>
@@ -163,6 +163,12 @@
                             </select>
                         </div>
 
+                        <div class="form-group" id="occasionSubtypeGroup" hidden>
+                            <label for="occasionSubtype" class="form-label">Occasion Type</label>
+                            <select id="occasionSubtype" class="form-select">
+                            </select>
+                        </div>
+
                         <div class="form-group">
                             <label for="climate" class="form-label">Climate</label>
                             <select id="climate" class="form-select">
@@ -173,11 +179,29 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="bodyType" class="form-label">Body Type</label>
+                            <select id="bodyType" class="form-select">
+                                <option value="regular">Regular</option>
+                                <option value="slim">Slim</option>
+                                <option value="relaxed">Relaxed</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="budget" class="form-label">Budget</label>
+                            <select id="budget" class="form-select">
+                                <option value="low">Low (Under ₹1000)</option>
+                                <option value="medium" selected>Medium (₹1000-2500)</option>
+                                <option value="high">High (Premium)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
                             <label for="detectFace" class="form-label checkbox-label">
                                 <input type="checkbox" id="detectFace" class="checkbox-input">
                                 <span>Detect Face & Skin Tone</span>
                             </label>
-                            <p class="form-hint">Enable to get personalized recommendations based on your skin tone</p>
+                            <p class="form-hint">Enable to get personalized grooming recommendations</p>
                         </div>
 
                         <button class="btn btn-generate" id="generateBtn" disabled>
@@ -221,7 +245,7 @@
 
                     <div class="results-header" style="margin-top: 48px;">
                         <h3 class="results-title">✨ Top 3 Style Recommendations</h3>
-                        <p class="section-subtitle">Curated just for you</p>
+                        <p class="section-subtitle">Ranked by best match</p>
                     </div>
 
                     <div id="outfitsContainer" class="outfits-container"></div>
@@ -244,7 +268,7 @@
 
                     <div class="style-tips-card">
                         <div class="prediction-header">
-                            <h4 class="prediction-title">✨ Style Tips</h4>
+                            <h4 class="prediction-title">✨ Style & Care Routine</h4>
                         </div>
                         <ul class="recommendation-list" id="styleTipsList"></ul>
                     </div>
@@ -364,4 +388,3 @@
 </body>
 
 </html>
-
