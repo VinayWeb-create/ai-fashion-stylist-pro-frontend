@@ -154,7 +154,7 @@ function displayResults(data) {
     if (data.outfits && data.outfits.length > 0) {
         data.outfits.forEach((outfit, index) => {
             console.log(`Creating card ${index + 1}:`, outfit.name);
-            
+
             const card = document.createElement('div');
             card.className = 'outfit-card';
 
@@ -193,9 +193,27 @@ function displayResults(data) {
                             <div class="shopping-item">
                                 <span class="shopping-item-name">${linkObj.item}</span>
                                 <div class="shopping-buttons">
-                                    <a href="${linkObj.links.amazon}" target="_blank" class="btn-shop btn-amazon">Amazon</a>
-                                    <a href="${linkObj.links.flipkart}" target="_blank" class="btn-shop btn-flipkart">Flipkart</a>
-                                    <a href="${linkObj.links.meesho}" target="_blank" class="btn-shop btn-meesho">Meesho</a>
+                                    <a href="${linkObj.links.amazon}" target="_blank" class="btn-shop btn-amazon" rel="noopener noreferrer">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                            <path d="M14.12 17.09c-2.62 1.93-6.43 2.96-9.71 2.96-4.59 0-8.73-1.7-11.86-4.52-.25-.22-.02-.53.27-.36 3.45 2.01 7.71 3.22 12.12 3.22 2.97 0 6.24-.62 9.25-1.9.45-.19.83.3.4.6zm1.09-1.24c-.34-.43-2.23-.21-3.08-.1-.26.03-.3-.19-.07-.36 1.51-1.06 3.99-.75 4.28-.4.29.36-.08 2.85-1.5 4.04-.22.18-.43.09-.33-.16.32-.8 1.04-2.59.7-3.02z"/>
+                                            <path d="M13.52 9.09c0 .74.02 1.36-.35 2.02-.3.54-.78.87-1.31.87-.73 0-1.16-.55-1.16-1.37 0-1.61 1.45-1.91 2.82-1.91v.39zm1.74 4.22c-.11.1-.28.11-.41.04-.58-.48-.68-.7-1-1.16-.95.97-1.63 1.27-2.86 1.27-1.46 0-2.6-.9-2.6-2.71 0-1.41.76-2.37 1.85-2.84 .94-.42 2.25-.49 3.25-.61v-.23c0-.43.03-.94-.22-1.31-.22-.33-.63-.47-.99-.47-.67 0-1.27.35-1.42 1.06-.03.16-.15.31-.31.32l-1.68-.18c-.15-.03-.31-.15-.27-.37.4-2.11 2.31-2.75 4.02-2.75.87 0 2.01.23 2.7.89.87.82.79 1.91.79 3.1v2.81c0 .84.35 1.21.68 1.67.12.16.14.35-.01.47-.37.31-.99.85-1.34 1.16l-.02-.02z"/>
+                                        </svg>
+                                        Amazon
+                                    </a>
+                                    <a href="${linkObj.links.flipkart}" target="_blank" class="btn-shop btn-flipkart" rel="noopener noreferrer">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                            <path d="M3.833 5.333h3.334v13.334H3.833V5.333zm13.334 0H20.5v13.334h-3.333V5.333zM10.5 2h3v20h-3V2z"/>
+                                            <path d="M8.5 8.5h7v7h-7v-7z" fill="#FFD700"/>
+                                        </svg>
+                                        Flipkart
+                                    </a>
+                                    <a href="${linkObj.links.meesho}" target="_blank" class="btn-shop btn-meesho" rel="noopener noreferrer">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                            <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+                                            <circle cx="12" cy="13" r="4"/>
+                                        </svg>
+                                        Meesho
+                                    </a>
                                 </div>
                             </div>
                         `).join('') : '<p>No shopping links available</p>'}
@@ -231,7 +249,7 @@ function displayResults(data) {
             outfitsContainer.appendChild(card);
             console.log(`Card ${index + 1} appended to container`);
         });
-        
+
         console.log('Total cards in container:', outfitsContainer.children.length);
     } else {
         outfitsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">No specific outfits generated. Please try again.</p>';
