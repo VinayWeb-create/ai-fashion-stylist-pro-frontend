@@ -1,5 +1,5 @@
 let uploadedImage = null;
-const API_URL = 'http://localhost:5000/predict';
+const API_URL = 'https://ai-fashion-stylist-pro-production.up.railway.app/predict';
 
 const imageInput = document.getElementById('imageInput');
 const uploadArea = document.getElementById('uploadArea');
@@ -337,3 +337,4 @@ window.addEventListener('scroll', () => {
         }
     });
 });
+
