@@ -42,7 +42,6 @@
             line-height: 1.6;
         }
 
-        /* Background patterns */
         body::before {
             content: '';
             position: fixed;
@@ -63,10 +62,6 @@
             position: relative;
             z-index: 1;
         }
-
-        /* ============================================================
-           AUTH CARD
-           ============================================================ */
 
         .auth-card {
             background: var(--color-surface);
@@ -89,10 +84,6 @@
                 transform: translateY(0);
             }
         }
-
-        /* ============================================================
-           LOGO
-           ============================================================ */
 
         .logo {
             text-align: center;
@@ -124,10 +115,6 @@
             color: var(--color-primary);
             letter-spacing: 0.5px;
         }
-
-        /* ============================================================
-           MESSAGES
-           ============================================================ */
 
         .message {
             padding: 14px 16px;
@@ -167,10 +154,6 @@
             color: var(--color-success);
         }
 
-        /* ============================================================
-           TABS
-           ============================================================ */
-
         .tabs {
             display: flex;
             gap: 0;
@@ -203,10 +186,6 @@
             color: var(--color-primary);
             background: rgba(212, 175, 55, 0.1);
         }
-
-        /* ============================================================
-           TAB CONTENT
-           ============================================================ */
 
         .tab-content {
             display: none;
@@ -241,10 +220,6 @@
             margin-bottom: 28px;
         }
 
-        /* ============================================================
-           FORM GROUPS
-           ============================================================ */
-
         .form-group {
             margin-bottom: 20px;
         }
@@ -262,10 +237,6 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-
-        /* ============================================================
-           FORM INPUTS
-           ============================================================ */
 
         .form-input,
         .form-select {
@@ -308,10 +279,6 @@
             font-size: 12px;
             margin-top: 6px;
         }
-
-        /* ============================================================
-           BUTTONS
-           ============================================================ */
 
         .btn {
             width: 100%;
@@ -380,10 +347,6 @@
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);
         }
 
-        /* ============================================================
-           SPINNER
-           ============================================================ */
-
         .spinner {
             display: inline-block;
             width: 16px;
@@ -397,10 +360,6 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-
-        /* ============================================================
-           AUTH LINKS
-           ============================================================ */
 
         .auth-link {
             text-align: center;
@@ -437,10 +396,6 @@
             width: 100%;
         }
 
-        /* ============================================================
-           BACK LINK
-           ============================================================ */
-
         .back-link {
             text-align: center;
             margin-top: 28px;
@@ -463,10 +418,6 @@
             color: var(--color-primary);
             transform: translateX(-4px);
         }
-
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
 
         @media (max-width: 600px) {
             .auth-card {
@@ -530,7 +481,6 @@
 <body>
     <div class="container">
         <div class="auth-card">
-            <!-- Logo -->
             <div class="logo">
                 <svg class="logo-svg" viewBox="0 0 40 40" fill="none">
                     <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2" />
@@ -539,17 +489,14 @@
                 <div class="logo-text">Fashion Stylist Pro</div>
             </div>
 
-            <!-- Messages -->
             <div id="errorMessage" class="message error-message"></div>
             <div id="successMessage" class="message success-message"></div>
 
-            <!-- Tabs -->
             <div class="tabs">
                 <button class="tab-btn active" data-tab="login">Login</button>
                 <button class="tab-btn" data-tab="register">Sign Up</button>
             </div>
 
-            <!-- LOGIN TAB ================================================== -->
             <div id="login-tab" class="tab-content active">
                 <h2 class="tab-title">Welcome Back</h2>
                 <p class="tab-subtitle">Enter your credentials to continue</p>
@@ -590,7 +537,6 @@
                 </p>
             </div>
 
-            <!-- REGISTER TAB ================================================ -->
             <div id="register-tab" class="tab-content">
                 <h2 class="tab-title">Create Account</h2>
                 <p class="tab-subtitle">Join our fashion community</p>
@@ -663,7 +609,6 @@
                 </p>
             </div>
 
-            <!-- Back Link -->
             <div class="back-link">
                 <a href="/index.html">← Back to Home</a>
             </div>
@@ -673,30 +618,19 @@
     <script type="module">
         import * as Auth from './auth.js';
 
-        // ================================================================
-        // TAB SWITCHING
-        // ================================================================
-
         window.switchTab = function(tabName) {
-            // Update tab buttons
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
 
-            // Update tab content
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
             document.getElementById(`${tabName}-tab`).classList.add('active');
 
-            // Clear messages
             hideMessages();
         };
-
-        // ================================================================
-        // MESSAGE HANDLERS
-        // ================================================================
 
         function showError(message) {
             const el = document.getElementById('errorMessage');
@@ -721,10 +655,6 @@
             }, 5000);
         }
 
-        // ================================================================
-        // BUTTON LOADING STATE
-        // ================================================================
-
         function setButtonLoading(btnId, isLoading) {
             const btn = document.getElementById(btnId);
             const text = document.getElementById(btnId.replace('Btn', 'BtnText'));
@@ -741,10 +671,6 @@
             }
         }
 
-        // ================================================================
-        // LOGIN HANDLER
-        // ================================================================
-
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessages();
@@ -754,7 +680,6 @@
                 const email = document.getElementById('loginEmail').value.trim();
                 const password = document.getElementById('loginPassword').value;
 
-                // Validation
                 if (!email || !password) {
                     showError('Please fill in all fields');
                     setButtonLoading('loginBtn', false);
@@ -769,7 +694,6 @@
                     return;
                 }
 
-                // Login
                 const result = await Auth.login(email, password);
 
                 if (result.status === 'success') {
@@ -789,10 +713,6 @@
             }
         });
 
-        // ================================================================
-        // REGISTER HANDLER
-        // ================================================================
-
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessages();
@@ -805,7 +725,6 @@
                 const lifestyle = document.getElementById('lifestyle').value;
                 const budget = document.getElementById('budget').value;
 
-                // Validation
                 if (!email || !password || !bodyType || !lifestyle || !budget) {
                     showError('Please fill in all fields');
                     setButtonLoading('registerBtn', false);
@@ -827,7 +746,6 @@
                     return;
                 }
 
-                // Register
                 const profile = {
                     body_type: bodyType,
                     lifestyle: lifestyle,
@@ -854,17 +772,9 @@
             }
         });
 
-        // ================================================================
-        // CHECK IF ALREADY LOGGED IN
-        // ================================================================
-
         if (Auth.isLoggedIn()) {
             window.location.href = '/dashboard.html';
         }
-
-        // ================================================================
-        // TAB BUTTON CLICK HANDLERS
-        // ================================================================
 
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -873,12 +783,7 @@
             });
         });
 
-        // ================================================================
-        // KEYBOARD SHORTCUTS
-        // ================================================================
-
         document.addEventListener('keydown', (e) => {
-            // Tab between forms with Ctrl+Tab
             if (e.ctrlKey && e.key === 'Tab') {
                 e.preventDefault();
                 const activeTab = document.querySelector('.tab-btn.active').dataset.tab;
