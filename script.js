@@ -2,7 +2,7 @@
 // Global Variables
 // =================================
 let uploadedImage = null;
-const API_URL = 'https://ai-fashion-stylist-pro-production.up.railway.app/predict'; // Update this to your Flask backend URL
+const API_URL = 'http://192.168.0.19:5000/predict'; // Update this to your Flask backend URL
 
 // =================================
 // DOM Elements
@@ -237,11 +237,24 @@ function displayResults(data) {
 
                 <div class="outfit-section">
                     <div class="outfit-section-title">
-                        <span>👔</span> Key Items
+                        <span>👔</span> Key Items & Shopping Links
                     </div>
                     <ul class="items-list">
-                        ${itemsHtml}
+                        ${outfit.items ? outfit.items.map(item => `<li class="item-badge">${item}</li>`).join('') : ''}
                     </ul>
+                    
+                    <div class="shopping-container">
+                        ${outfit.shopping_links ? outfit.shopping_links.map(linkObj => `
+                            <div class="shopping-item">
+                                <span class="shopping-item-name">${linkObj.item}</span>
+                                <div class="shopping-buttons">
+                                    <a href="${linkObj.links.amazon}" target="_blank" class="btn-shop btn-amazon">Amazon</a>
+                                    <a href="${linkObj.links.flipkart}" target="_blank" class="btn-shop btn-flipkart">Flipkart</a>
+                                    <a href="${linkObj.links.meesho}" target="_blank" class="btn-shop btn-meesho">Meesho</a>
+                                </div>
+                            </div>
+                        `).join('') : '<p>No shopping links available</p>'}
+                    </div>
                 </div>
 
                 <div class="outfit-section">
@@ -445,4 +458,3 @@ window.addEventListener('scroll', () => {
         }
     });
 });
-
