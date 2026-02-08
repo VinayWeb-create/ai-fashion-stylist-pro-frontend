@@ -10,13 +10,59 @@ const resultsSection = document.getElementById('resultsSection');
 const tryAnotherBtn = document.getElementById('tryAnotherBtn');
 
 const occasionSelect = document.getElementById('occasion');
+const occasionSubtypeSelect = document.getElementById('occasionSubtype');
+const occasionSubtypeGroup = document.getElementById('occasionSubtypeGroup');
 const climateSelect = document.getElementById('climate');
 const clothingStyleSelect = document.getElementById('clothingStyle');
+const bodyTypeSelect = document.getElementById('bodyType');
+const budgetSelect = document.getElementById('budget');
 
 const outfitType = document.getElementById('outfitType');
 const confidenceFill = document.getElementById('confidenceFill');
 const confidenceText = document.getElementById('confidenceText');
 const outfitsContainer = document.getElementById('outfitsContainer');
+
+const occasionSubtypes = {
+    casual: [
+        { value: 'college', label: 'College' },
+        { value: 'travel', label: 'Travel' },
+        { value: 'daily', label: 'Daily Wear' }
+    ],
+    formal: [
+        { value: 'office', label: 'Office' },
+        { value: 'interview', label: 'Interview' },
+        { value: 'meeting', label: 'Meeting' }
+    ],
+    party: [
+        { value: 'night', label: 'Night Out' },
+        { value: 'wedding', label: 'Wedding' },
+        { value: 'festival', label: 'Festival' }
+    ],
+    ethnic: [
+        { value: 'traditional', label: 'Traditional' },
+        { value: 'festive', label: 'Festive' }
+    ]
+};
+
+occasionSelect.addEventListener('change', () => {
+    const occasion = occasionSelect.value;
+    const subtypes = occasionSubtypes[occasion];
+
+    if (subtypes) {
+        occasionSubtypeSelect.innerHTML = '';
+        subtypes.forEach(subtype => {
+            const option = document.createElement('option');
+            option.value = subtype.value;
+            option.textContent = subtype.label;
+            occasionSubtypeSelect.appendChild(option);
+        });
+        occasionSubtypeGroup.hidden = false;
+    } else {
+        occasionSubtypeGroup.hidden = true;
+    }
+});
+
+occasionSelect.dispatchEvent(new Event('change'));
 
 uploadArea.addEventListener('click', () => {
     imageInput.click();
@@ -111,8 +157,11 @@ generateBtn.addEventListener('click', async () => {
         const formData = new FormData();
         formData.append('image', uploadedImage);
         formData.append('occasion', occasionSelect.value);
+        formData.append('occasion_subtype', occasionSubtypeSelect.value || '');
         formData.append('climate', climateSelect.value);
         formData.append('clothing_style', clothingStyleSelect.value);
+        formData.append('body_type', bodyTypeSelect.value);
+        formData.append('budget', budgetSelect.value);
 
         const response = await fetch(API_URL, {
             method: 'POST',
@@ -362,4 +411,3 @@ window.addEventListener('scroll', () => {
         }
     });
 });
-
