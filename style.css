@@ -1303,3 +1303,67 @@ body {
     gap: 8px;
     margin-top: 8px;
 }
+
+/* =================================
+   Shopping Links
+   ================================= */
+.shopping-container {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.shopping-item {
+    background: var(--color-background);
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+}
+
+.shopping-item-name {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--color-primary);
+}
+
+.shopping-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.btn-shop {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: var(--transition);
+    color: white;
+}
+
+.btn-shop:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-amazon {
+    background-color: #FF9900;
+    color: #232F3E;
+}
+
+.btn-flipkart {
+    background-color: #2874F0;
+}
+
+.btn-meesho {
+    background-color: #D32F2F;
+    /* Closest to Meesho pink/red branding */
+    background: linear-gradient(45deg, #f43397, #f665a8);
+}
