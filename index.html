@@ -771,7 +771,7 @@
 
                 // Login
                 const result = await Auth.login(email, password);
-
+                {
                if (result.status === 'success') {
     showSuccess('Login successful! Redirecting...');
     setTimeout(() => {
