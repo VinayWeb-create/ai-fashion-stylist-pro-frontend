@@ -254,6 +254,13 @@ function displayResults(data) {
     } else {
         outfitsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">No specific outfits generated. Please try again.</p>';
     }
+
+    const styleTipsList = document.getElementById('styleTipsList');
+    if (data.style_tips && data.style_tips.length > 0) {
+        styleTipsList.innerHTML = data.style_tips.map(tip => `<li>${tip}</li>`).join('');
+    } else {
+        styleTipsList.innerHTML = '<li>Keep your look fresh and confident</li><li>Coordinate colors for a cohesive appearance</li>';
+    }
 }
 
 function getColorCode(colorName) {
