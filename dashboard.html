@@ -31,6 +31,25 @@
                 <a href="#home" class="nav-link active">Home</a>
                 <a href="#styler" class="nav-link">Try Now</a>
                 <a href="#about" class="nav-link">About</a>
+                
+                <!-- Auth Navigation -->
+                <div id="authNav">
+                    <a href="/login.html" class="nav-link">Login</a>
+                </div>
+                
+                <!-- User Navigation (hidden by default) -->
+                <div id="userNav" class="user-nav" hidden>
+                    <button class="user-menu-btn" id="userMenuBtn">
+                        <div class="user-avatar">
+                            <span id="userInitial">U</span>
+                        </div>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown" hidden>
+                        <a href="/dashboard.html" class="dropdown-item">Dashboard</a>
+                        <a href="/wardrobe.html" class="dropdown-item">My Wardrobe</a>
+                        <button id="logoutBtn" class="dropdown-item logout-btn">Logout</button>
+                    </div>
+                </div>
             </nav>
         </div>
     </header>
@@ -384,8 +403,8 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <!-- CRITICAL FIX: Add type="module" to the script tag -->
+    <script type="module" src="script.js"></script>
 </body>
 
 </html>
-
