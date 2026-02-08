@@ -1059,3 +1059,98 @@ body {
         height: 300px;
     }
 }
+/* Authentication Navigation */
+.auth-nav {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.user-nav {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.user-menu-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary) 0%, #f0d98f 100%);
+    color: #000;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    position: relative;
+    transition: transform 0.3s;
+}
+
+.user-menu-btn:hover {
+    transform: scale(1.1);
+}
+
+.user-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    min-width: 150px;
+    padding: 8px 0;
+    margin-top: 8px;
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.user-dropdown a,
+.logout-btn {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    color: var(--color-text);
+    text-decoration: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    font-size: 13px;
+    transition: background 0.3s;
+}
+
+.user-dropdown a:hover,
+.logout-btn:hover {
+    background: var(--color-border);
+}
+
+.logout-btn {
+    color: #ff6b7a;
+    border-top: 1px solid var(--color-border);
+}
+
+.user-dropdown hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 4px 0;
+}
+
+/* Save Wardrobe Button */
+.save-outfit-btn {
+    margin-top: 12px;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .auth-nav {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .user-nav {
+        flex-direction: column;
+    }
+
+    .user-dropdown {
+        right: -50px;
+    }
+}
