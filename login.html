@@ -699,7 +699,7 @@
                 if (result.status === 'success') {
                     showSuccess('Login successful! Redirecting...');
                     setTimeout(() => {
-                        window.location.href = '/index.html';
+                        window.location.replace('/index.html');
                     }, 800);
                 } else {
                     showError(result.message || 'Login failed. Please check your credentials.');
@@ -758,7 +758,8 @@
                 if (result.status === 'success') {
                     showSuccess('Account created! Redirecting...');
                     setTimeout(() => {
-                        window.location.href = '/index.html';
+                        window.location.replace('/index.html');
+
                     }, 800);
                 } else {
                     showError(result.message || 'Registration failed. Please try again.');
@@ -772,9 +773,7 @@
             }
         });
 
-        if (Auth.isLoggedIn()) {
-            window.location.href = '/index.html';
-        }
+       
 
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
