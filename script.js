@@ -1,4 +1,5 @@
 import * as Auth from './auth.js';
+
 let uploadedImage = null;
 let currentPrediction = null;
 const API_URL = 'https://ai-fashion-stylist-pro-production.up.railway.app/predict';
@@ -18,6 +19,7 @@ const climateSelect = document.getElementById('climate');
 const clothingStyleSelect = document.getElementById('clothingStyle');
 const bodyTypeSelect = document.getElementById('bodyType');
 const budgetSelect = document.getElementById('budget');
+const detectFaceCheckbox = document.getElementById('detectFace');
 
 const outfitType = document.getElementById('outfitType');
 const confidenceFill = document.getElementById('confidenceFill');
@@ -46,6 +48,10 @@ const occasionSubtypes = {
     ]
 };
 
+// ============================================
+// OCCASION SUBTYPE HANDLING
+// ============================================
+
 occasionSelect.addEventListener('change', () => {
     const occasion = occasionSelect.value;
     const subtypes = occasionSubtypes[occasion];
@@ -66,6 +72,10 @@ occasionSelect.addEventListener('change', () => {
 
 occasionSelect.dispatchEvent(new Event('change'));
 
+// ============================================
+// IMAGE UPLOAD HANDLING
+// ============================================
+
 uploadArea.addEventListener('click', () => {
     imageInput.click();
 });
@@ -73,7 +83,7 @@ uploadArea.addEventListener('click', () => {
 uploadArea.addEventListener('dragover', (e) => {
     e.preventDefault();
     uploadArea.style.borderColor = 'var(--color-secondary)';
-    uploadArea.style.background = 'var(--color-background)';
+    uploadArea.style.background = 'rgba(139, 115, 85, 0.1)';
 });
 
 uploadArea.addEventListener('dragleave', () => {
@@ -88,6 +98,8 @@ uploadArea.addEventListener('drop', (e) => {
     const file = e.dataTransfer.files[0];
     if (file && file.type.startsWith('image/')) {
         handleImageUpload(file);
+    } else {
+        alert('Please drop an image file');
     }
 });
 
@@ -115,6 +127,7 @@ function handleImageUpload(file) {
             let width = img.width;
             let height = img.height;
 
+            // Scale image proportionally
             if (width > height) {
                 if (width > maxWidth) {
                     height *= maxWidth / width;
@@ -143,6 +156,10 @@ function handleImageUpload(file) {
     reader.readAsDataURL(file);
 }
 
+// ============================================
+// PREDICTION & RESULTS
+// ============================================
+
 generateBtn.addEventListener('click', async () => {
     if (!uploadedImage) {
         alert('Please upload an image first');
@@ -164,6 +181,7 @@ generateBtn.addEventListener('click', async () => {
         formData.append('clothing_style', clothingStyleSelect.value);
         formData.append('body_type', bodyTypeSelect.value);
         formData.append('budget', budgetSelect.value);
+        formData.append('detect_face', detectFaceCheckbox.checked);
 
         const response = await fetch(API_URL, {
             method: 'POST',
@@ -192,12 +210,15 @@ function displayResults(data) {
     resultsSection.hidden = false;
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
+    // Display detected item type
     outfitType.textContent = data.clothing_type || 'Unknown';
 
+    // Display confidence
     const confidence = Math.round((data.confidence || 0.95) * 100);
     confidenceFill.style.width = `${confidence}%`;
     confidenceText.textContent = `${confidence}%`;
 
+    // Clear previous results
     outfitsContainer.innerHTML = '';
 
     console.log('Number of outfits:', data.outfits ? data.outfits.length : 0);
@@ -219,6 +240,14 @@ function displayResults(data) {
 
             const ratingStars = outfit.average_rating ? '⭐'.repeat(Math.round(outfit.average_rating)) : '';
             const ratingDisplay = outfit.average_rating ? `<div class="outfit-rating">${ratingStars} ${outfit.average_rating.toFixed(1)}</div>` : '';
+
+            const saveBtn = Auth.isLoggedIn() ? 
+                `<button class="btn btn-secondary save-outfit-btn" data-outfit-index="${index}" style="margin-top: 16px; width: 100%;">
+                    ➕ Save to Wardrobe
+                </button>` : 
+                `<button class="btn btn-secondary" style="margin-top: 16px; width: 100%; opacity: 0.6; cursor: not-allowed;" disabled>
+                    🔒 Login to Save
+                </button>`;
 
             card.innerHTML = `
                 <div class="outfit-header">
@@ -245,21 +274,21 @@ function displayResults(data) {
                                 <span class="shopping-item-name">${linkObj.item}</span>
                                 <div class="shopping-buttons">
                                     <a href="${linkObj.links.amazon}" target="_blank" class="btn-shop btn-amazon" rel="noopener noreferrer">
-                                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width: 16px; height: 16px;">
                                             <path d="M14.12 17.09c-2.62 1.93-6.43 2.96-9.71 2.96-4.59 0-8.73-1.7-11.86-4.52-.25-.22-.02-.53.27-.36 3.45 2.01 7.71 3.22 12.12 3.22 2.97 0 6.24-.62 9.25-1.9.45-.19.83.3.4.6zm1.09-1.24c-.34-.43-2.23-.21-3.08-.1-.26.03-.3-.19-.07-.36 1.51-1.06 3.99-.75 4.28-.4.29.36-.08 2.85-1.5 4.04-.22.18-.43.09-.33-.16.32-.8 1.04-2.59.7-3.02z"/>
                                             <path d="M13.52 9.09c0 .74.02 1.36-.35 2.02-.3.54-.78.87-1.31.87-.73 0-1.16-.55-1.16-1.37 0-1.61 1.45-1.91 2.82-1.91v.39zm1.74 4.22c-.11.1-.28.11-.41.04-.58-.48-.68-.7-1-1.16-.95.97-1.63 1.27-2.86 1.27-1.46 0-2.6-.9-2.6-2.71 0-1.41.76-2.37 1.85-2.84 .94-.42 2.25-.49 3.25-.61v-.23c0-.43.03-.94-.22-1.31-.22-.33-.63-.47-.99-.47-.67 0-1.27.35-1.42 1.06-.03.16-.15.31-.31.32l-1.68-.18c-.15-.03-.31-.15-.27-.37.4-2.11 2.31-2.75 4.02-2.75.87 0 2.01.23 2.7.89.87.82.79 1.91.79 3.1v2.81c0 .84.35 1.21.68 1.67.12.16.14.35-.01.47-.37.31-.99.85-1.34 1.16l-.02-.02z"/>
                                         </svg>
                                         Amazon
                                     </a>
                                     <a href="${linkObj.links.flipkart}" target="_blank" class="btn-shop btn-flipkart" rel="noopener noreferrer">
-                                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width: 16px; height: 16px;">
                                             <path d="M3.833 5.333h3.334v13.334H3.833V5.333zm13.334 0H20.5v13.334h-3.333V5.333zM10.5 2h3v20h-3V2z"/>
                                             <path d="M8.5 8.5h7v7h-7v-7z" fill="#FFD700"/>
                                         </svg>
                                         Flipkart
                                     </a>
                                     <a href="${linkObj.links.meesho}" target="_blank" class="btn-shop btn-meesho" rel="noopener noreferrer">
-                                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width: 16px; height: 16px;">
                                             <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
                                             <circle cx="12" cy="13" r="4"/>
                                         </svg>
@@ -273,10 +302,10 @@ function displayResults(data) {
 
                 <div class="outfit-section">
                     <div class="outfit-section-title">
-                        <span>🎨</span> Palette
+                        <span>🎨</span> Color Palette
                     </div>
                     <div class="color-palette">
-                        ${colorsHtml}
+                        ${colorsHtml || '<p>No color data available</p>'}
                     </div>
                 </div>
 
@@ -295,24 +324,91 @@ function displayResults(data) {
                     </div>
                     <p style="color: var(--color-text); font-size: 14px;">${outfit.footwear || 'Not specified'}</p>
                 </div>
+
+                ${saveBtn}
             `;
 
             outfitsContainer.appendChild(card);
             console.log(`Card ${index + 1} appended to container`);
         });
 
+        // Add event listeners to save buttons
+        document.querySelectorAll('.save-outfit-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const index = parseInt(e.target.dataset.outfitIndex);
+                saveOutfitToWardrobe(data.outfits[index]);
+            });
+        });
+
         console.log('Total cards in container:', outfitsContainer.children.length);
     } else {
-        outfitsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">No specific outfits generated. Please try again.</p>';
+        outfitsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">No specific outfits generated. Please try again.</p>';
     }
 
+    // Display style tips
     const styleTipsList = document.getElementById('styleTipsList');
     if (data.style_tips && data.style_tips.length > 0) {
         styleTipsList.innerHTML = data.style_tips.map(tip => `<li>${tip}</li>`).join('');
     } else {
-        styleTipsList.innerHTML = '<li>Keep your look fresh and confident</li><li>Coordinate colors for a cohesive appearance</li>';
+        styleTipsList.innerHTML = `
+            <li>Keep your look fresh and confident</li>
+            <li>Coordinate colors for a cohesive appearance</li>
+            <li>Pay attention to fabric quality and fit</li>
+            <li>Accessorize appropriately for the occasion</li>
+        `;
+    }
+
+    // Display face detection results if available
+    const faceDetectionCard = document.getElementById('faceDetectionCard');
+    if (data.skin_tone) {
+        faceDetectionCard.hidden = false;
+        document.getElementById('skinTone').textContent = data.skin_tone;
+        document.getElementById('colorNote').textContent = `Colors that complement your ${data.skin_tone} skin tone`;
+    } else {
+        faceDetectionCard.hidden = true;
     }
 }
+
+// ============================================
+// WARDROBE INTEGRATION
+// ============================================
+
+async function saveOutfitToWardrobe(outfit) {
+    if (!Auth.isLoggedIn()) {
+        if (confirm('You need to log in to save items to your wardrobe. Go to login page?')) {
+            window.location.href = '/login.html';
+        }
+        return;
+    }
+
+    try {
+        const occasion = document.getElementById('occasion').value;
+        const itemData = {
+            name: outfit.name,
+            category: 'top',
+            colors: outfit.colors || [],
+            occasions: [occasion],
+            season: ['spring', 'summer', 'fall', 'winter'],
+            owned: false,
+            brand: '',
+            shopping_links: outfit.shopping_links && outfit.shopping_links[0] ? outfit.shopping_links[0].links : {}
+        };
+
+        const result = await Auth.addWardrobeItem(itemData);
+        
+        if (result.status === 'success') {
+            alert('✨ Item added to your wardrobe!');
+        } else {
+            alert('Error: ' + (result.message || 'Failed to add item'));
+        }
+    } catch (error) {
+        alert('Error saving to wardrobe: ' + error.message);
+    }
+}
+
+// ============================================
+// COLOR MAPPING
+// ============================================
 
 function getColorCode(colorName) {
     const colorMap = {
@@ -372,6 +468,10 @@ function getColorCode(colorName) {
     return colorMap[colorName] || '#808080';
 }
 
+// ============================================
+// TRY ANOTHER OUTFIT
+// ============================================
+
 tryAnotherBtn.addEventListener('click', () => {
     uploadedImage = null;
     imageInput.value = '';
@@ -381,6 +481,10 @@ tryAnotherBtn.addEventListener('click', () => {
     generateBtn.disabled = true;
     document.getElementById('styler').scrollIntoView({ behavior: 'smooth' });
 });
+
+// ============================================
+// NAVIGATION
+// ============================================
 
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -414,72 +518,72 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// Add this function to handle saving to wardrobe
-async function saveOutfitToWardrobe(outfit) {
-    if (!Auth.isLoggedIn()) {
-        if (confirm('You need to log in to save items to your wardrobe. Go to login page?')) {
-            window.location.href = '/login';
+// ============================================
+// AUTHENTICATION UI INITIALIZATION
+// ============================================
+
+function initAuthUI() {
+    const authNav = document.getElementById('authNav');
+    const userNav = document.getElementById('userNav');
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const userInitial = document.getElementById('userInitial');
+
+    function updateAuthUI() {
+        if (Auth.isLoggedIn()) {
+            const user = Auth.getUser();
+            if (authNav) authNav.hidden = true;
+            if (userNav) userNav.hidden = false;
+            
+            if (user && user.email && userInitial) {
+                userInitial.textContent = user.email.charAt(0).toUpperCase();
+            }
+        } else {
+            if (authNav) authNav.hidden = false;
+            if (userNav) userNav.hidden = true;
+            if (userDropdown) userDropdown.hidden = true;
         }
-        return;
     }
 
-    try {
-        const occasion = document.getElementById('occasion').value;
-        const itemData = {
-            name: outfit.name,
-            category: 'top',
-            colors: outfit.colors || [],
-            occasions: [occasion],
-            season: ['spring', 'summer', 'fall', 'winter'],
-            owned: false,
-            brand: '',
-            shopping_links: outfit.shopping_links?.[0]?.links || {}
-        };
-
-        const result = await Auth.addWardrobeItem(itemData);
-        
-        if (result.status === 'success') {
-            alert('✨ Item added to your wardrobe!');
+    // Toggle dropdown
+    userMenuBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (userDropdown) {
+            userDropdown.hidden = !userDropdown.hidden;
         }
-    } catch (error) {
-        alert('Error saving to wardrobe: ' + error.message);
-    }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (userMenuBtn && !userMenuBtn.contains(e.target) && userDropdown && !userDropdown.contains(e.target)) {
+            userDropdown.hidden = true;
+        }
+    });
+
+    // Logout handler
+    logoutBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (confirm('Are you sure you want to logout?')) {
+            Auth.logout();
+        }
+    });
+
+    // Listen for auth state changes
+    window.addEventListener('authStateChanged', updateAuthUI);
+
+    // Initial UI update
+    updateAuthUI();
 }
 
-// Add save button to outfit cards
-function displayResults(data) {
-    // ... [Keep your existing displayResults code] ...
+// ============================================
+// PAGE INITIALIZATION
+// ============================================
 
-    const outfitsContainer = document.getElementById('outfitsContainer');
-    
-    if (data.outfits && data.outfits.length > 0) {
-        data.outfits.forEach((outfit, index) => {
-            const card = document.createElement('div');
-            card.className = 'outfit-card';
+document.addEventListener('DOMContentLoaded', () => {
+    initAuthUI();
+    console.log('✅ Fashion Stylist App Initialized');
+});
 
-            const saveBtn = Auth.isLoggedIn() ? 
-                `<button class="btn btn-secondary save-outfit-btn" data-outfit-index="${index}">
-                    ➕ Save to Wardrobe
-                 </button>` : '';
-
-            // ... [Your existing outfit card HTML] ...
-            
-            card.innerHTML += saveBtn;
-            
-            outfitsContainer.appendChild(card);
-        });
-
-        // Add event listeners to save buttons
-        document.querySelectorAll('.save-outfit-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const index = parseInt(e.target.dataset.outfitIndex);
-                saveOutfitToWardrobe(data.outfits[index]);
-            });
-        });
-    }
-}
-
-export { initializeStyler: () => {
-    // Your existing initialization code
-} };
-
+// Export for module usage
+export { initAuthUI };
