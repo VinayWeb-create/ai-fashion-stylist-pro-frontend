@@ -2,7 +2,9 @@
 // Global Variables
 // =================================
 let uploadedImage = null;
-const API_URL = 'http://192.168.0.19:5000/predict'; // Update this to your Flask backend URL
+const API_URL =
+  'https://ai-fashion-stylist-pro-production.up.railway.app/predict';
+ // Update this to your Flask backend URL
 
 // =================================
 // DOM Elements
@@ -458,3 +460,4 @@ window.addEventListener('scroll', () => {
         }
     });
 });
+
