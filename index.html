@@ -403,25 +403,9 @@
         </div>
     </footer>
 
-    <!-- CRITICAL FIX: Add type="module" to the script tag -->
+    <!-- ✅ FIXED: Removed the duplicate auth check script that called non-existent initApp() -->
+    <!-- Auth is handled by script.js module -->
     <script type="module" src="script.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-        window.location.replace("/login.html");
-        return;
-    }
-
-    initApp(); // or whatever your dashboard init function is
-});
-
-    </script>
 </body>
 
 </html>
-
-
-
-
