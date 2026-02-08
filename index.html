@@ -772,18 +772,17 @@
                 // Login
                 const result = await Auth.login(email, password);
 
-                if (result.status === 'success') {
+               if (result.status === 'success') {
     showSuccess('Login successful! Redirecting...');
     setTimeout(() => {
         window.location.href = '/dashboard.html';
     }, 800);
+} else {
+    showError(result.message || 'Login failed. Please check your credentials.');
+    setButtonLoading('loginBtn', false);
+    clearMessages();
 }
 
-                } else {
-                    showError(result.message || 'Login failed. Please check your credentials.');
-                    setButtonLoading('loginBtn', false);
-                    clearMessages();
-                }
             } catch (error) {
                 showError(error.message || 'An error occurred. Please try again.');
                 setButtonLoading('loginBtn', false);
