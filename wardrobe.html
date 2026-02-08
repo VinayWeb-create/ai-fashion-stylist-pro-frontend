@@ -511,6 +511,19 @@
             <div id="wardrobeGrid" class="wardrobe-grid" style="display: none;"></div>
         </div>
     </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        window.location.replace("/login.html");
+        return;
+    }
+
+    init();
+});
+
+    </script>
 
     <script type="module">
         const API_BASE = 'https://ai-fashion-stylist-pro-production.up.railway.app';
@@ -529,14 +542,7 @@
             return localStorage.getItem('token');
         }
 
-        function checkAuth() {
-            const token = getToken();
-            if (!token) {
-                window.location.href = '/login.html';
-                return false;
-            }
-            return true;
-        }
+        
 
         async function fetchWardrobe() {
             const token = getToken();
