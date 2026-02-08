@@ -14,11 +14,9 @@
 </head>
 
 <body>
-    <!-- Background Elements -->
     <div class="bg-gradient"></div>
     <div class="bg-pattern"></div>
 
-    <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="logo">
@@ -38,7 +36,6 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="container">
             <div class="hero-content">
@@ -76,7 +73,6 @@
         </div>
     </section>
 
-    <!-- Features Section -->
     <section class="features" id="how-it-works">
         <div class="container">
             <div class="section-header">
@@ -123,7 +119,6 @@
         </div>
     </section>
 
-    <!-- Main Styler Section -->
     <section class="styler" id="styler">
         <div class="container">
             <div class="section-header">
@@ -132,7 +127,6 @@
             </div>
 
             <div class="styler-container">
-                <!-- Upload Section -->
                 <div class="upload-section">
                     <div class="upload-area" id="uploadArea">
                         <input type="file" id="imageInput" accept="image/*" hidden>
@@ -165,8 +159,6 @@
                             <select id="occasion" class="form-select">
                                 <option value="casual">Casual</option>
                                 <option value="formal">Formal</option>
-                                <option value="party">Party</option>
-                                <option value="ethnic">Ethnic</option>
                             </select>
                         </div>
 
@@ -176,6 +168,42 @@
                                 <option value="hot">Hot</option>
                                 <option value="moderate">Moderate</option>
                                 <option value="cold">Cold</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="colorPreferences" class="form-label">Color Preferences (Optional)</label>
+                            <input type="text" id="colorPreferences" class="form-input" placeholder="e.g., Blue, Red, Black (comma-separated)">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="budgetRange" class="form-label">Budget Range (Optional)</label>
+                            <select id="budgetRange" class="form-select">
+                                <option value="">Any Budget</option>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="brandPreferences" class="form-label">Brand Preferences (Optional)</label>
+                            <input type="text" id="brandPreferences" class="form-input" placeholder="e.g., Zara, Nike, H&M (comma-separated)">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="styleTags" class="form-label">Style Tags (Optional)</label>
+                            <input type="text" id="styleTags" class="form-input" placeholder="e.g., casual, elegant, sporty (comma-separated)">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="seasonPreference" class="form-label">Season Preference (Optional)</label>
+                            <select id="seasonPreference" class="form-select">
+                                <option value="">Auto (Current Season)</option>
+                                <option value="spring">Spring</option>
+                                <option value="summer">Summer</option>
+                                <option value="fall">Fall</option>
+                                <option value="winter">Winter</option>
                             </select>
                         </div>
 
@@ -202,13 +230,11 @@
                     </div>
                 </div>
 
-                <!-- Results Section -->
                 <div class="results-section" id="resultsSection" hidden>
                     <div class="results-header">
                         <h3 class="results-title">Your Style Recommendations</h3>
                     </div>
 
-                    <!-- Gemini Analysis Result -->
                     <div class="prediction-card">
                         <div class="prediction-header">
                             <h4 class="prediction-title">Image Analysis</h4>
@@ -233,12 +259,9 @@
                         <p class="section-subtitle">Curated just for you</p>
                     </div>
 
-                    <!-- Dynamic Outfits Container -->
                     <div id="outfitsContainer" class="outfits-container">
-                        <!-- Outfits will be injected here by JS -->
                     </div>
 
-                    <!-- Face Detection Results -->
                     <div class="face-detection-card" id="faceDetectionCard" hidden>
                         <div class="prediction-header">
                             <h4 class="prediction-title">Face Analysis</h4>
@@ -255,7 +278,6 @@
                         </div>
                     </div>
 
-                    <!-- Style Tips -->
                     <div class="style-tips-card">
                         <div class="prediction-header">
                             <h4 class="prediction-title">✨ Style Tips</h4>
@@ -269,7 +291,6 @@
         </div>
     </section>
 
-    <!-- About Section -->
     <section class="about" id="about">
         <div class="container">
             <div class="section-header">
@@ -351,7 +372,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -380,4 +400,3 @@
 </body>
 
 </html>
-
