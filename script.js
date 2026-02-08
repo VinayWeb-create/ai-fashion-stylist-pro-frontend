@@ -4,7 +4,6 @@
 let uploadedImage = null;
 const API_URL =
   'https://ai-fashion-stylist-pro-production.up.railway.app/predict';
- // Update this to your Flask backend URL
 
 // =================================
 // DOM Elements
@@ -22,6 +21,11 @@ const occasionSelect = document.getElementById('occasion');
 const climateSelect = document.getElementById('climate');
 const clothingStyleSelect = document.getElementById('clothingStyle');
 const detectFaceCheckbox = document.getElementById('detectFace');
+const colorPreferencesInput = document.getElementById('colorPreferences');
+const budgetRangeSelect = document.getElementById('budgetRange');
+const brandPreferencesInput = document.getElementById('brandPreferences');
+const styleTagsInput = document.getElementById('styleTags');
+const seasonPreferenceSelect = document.getElementById('seasonPreference');
 
 // Result elements
 const outfitType = document.getElementById('outfitType');
@@ -80,7 +84,6 @@ imageInput.addEventListener('change', (e) => {
 });
 
 function handleImageUpload(file) {
-    // Validate file size (5MB max)
     if (file.size > 5 * 1024 * 1024) {
         alert('File size must be less than 5MB');
         return;
@@ -90,7 +93,6 @@ function handleImageUpload(file) {
     reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
-            // Display image on canvas
             const ctx = imageCanvas.getContext('2d');
             const maxWidth = uploadArea.clientWidth - 80;
             const maxHeight = 400;
@@ -114,17 +116,13 @@ function handleImageUpload(file) {
             imageCanvas.height = height;
             ctx.drawImage(img, 0, 0, width, height);
 
-            // Show canvas, hide placeholder
             uploadPlaceholder.hidden = true;
             imageCanvas.hidden = false;
 
-            // Store image file
             uploadedImage = file;
 
-            // Enable generate button
             generateBtn.disabled = false;
 
-            // Hide results if showing
             resultsSection.hidden = true;
         };
         img.src = e.target.result;
@@ -141,7 +139,6 @@ generateBtn.addEventListener('click', async () => {
         return;
     }
 
-    // Update button state
     const btnText = generateBtn.querySelector('.btn-text');
     const btnLoader = generateBtn.querySelector('.btn-loader');
     btnText.hidden = true;
@@ -149,15 +146,33 @@ generateBtn.addEventListener('click', async () => {
     generateBtn.disabled = true;
 
     try {
-        // Create FormData
         const formData = new FormData();
         formData.append('image', uploadedImage);
         formData.append('occasion', occasionSelect.value);
         formData.append('climate', climateSelect.value);
         formData.append('clothing_style', clothingStyleSelect.value);
         formData.append('detect_face', detectFaceCheckbox.checked ? 'true' : 'false');
+        
+        if (colorPreferencesInput && colorPreferencesInput.value.trim()) {
+            formData.append('color_preferences', colorPreferencesInput.value.trim());
+        }
+        
+        if (budgetRangeSelect && budgetRangeSelect.value) {
+            formData.append('budget_range', budgetRangeSelect.value);
+        }
+        
+        if (brandPreferencesInput && brandPreferencesInput.value.trim()) {
+            formData.append('brand_preferences', brandPreferencesInput.value.trim());
+        }
+        
+        if (styleTagsInput && styleTagsInput.value.trim()) {
+            formData.append('style_tags', styleTagsInput.value.trim());
+        }
+        
+        if (seasonPreferenceSelect && seasonPreferenceSelect.value) {
+            formData.append('season_preference', seasonPreferenceSelect.value);
+        }
 
-        // Make API request
         const response = await fetch(API_URL, {
             method: 'POST',
             body: formData
@@ -169,14 +184,12 @@ generateBtn.addEventListener('click', async () => {
 
         const data = await response.json();
 
-        // Display results (data.prediction contains the predictions)
         displayResults(data.prediction);
 
     } catch (error) {
         console.error('Error:', error);
         alert('Error generating recommendations. Please make sure the backend server is running and try again.');
     } finally {
-        // Reset button state
         btnText.hidden = false;
         btnLoader.hidden = true;
         generateBtn.disabled = false;
@@ -187,49 +200,44 @@ generateBtn.addEventListener('click', async () => {
 // Display Results
 // =================================
 function displayResults(data) {
-    // Show results section
     resultsSection.hidden = false;
 
-    // Scroll to results
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    // Update generic analysis
     outfitType.textContent = data.clothing_type || 'Unknown';
 
-    // Update confidence score
     const confidence = Math.round((data.confidence || 0.95) * 100);
     confidenceFill.style.width = `${confidence}%`;
     confidenceText.textContent = `${confidence}%`;
 
-    // Clear previous outfits
     outfitsContainer.innerHTML = '';
 
-    // Render 3 Outfits
     if (data.outfits && data.outfits.length > 0) {
         data.outfits.forEach((outfit, index) => {
             const card = document.createElement('div');
             card.className = 'outfit-card';
-            card.style.animationDelay = `${index * 0.2}s`; // Staggered animation
-            card.className += ' feature-card'; // Reuse animation class
+            card.style.animationDelay = `${index * 0.2}s`;
+            card.className += ' feature-card';
 
-            // Build items list HTML
             const itemsHtml = outfit.items ? outfit.items.map(item =>
                 `<li class="item-badge">${item}</li>`
             ).join('') : '';
 
-            // Build colors HTML
             const colorsHtml = outfit.colors ? outfit.colors.map(color =>
                 `<div class="color-swatch" style="background-color: ${getColorCode(color)}" title="${color}"></div>`
             ).join('') : '';
 
-            // Build accessories list
             const accessoriesHtml = outfit.accessories ? outfit.accessories.map(acc =>
                 `<li>${acc}</li>`
             ).join('') : '<li>No specific accessories</li>';
 
+            const ratingStars = outfit.average_rating ? '⭐'.repeat(Math.round(outfit.average_rating)) : '';
+            const ratingDisplay = outfit.average_rating ? `<div class="outfit-rating">${ratingStars} ${outfit.average_rating.toFixed(1)}</div>` : '';
+
             card.innerHTML = `
                 <div class="outfit-header">
                     <h4 class="outfit-title">${outfit.name || `Option ${index + 1}`}</h4>
+                    ${ratingDisplay}
                     <p class="outfit-description">${outfit.description || ''}</p>
                 </div>
                 
@@ -287,14 +295,12 @@ function displayResults(data) {
 
             outfitsContainer.appendChild(card);
 
-            // Trigger animation observer for new element
             observer.observe(card);
         });
     } else {
         outfitsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">No specific outfits generated. Please try again.</p>';
     }
 
-    // Display face detection results if available
     if (data.face_detection && data.face_detection.detected) {
         faceDetectionCard.hidden = false;
         skinTone.textContent = data.face_detection.skin_tone || 'Not detected';
@@ -309,7 +315,6 @@ function displayResults(data) {
 // =================================
 function getColorCode(colorName) {
     const colorMap = {
-        // Neutrals
         'Black': '#000000',
         'White': '#FFFFFF',
         'Gray': '#808080',
@@ -319,8 +324,6 @@ function getColorCode(colorName) {
         'Tan': '#D2B48C',
         'Brown': '#8B4513',
         'Camel': '#C19A6B',
-
-        // Blues
         'Navy': '#000080',
         'Navy Blue': '#000080',
         'Royal Blue': '#4169E1',
@@ -329,8 +332,6 @@ function getColorCode(colorName) {
         'Turquoise': '#40E0D0',
         'Teal': '#008080',
         'Cobalt': '#0047AB',
-
-        // Reds & Pinks
         'Red': '#FF0000',
         'Burgundy': '#800020',
         'Maroon': '#800000',
@@ -339,8 +340,6 @@ function getColorCode(colorName) {
         'Hot Pink': '#FF69B4',
         'Rose': '#FF007F',
         'Coral': '#FF7F50',
-
-        // Greens
         'Green': '#008000',
         'Olive': '#808000',
         'Emerald': '#50C878',
@@ -348,27 +347,24 @@ function getColorCode(colorName) {
         'Sage': '#BCB88A',
         'Mint': '#98FF98',
         'Lime': '#00FF00',
-
-        // Yellows & Oranges
         'Yellow': '#FFFF00',
         'Gold': '#FFD700',
         'Mustard': '#FFDB58',
         'Orange': '#FFA500',
         'Burnt Orange': '#CC5500',
         'Peach': '#FFE5B4',
-
-        // Purples
         'Purple': '#800080',
         'Lavender': '#E6E6FA',
         'Plum': '#DDA0DD',
         'Violet': '#8F00FF',
         'Mauve': '#E0B0FF',
-
-        // Others
         'Silver': '#C0C0C0',
         'Champagne': '#F7E7CE',
         'Blush': '#DE5D83',
-        'Charcoal': '#36454F'
+        'Charcoal': '#36454F',
+        'Floral Print': '#FFB6C1',
+        'Denim Blue': '#1560BD',
+        'Khaki': '#C3B091'
     };
 
     return colorMap[colorName] || '#808080';
@@ -378,7 +374,6 @@ function getColorCode(colorName) {
 // Try Another Button
 // =================================
 tryAnotherBtn.addEventListener('click', () => {
-    // Reset everything
     uploadedImage = null;
     imageInput.value = '';
     uploadPlaceholder.hidden = false;
@@ -387,7 +382,6 @@ tryAnotherBtn.addEventListener('click', () => {
     generateBtn.disabled = true;
     faceDetectionCard.hidden = true;
 
-    // Scroll to upload section
     document.getElementById('styler').scrollIntoView({ behavior: 'smooth' });
 });
 
@@ -404,7 +398,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 block: 'start'
             });
 
-            // Update active nav link
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
             });
@@ -430,7 +423,6 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe all feature cards
 document.querySelectorAll('.feature-card, .recommendation-card, .tech-item').forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(30px)';
@@ -460,4 +452,3 @@ window.addEventListener('scroll', () => {
         }
     });
 });
-
