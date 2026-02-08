@@ -791,16 +791,32 @@ body {
 }
 
 .btn-shop {
-    padding: 6px 12px;
-    border-radius: var(--border-radius-sm);
-    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 6px;
     text-decoration: none;
     font-size: 12px;
     font-weight: 600;
     color: white;
-    transition: var(--transition-fast);
+    transition: all 0.2s ease;
     flex: 1;
-    min-width: 70px;
+    min-width: 90px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-shop:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    filter: brightness(1.05);
+}
+
+.btn-shop svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
 }
 
 .btn-amazon {
@@ -813,11 +829,6 @@ body {
 
 .btn-meesho {
     background: #f43397;
-}
-
-.btn-shop:hover {
-    opacity: 0.9;
-    transform: scale(1.02);
 }
 
 .outfit-rating {
