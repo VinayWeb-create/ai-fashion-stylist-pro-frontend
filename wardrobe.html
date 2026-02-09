@@ -512,9 +512,6 @@
         </div>
     </main>
 
-    <!-- ✅ FIXED: Removed the duplicate auth check and init() call -->
-    <!-- Auth and initialization are handled by the module script below -->
-
     <script type="module">
         const API_BASE = 'https://ai-fashion-stylist-pro-production.up.railway.app';
         
@@ -532,9 +529,8 @@
             return typeof token === 'string' && token.trim() !== '' && token !== 'undefined' && token !== 'null';
         }
 
+        // ✅ FIXED: Corrected function to check both token keys properly
         function getToken() {
-            return localStorage.getItem('token');
-            // Primary auth keys used by auth.js
             const primaryToken = localStorage.getItem('fashion_token');
             const legacyToken = localStorage.getItem('token');
 
@@ -546,9 +542,11 @@
         function checkAuth() {
             const token = getToken();
             if (!token) {
+                console.log('No valid token found, redirecting to login');
                 window.location.replace('/login.html');
                 return false;
             }
+            console.log('Token found:', token.substring(0, 10) + '...');
             return true;
         }
 
@@ -562,6 +560,7 @@
             });
 
             if (response.status === 401) {
+                console.error('Unauthorized access');
                 localStorage.removeItem('fashion_token');
                 localStorage.removeItem('fashion_user');
                 localStorage.removeItem('token');
@@ -681,7 +680,8 @@
         }
 
         async function init() {
-            // ✅ Auth check happens here - only once
+            console.log('🚀 Initializing wardrobe page');
+            
             if (!checkAuth()) return;
 
             const loadingSection = document.getElementById('loadingSection');
@@ -692,7 +692,9 @@
             const filtersSection = document.getElementById('filtersSection');
 
             try {
+                console.log('Fetching wardrobe data...');
                 const data = await fetchWardrobe();
+                console.log('Wardrobe data received:', data);
                 
                 loadingSection.style.display = 'none';
 
@@ -716,7 +718,7 @@
             }
         }
 
-         document.getElementById('logoutBtn').addEventListener('click', () => {
+        document.getElementById('logoutBtn').addEventListener('click', () => {
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('fashion_token');
                 localStorage.removeItem('fashion_user');
@@ -726,7 +728,6 @@
             }
         });
 
-        // ✅ Initialize the page - single call
         init();
     </script>
 </body>
