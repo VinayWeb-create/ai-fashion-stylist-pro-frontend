@@ -556,7 +556,10 @@
             });
 
             if (response.status === 401) {
+                localStorage.removeItem('fashion_token');
+                localStorage.removeItem('fashion_user');
                 localStorage.removeItem('token');
+                localStorage.removeItem('user');
                 window.location.replace('/login.html');
                 throw new Error('Unauthorized');
             }
@@ -707,8 +710,10 @@
             }
         }
 
-        document.getElementById('logoutBtn').addEventListener('click', () => {
+         document.getElementById('logoutBtn').addEventListener('click', () => {
             if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('fashion_token');
+                localStorage.removeItem('fashion_user');
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
                 window.location.replace('/login.html');
