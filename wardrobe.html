@@ -528,13 +528,19 @@
             'Orange': '#FFA500', 'Purple': '#800080', 'Brown': '#8B4513', 'Gold': '#FFD700'
         };
 
+        function isValidToken(token) {
+            return typeof token === 'string' && token.trim() !== '' && token !== 'undefined' && token !== 'null';
+        }
+
         function getToken() {
             return localStorage.getItem('token');
             // Primary auth keys used by auth.js
-            const token = localStorage.getItem('fashion_token');
+            const primaryToken = localStorage.getItem('fashion_token');
+            const legacyToken = localStorage.getItem('token');
 
-            // Fallback for legacy key used in older builds
-            return token || localStorage.getItem('token');
+            if (isValidToken(primaryToken)) return primaryToken;
+            if (isValidToken(legacyToken)) return legacyToken;
+            return null;
         }
 
         function checkAuth() {
