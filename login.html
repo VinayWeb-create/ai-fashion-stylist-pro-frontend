@@ -7,77 +7,37 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --color-primary: #d4af37;
-            --color-secondary: #8b7355;
-            --color-background: #0f0f1e;
-            --color-surface: #1a1a2e;
-            --color-border: #2d2d44;
-            --color-text: #e0e0e0;
-            --color-text-muted: #999;
-            --color-success: #2ed573;
-            --color-error: #ff6b7a;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: linear-gradient(135deg, var(--color-background) 0%, #1a0f2e 100%);
-            color: var(--color-text);
+        /* Login page specific styles extending style.css */
+        .auth-page {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            line-height: 1.6;
+            padding: var(--spacing-lg) var(--spacing-md);
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(139, 115, 85, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .container {
+        .auth-container {
             width: 100%;
-            max-width: 480px;
+            max-width: 520px;
             position: relative;
             z-index: 1;
         }
 
         .auth-card {
-            background: var(--color-surface);
-            border: 1px solid var(--color-border);
-            border-radius: 16px;
-            padding: 48px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4),
-                        0 0 1px rgba(212, 175, 55, 0.2);
-            backdrop-filter: blur(10px);
-            animation: slideUp 0.5s ease-out;
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius-xl);
+            padding: var(--spacing-3xl) var(--spacing-xl);
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.6s ease-out;
         }
 
         @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(40px);
             }
             to {
                 opacity: 1;
@@ -85,52 +45,42 @@
             }
         }
 
-        .logo {
+        .auth-logo {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: var(--spacing-xl);
         }
 
-        .logo-svg {
-            width: 64px;
-            height: 64px;
-            display: inline-block;
-            margin-bottom: 12px;
+        .auth-logo svg {
+            width: 72px;
+            height: 72px;
+            margin-bottom: var(--spacing-md);
+            color: var(--accent-color);
         }
 
-        .logo-svg circle,
-        .logo-svg path {
-            stroke: var(--color-primary);
-            transition: stroke 0.3s ease;
-        }
-
-        .logo-svg:hover circle,
-        .logo-svg:hover path {
-            stroke: #f0d98f;
-        }
-
-        .logo-text {
-            font-family: 'Playfair Display', serif;
-            font-size: 24px;
+        .auth-logo-text {
+            font-family: var(--font-heading);
+            font-size: 1.75rem;
             font-weight: 700;
-            color: var(--color-primary);
-            letter-spacing: 0.5px;
+            color: var(--primary-color);
+            letter-spacing: -0.5px;
         }
 
         .message {
-            padding: 14px 16px;
-            border-radius: 8px;
-            margin-bottom: 24px;
-            font-size: 13px;
+            padding: 16px 20px;
+            border-radius: var(--border-radius-md);
+            margin-bottom: var(--spacing-lg);
+            font-size: 14px;
             font-weight: 500;
             display: none;
-            animation: slideDown 0.3s ease-out;
+            animation: slideDown 0.4s ease-out;
             border-left: 4px solid;
+            line-height: 1.5;
         }
 
         @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(-15px);
             }
             to {
                 opacity: 1;
@@ -143,53 +93,54 @@
         }
 
         .error-message {
-            background: rgba(255, 107, 122, 0.1);
-            border-left-color: var(--color-error);
-            color: var(--color-error);
+            background: #fff5f5;
+            border-left-color: #e74c3c;
+            color: #c0392b;
         }
 
         .success-message {
-            background: rgba(46, 213, 115, 0.1);
-            border-left-color: var(--color-success);
-            color: var(--color-success);
+            background: #f0fdf4;
+            border-left-color: #27ae60;
+            color: #1e8449;
         }
 
         .tabs {
             display: flex;
             gap: 0;
-            margin-bottom: 32px;
-            border-bottom: 2px solid var(--color-border);
-            background: rgba(45, 45, 68, 0.3);
-            border-radius: 8px;
-            padding: 4px;
+            margin-bottom: var(--spacing-xl);
+            background: var(--bg-lighter);
+            border-radius: var(--border-radius-md);
+            padding: 6px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
         }
 
         .tab-btn {
             flex: 1;
-            padding: 12px 16px;
+            padding: 14px 20px;
             background: transparent;
             border: none;
-            color: var(--color-text-muted);
+            color: var(--text-secondary);
             cursor: pointer;
             font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            border-radius: 6px;
-            position: relative;
+            font-size: 15px;
+            transition: all var(--transition-normal);
+            border-radius: var(--border-radius-sm);
+            font-family: var(--font-body);
         }
 
         .tab-btn:hover {
-            color: var(--color-text);
+            color: var(--primary-color);
         }
 
         .tab-btn.active {
-            color: var(--color-primary);
-            background: rgba(212, 175, 55, 0.1);
+            color: var(--primary-color);
+            background: white;
+            box-shadow: var(--shadow-sm);
         }
 
         .tab-content {
             display: none;
-            animation: fadeIn 0.4s ease-in;
+            animation: fadeIn 0.5s ease-in;
         }
 
         .tab-content.active {
@@ -199,7 +150,7 @@
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(15px);
             }
             to {
                 opacity: 1;
@@ -208,32 +159,42 @@
         }
 
         .tab-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 28px;
+            font-family: var(--font-heading);
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 8px;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+            text-align: center;
         }
 
         .tab-subtitle {
-            color: var(--color-text-muted);
-            font-size: 14px;
-            margin-bottom: 28px;
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: var(--spacing-xl);
+            text-align: center;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
         }
 
         .form-group {
-            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
         }
 
         .form-group:last-of-type {
-            margin-bottom: 24px;
+            margin-bottom: 0;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 8px;
             font-size: 13px;
             font-weight: 600;
-            color: var(--color-text);
+            color: var(--primary-color);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -241,118 +202,97 @@
         .form-input,
         .form-select {
             width: 100%;
-            padding: 12px 16px;
-            background: rgba(15, 15, 30, 0.8);
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            color: var(--color-text);
-            font-size: 14px;
-            font-family: 'Outfit', sans-serif;
-            transition: all 0.3s ease;
+            padding: 14px 18px;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: var(--font-body);
+            transition: all var(--transition-normal);
         }
 
         .form-input:focus,
         .form-select:focus {
             outline: none;
-            border-color: var(--color-primary);
-            background: rgba(21, 21, 48, 0.9);
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
         }
 
         .form-input::placeholder {
-            color: var(--color-text-muted);
-        }
-
-        .form-select {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 8px center;
-            background-size: 20px;
-            padding-right: 36px;
+            color: var(--text-light);
         }
 
         .form-hint {
             display: block;
-            color: var(--color-text-muted);
-            font-size: 12px;
+            color: var(--text-light);
+            font-size: 13px;
             margin-top: 6px;
+            line-height: 1.4;
         }
 
-        .btn {
+        .btn-auth {
             width: 100%;
-            padding: 13px 16px;
+            padding: 16px 24px;
             border: none;
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: var(--border-radius-md);
+            font-size: 15px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--transition-normal);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             letter-spacing: 0.5px;
             text-transform: uppercase;
             position: relative;
             overflow: hidden;
+            margin-top: var(--spacing-md);
         }
 
-        .btn::before {
+        .btn-auth::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            transition: left 0.3s ease;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left var(--transition-normal);
         }
 
-        .btn:hover::before {
+        .btn-auth:hover::before {
             left: 100%;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--color-primary) 0%, #f0d98f 100%);
-            color: #1a1a2e;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        .btn-auth-primary {
+            background: var(--gradient-accent);
+            color: white;
+            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4);
         }
 
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+        .btn-auth-primary:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.5);
         }
 
-        .btn-primary:active:not(:disabled) {
-            transform: translateY(0);
+        .btn-auth-primary:active:not(:disabled) {
+            transform: translateY(-1px);
         }
 
-        .btn-primary:disabled {
+        .btn-auth-primary:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
         }
 
-        .btn-secondary {
-            background: transparent;
-            color: var(--color-primary);
-            border: 1px solid var(--color-primary);
-            margin-top: 12px;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(212, 175, 55, 0.1);
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);
-        }
-
         .spinner {
             display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(26, 26, 46, 0.3);
-            border-top-color: #1a1a2e;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
@@ -363,254 +303,255 @@
 
         .auth-link {
             text-align: center;
-            margin-top: 24px;
+            margin-top: var(--spacing-lg);
             font-size: 14px;
-            color: var(--color-text-muted);
+            color: var(--text-secondary);
         }
 
         .auth-link a {
-            color: var(--color-primary);
+            color: var(--accent-color);
             text-decoration: none;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--transition-fast);
             position: relative;
         }
 
-        .auth-link a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -2px;
-            left: 0;
-            background: var(--color-primary);
-            transition: width 0.3s ease;
-        }
-
         .auth-link a:hover {
-            color: #f0d98f;
-        }
-
-        .auth-link a:hover::after {
-            width: 100%;
+            color: var(--accent-dark);
         }
 
         .back-link {
             text-align: center;
-            margin-top: 28px;
-            padding-top: 28px;
-            border-top: 1px solid var(--color-border);
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-xl);
+            border-top: 1px solid var(--border-light);
         }
 
         .back-link a {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            color: var(--color-text-muted);
+            gap: 8px;
+            color: var(--text-secondary);
             text-decoration: none;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all var(--transition-normal);
         }
 
         .back-link a:hover {
-            color: var(--color-primary);
-            transform: translateX(-4px);
+            color: var(--primary-color);
+            transform: translateX(-6px);
         }
 
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Responsive */
         @media (max-width: 600px) {
             .auth-card {
-                padding: 32px 24px;
-                border-radius: 12px;
+                padding: var(--spacing-xl) var(--spacing-lg);
+                border-radius: var(--border-radius-lg);
             }
 
-            .logo {
-                margin-bottom: 24px;
+            .auth-logo {
+                margin-bottom: var(--spacing-lg);
             }
 
-            .logo-svg {
-                width: 56px;
-                height: 56px;
+            .auth-logo svg {
+                width: 64px;
+                height: 64px;
             }
 
-            .logo-text {
-                font-size: 22px;
+            .auth-logo-text {
+                font-size: 1.5rem;
             }
 
             .tab-title {
-                font-size: 24px;
+                font-size: 1.75rem;
             }
 
-            .btn {
-                padding: 12px 14px;
-                font-size: 13px;
+            .btn-auth {
+                padding: 14px 20px;
+                font-size: 14px;
             }
 
             .form-input,
             .form-select {
-                padding: 11px 14px;
-                font-size: 16px;
+                padding: 12px 16px;
+                font-size: 16px; /* Prevent zoom on iOS */
             }
         }
 
         @media (max-width: 400px) {
             .auth-card {
-                padding: 24px 20px;
+                padding: var(--spacing-lg) var(--spacing-md);
             }
 
-            .container {
-                padding: 16px;
+            .auth-page {
+                padding: var(--spacing-md);
             }
 
             .tab-title {
-                font-size: 22px;
+                font-size: 1.5rem;
             }
 
-            .logo-svg {
-                width: 48px;
-                height: 48px;
+            .auth-logo svg {
+                width: 56px;
+                height: 56px;
             }
 
-            .logo-text {
-                font-size: 20px;
+            .auth-logo-text {
+                font-size: 1.375rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="auth-card">
-            <div class="logo">
-                <svg class="logo-svg" viewBox="0 0 40 40" fill="none">
-                    <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2" />
-                    <path d="M15 12L25 12L28 20L25 28L15 28L12 20L15 12Z" stroke="currentColor" stroke-width="2" fill="none" />
-                </svg>
-                <div class="logo-text">Fashion Stylist Pro</div>
-            </div>
+    <div class="bg-gradient"></div>
+    <div class="bg-pattern"></div>
 
-            <div id="errorMessage" class="message error-message"></div>
-            <div id="successMessage" class="message success-message"></div>
+    <div class="auth-page">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-logo">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2" />
+                        <path d="M15 12L25 12L28 20L25 28L15 28L12 20L15 12Z" stroke="currentColor" stroke-width="2" fill="none" />
+                    </svg>
+                    <div class="auth-logo-text">Fashion Stylist Pro</div>
+                </div>
 
-            <div class="tabs">
-                <button class="tab-btn active" data-tab="login">Login</button>
-                <button class="tab-btn" data-tab="register">Sign Up</button>
-            </div>
+                <div id="errorMessage" class="message error-message"></div>
+                <div id="successMessage" class="message success-message"></div>
 
-            <div id="login-tab" class="tab-content active">
-                <h2 class="tab-title">Welcome Back</h2>
-                <p class="tab-subtitle">Enter your credentials to continue</p>
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="login">Login</button>
+                    <button class="tab-btn" data-tab="register">Sign Up</button>
+                </div>
 
-                <form id="loginForm" novalidate>
-                    <div class="form-group">
-                        <label class="form-label">Email Address</label>
-                        <input 
-                            type="email" 
-                            id="loginEmail" 
-                            class="form-input" 
-                            placeholder="your@email.com" 
-                            required
-                            autocomplete="email"
-                        >
-                    </div>
+                <div id="login-tab" class="tab-content active">
+                    <h2 class="tab-title">Welcome Back</h2>
+                    <p class="tab-subtitle">Enter your credentials to continue</p>
 
-                    <div class="form-group">
-                        <label class="form-label">Password</label>
-                        <input 
-                            type="password" 
-                            id="loginPassword" 
-                            class="form-input" 
-                            placeholder="••••••••" 
-                            required
-                            autocomplete="current-password"
-                        >
-                    </div>
+                    <form id="loginForm" class="auth-form" novalidate>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input 
+                                type="email" 
+                                id="loginEmail" 
+                                class="form-input" 
+                                placeholder="your@email.com" 
+                                required
+                                autocomplete="email"
+                            >
+                        </div>
 
-                    <button type="submit" class="btn btn-primary" id="loginBtn">
-                        <span id="loginBtnText">Sign In</span>
-                        <span id="loginSpinner" class="spinner" style="display: none;"></span>
-                    </button>
-                </form>
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input 
+                                type="password" 
+                                id="loginPassword" 
+                                class="form-input" 
+                                placeholder="••••••••" 
+                                required
+                                autocomplete="current-password"
+                            >
+                        </div>
 
-                <p class="auth-link">
-                    Don't have an account? <a onclick="switchTab('register')">Create one</a>
-                </p>
-            </div>
+                        <button type="submit" class="btn-auth btn-auth-primary" id="loginBtn">
+                            <span id="loginBtnText">Sign In</span>
+                            <span id="loginSpinner" class="spinner" style="display: none;"></span>
+                        </button>
+                    </form>
 
-            <div id="register-tab" class="tab-content">
-                <h2 class="tab-title">Create Account</h2>
-                <p class="tab-subtitle">Join our fashion community</p>
+                    <p class="auth-link">
+                        Don't have an account? <a onclick="switchTab('register')">Create one</a>
+                    </p>
+                </div>
 
-                <form id="registerForm" novalidate>
-                    <div class="form-group">
-                        <label class="form-label">Email Address</label>
-                        <input 
-                            type="email" 
-                            id="registerEmail" 
-                            class="form-input" 
-                            placeholder="your@email.com" 
-                            required
-                            autocomplete="email"
-                        >
-                    </div>
+                <div id="register-tab" class="tab-content">
+                    <h2 class="tab-title">Create Account</h2>
+                    <p class="tab-subtitle">Join our fashion community</p>
 
-                    <div class="form-group">
-                        <label class="form-label">Password</label>
-                        <input 
-                            type="password" 
-                            id="registerPassword" 
-                            class="form-input" 
-                            placeholder="••••••••" 
-                            minlength="6" 
-                            required
-                            autocomplete="new-password"
-                        >
-                        <span class="form-hint">🔒 At least 6 characters</span>
-                    </div>
+                    <form id="registerForm" class="auth-form" novalidate>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input 
+                                type="email" 
+                                id="registerEmail" 
+                                class="form-input" 
+                                placeholder="your@email.com" 
+                                required
+                                autocomplete="email"
+                            >
+                        </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Body Type</label>
-                        <select id="bodyType" class="form-select" required>
-                            <option value="">Select your body type...</option>
-                            <option value="slim">Slim</option>
-                            <option value="regular" selected>Regular</option>
-                            <option value="relaxed">Relaxed</option>
-                        </select>
-                    </div>
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input 
+                                type="password" 
+                                id="registerPassword" 
+                                class="form-input" 
+                                placeholder="••••••••" 
+                                minlength="6" 
+                                required
+                                autocomplete="new-password"
+                            >
+                            <span class="form-hint">🔒 At least 6 characters</span>
+                        </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Lifestyle</label>
-                        <select id="lifestyle" class="form-select" required>
-                            <option value="">Select your lifestyle...</option>
-                            <option value="student">Student</option>
-                            <option value="office">Office Professional</option>
-                            <option value="mixed" selected>Mixed</option>
-                        </select>
-                    </div>
+                        <div class="form-group">
+                            <label class="form-label">Body Type</label>
+                            <select id="bodyType" class="form-select" required>
+                                <option value="">Select your body type...</option>
+                                <option value="slim">Slim</option>
+                                <option value="regular" selected>Regular</option>
+                                <option value="relaxed">Relaxed</option>
+                            </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Budget Preference</label>
-                        <select id="budget" class="form-select" required>
-                            <option value="">Select your budget...</option>
-                            <option value="low">Budget (₹0-1000)</option>
-                            <option value="medium" selected>Medium (₹1000-2500)</option>
-                            <option value="high">Premium (₹2500+)</option>
-                        </select>
-                    </div>
+                        <div class="form-group">
+                            <label class="form-label">Lifestyle</label>
+                            <select id="lifestyle" class="form-select" required>
+                                <option value="">Select your lifestyle...</option>
+                                <option value="student">Student</option>
+                                <option value="office">Office Professional</option>
+                                <option value="mixed" selected>Mixed</option>
+                            </select>
+                        </div>
 
-                    <button type="submit" class="btn btn-primary" id="registerBtn">
-                        <span id="registerBtnText">Create Account</span>
-                        <span id="registerSpinner" class="spinner" style="display: none;"></span>
-                    </button>
-                </form>
+                        <div class="form-group">
+                            <label class="form-label">Budget Preference</label>
+                            <select id="budget" class="form-select" required>
+                                <option value="">Select your budget...</option>
+                                <option value="low">Budget (₹0-1000)</option>
+                                <option value="medium" selected>Medium (₹1000-2500)</option>
+                                <option value="high">Premium (₹2500+)</option>
+                            </select>
+                        </div>
 
-                <p class="auth-link">
-                    Already have an account? <a onclick="switchTab('login')">Sign in</a>
-                </p>
-            </div>
+                        <button type="submit" class="btn-auth btn-auth-primary" id="registerBtn">
+                            <span id="registerBtnText">Create Account</span>
+                            <span id="registerSpinner" class="spinner" style="display: none;"></span>
+                        </button>
+                    </form>
 
-            <div class="back-link">
-                <a href="/index.html">← Back to Home</a>
+                    <p class="auth-link">
+                        Already have an account? <a onclick="switchTab('login')">Sign in</a>
+                    </p>
+                </div>
+
+                <div class="back-link">
+                    <a href="/index.html">
+                        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                            <path d="M8 4L2 10L8 16M2 10H18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Back to Home
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -671,7 +612,7 @@
             }
         }
 
-        // ✅ LOGIN: Redirect only happens AFTER successful authentication
+        // Login Form Handler
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessages();
@@ -714,7 +655,7 @@
             }
         });
 
-        // ✅ REGISTER: Redirect only happens AFTER successful registration
+        // Register Form Handler
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessages();
@@ -774,8 +715,7 @@
             }
         });
 
-        // ✅ NO automatic redirect on page load - this is a public page
-
+        // Tab Button Event Listeners
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const tabName = btn.dataset.tab;
@@ -783,6 +723,7 @@
             });
         });
 
+        // Keyboard Shortcut: Ctrl+Tab to switch tabs
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.key === 'Tab') {
                 e.preventDefault();
