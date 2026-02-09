@@ -530,6 +530,11 @@
 
         function getToken() {
             return localStorage.getItem('token');
+            // Primary auth keys used by auth.js
+            const token = localStorage.getItem('fashion_token');
+
+            // Fallback for legacy key used in older builds
+            return token || localStorage.getItem('token');
         }
 
         function checkAuth() {
