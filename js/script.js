@@ -40,7 +40,7 @@ import * as Auth from './auth.js';
 
 let uploadedImage = null;
 let currentPrediction = null;
-const API_URL = 'https://ai-fashion-stylist-pro-production.up.railway.app/predict';
+const API_URL = 'https://ai-fashion-stylist-pro-production.up.railway.app/';
 
 // ============================================================================
 // DOM ELEMENT REFERENCES
