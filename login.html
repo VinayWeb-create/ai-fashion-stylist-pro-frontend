@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login & Register - AI Fashion Stylist Pro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
     <style>
-        /* Login page specific styles extending style.css */
+        /* Login page specific styles extending main.css */
         .auth-page {
             min-height: 100vh;
             display: flex;
@@ -39,6 +42,7 @@
                 opacity: 0;
                 transform: translateY(40px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -82,6 +86,7 @@
                 opacity: 0;
                 transform: translateY(-15px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -152,6 +157,7 @@
                 opacity: 0;
                 transform: translateY(15px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -298,7 +304,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .auth-link {
@@ -381,7 +389,8 @@
             .form-input,
             .form-select {
                 padding: 12px 16px;
-                font-size: 16px; /* Prevent zoom on iOS */
+                font-size: 16px;
+                /* Prevent zoom on iOS */
             }
         }
 
@@ -409,6 +418,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="bg-gradient"></div>
     <div class="bg-pattern"></div>
@@ -419,7 +429,8 @@
                 <div class="auth-logo">
                     <svg viewBox="0 0 40 40" fill="none">
                         <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2" />
-                        <path d="M15 12L25 12L28 20L25 28L15 28L12 20L15 12Z" stroke="currentColor" stroke-width="2" fill="none" />
+                        <path d="M15 12L25 12L28 20L25 28L15 28L12 20L15 12Z" stroke="currentColor" stroke-width="2"
+                            fill="none" />
                     </svg>
                     <div class="auth-logo-text">Fashion Stylist Pro</div>
                 </div>
@@ -439,26 +450,14 @@
                     <form id="loginForm" class="auth-form" novalidate>
                         <div class="form-group">
                             <label class="form-label">Email Address</label>
-                            <input 
-                                type="email" 
-                                id="loginEmail" 
-                                class="form-input" 
-                                placeholder="your@email.com" 
-                                required
-                                autocomplete="email"
-                            >
+                            <input type="email" id="loginEmail" class="form-input" placeholder="your@email.com" required
+                                autocomplete="email">
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Password</label>
-                            <input 
-                                type="password" 
-                                id="loginPassword" 
-                                class="form-input" 
-                                placeholder="••••••••" 
-                                required
-                                autocomplete="current-password"
-                            >
+                            <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required
+                                autocomplete="current-password">
                         </div>
 
                         <button type="submit" class="btn-auth btn-auth-primary" id="loginBtn">
@@ -479,27 +478,14 @@
                     <form id="registerForm" class="auth-form" novalidate>
                         <div class="form-group">
                             <label class="form-label">Email Address</label>
-                            <input 
-                                type="email" 
-                                id="registerEmail" 
-                                class="form-input" 
-                                placeholder="your@email.com" 
-                                required
-                                autocomplete="email"
-                            >
+                            <input type="email" id="registerEmail" class="form-input" placeholder="your@email.com"
+                                required autocomplete="email">
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Password</label>
-                            <input 
-                                type="password" 
-                                id="registerPassword" 
-                                class="form-input" 
-                                placeholder="••••••••" 
-                                minlength="6" 
-                                required
-                                autocomplete="new-password"
-                            >
+                            <input type="password" id="registerPassword" class="form-input" placeholder="••••••••"
+                                minlength="6" required autocomplete="new-password">
                             <span class="form-hint">🔒 At least 6 characters</span>
                         </div>
 
@@ -547,7 +533,8 @@
                 <div class="back-link">
                     <a href="/index.html">
                         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor">
-                            <path d="M8 4L2 10L8 16M2 10H18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8 4L2 10L8 16M2 10H18" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
                         </svg>
                         Back to Home
                     </a>
@@ -557,9 +544,9 @@
     </div>
 
     <script type="module">
-        import * as Auth from './auth.js';
+        import * as Auth from './js/auth.js';
 
-        window.switchTab = function(tabName) {
+        window.switchTab = function (tabName) {
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -736,4 +723,5 @@
         console.log('✅ Login page loaded');
     </script>
 </body>
+
 </html>
