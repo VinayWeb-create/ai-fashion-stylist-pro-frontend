@@ -1,552 +1,377 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- SEO Meta Tags -->
-    <title>AI Fashion Stylist Pro - Your Personal AI Style Expert</title>
-    <meta name="description" content="Transform your style with AI-powered fashion recommendations. Get personalized outfit suggestions, wardrobe management, and expert styling advice.">
-    <meta name="keywords" content="AI fashion, style assistant, outfit recommendations, wardrobe management, fashion AI">
-    <meta name="author" content="AI Fashion Stylist Pro">
-    
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="AI Fashion Stylist Pro - Your Personal AI Style Expert">
-    <meta property="og:description" content="Transform your style with AI-powered fashion recommendations">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://ai-fashion-stylist-pro-frontend.vercel.app/">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👗</text></svg>">
-    
-    <!-- Fonts -->
+    <title>AI Fashion Stylist Pro - Smart Style Recommendations</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Crimson+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/animations.css">
-     <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body data-theme="light">
-    <!-- Toast Notifications Container -->
-    <div id="toast-container" class="toast-container"></div>
 
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-pattern"></div>
+
+    <header class="header">
         <div class="container">
-            <div class="navbar-content">
-                <a href="#home" class="logo">
-                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                        <path d="M20 2L28 10L36 8L34 16L38 20L34 24L36 32L28 30L20 38L12 30L4 32L6 24L2 20L6 16L4 8L12 10L20 2Z" stroke="currentColor" stroke-width="2" fill="none"/>
-                    </svg>
-                    <span>StyleAI Pro</span>
-                </a>
-                
-                <div class="nav-links">
-                    <a href="#features" class="nav-link">Features</a>
-                    <a href="#how-it-works" class="nav-link">How It Works</a>
-                    <a href="#pricing" class="nav-link">Pricing</a>
-                    <a href="#testimonials" class="nav-link">Testimonials</a>
-                </div>
-
-                <div class="nav-actions">
-                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-                        <svg class="sun-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="2"/>
-                            <path d="M10 2V4M10 16V18M18 10H16M4 10H2M15.5 15.5L14 14M6 6L4.5 4.5M15.5 4.5L14 6M6 14L4.5 15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                        <svg class="moon-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M18 11C17 15 13 18 9 18C5 18 2 15 2 11C2 7 5 3 9 3C9 5 10 7 12 8C14 9 16 10 18 11Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <button class="btn btn-secondary" onclick="window.location.href='/login.html'">Login</button>
-                    <button class="btn btn-primary" onclick="scrollToSection('styler')">Try Now</button>
-                    <button class="mobile-menu-toggle" id="mobile-menu-toggle">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                </div>
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2" />
+                    <path d="M15 12L25 12L28 20L25 28L15 28L12 20L15 12Z" stroke="currentColor" stroke-width="2"
+                        fill="none" />
+                </svg>
+                <span class="logo-text">Fashion Stylist Pro</span>
             </div>
+            <nav class="nav">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#styler" class="nav-link">Try Now</a>
+                <a href="#about" class="nav-link">About</a>
+                
+                <!-- Auth Navigation -->
+                <div id="authNav">
+                    <a href="/login.html" class="nav-link">Login</a>
+                </div>
+                
+                <!-- User Navigation (hidden by default) -->
+                <div id="userNav" class="user-nav" hidden>
+                    <button class="user-menu-btn" id="userMenuBtn">
+                        <div class="user-avatar">
+                            <span id="userInitial">U</span>
+                        </div>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown" hidden>
+                        <a href="/index.html" class="dropdown-item">Dashboard</a>
+                        <a href="/wardrobe.html" class="dropdown-item">My Wardrobe</a>
+                        <button id="logoutBtn" class="dropdown-item logout-btn">Logout</button>
+                    </div>
+                </div>
+            </nav>
         </div>
-    </nav>
+    </header>
 
-    <!-- Hero Section -->
     <section class="hero" id="home">
-        <div class="hero-bg">
-            <div class="gradient-orb orb-1"></div>
-            <div class="gradient-orb orb-2"></div>
-            <div class="gradient-orb orb-3"></div>
-        </div>
-        
         <div class="container">
             <div class="hero-content">
-                <div class="hero-badge" data-animate="fade-up">
-                    <span class="badge-dot"></span>
-                    <span>Powered by Advanced AI</span>
-                </div>
-                
-                <h1 class="hero-title" data-animate="fade-up" data-delay="100">
-                    Your Personal
-                    <span class="gradient-text">AI Style Expert</span>
+                <h1 class="hero-title">
+                    <span class="title-line">Your Personal</span>
+                    <span class="title-line accent">AI Style Assistant</span>
                 </h1>
-                
-                <p class="hero-subtitle" data-animate="fade-up" data-delay="200">
-                    Transform your wardrobe with intelligent fashion recommendations. 
-                    Upload any outfit and get instant AI-powered styling suggestions 
-                    tailored to your body type, occasion, and budget.
-                </p>
-                
-                <div class="hero-actions" data-animate="fade-up" data-delay="300">
-                    <button class="btn btn-primary btn-lg" onclick="scrollToSection('styler')">
-                        <span>Start Styling</span>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <button class="btn btn-secondary btn-lg" onclick="scrollToSection('how-it-works')">
-                        <span>See How It Works</span>
-                    </button>
-                </div>
-                
-                <div class="hero-stats" data-animate="fade-up" data-delay="400">
-                    <div class="stat-item">
-                        <div class="stat-number">50K+</div>
-                        <div class="stat-label">Outfits Styled</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">98%</div>
-                        <div class="stat-label">Satisfaction Rate</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">24/7</div>
-                        <div class="stat-label">AI Available</div>
-                    </div>
+                <p class="hero-subtitle">Upload your outfit and get intelligent fashion recommendations tailored to any
+                    occasion and climate</p>
+                <div class="hero-buttons">
+                    <a href="#styler" class="btn btn-primary">Start Styling</a>
+                    <a href="#how-it-works" class="btn btn-secondary">Learn More</a>
                 </div>
             </div>
-            
-            <div class="hero-visual" data-animate="fade-left" data-delay="200">
-                <div class="fashion-grid">
-                    <div class="fashion-card card-1">
-                        <div class="card-image-placeholder"></div>
-                        <div class="card-overlay">Casual</div>
+            <div class="hero-visual">
+                <div class="visual-card card-1">
+                    <img src="model-dress.webp" alt="Model wearing dress" class="card-image">
+                    <div class="card-overlay">
+                        <span class="card-label">Dress</span>
                     </div>
-                    <div class="fashion-card card-2">
-                        <div class="card-image-placeholder"></div>
-                        <div class="card-overlay">Formal</div>
+                </div>
+                <div class="visual-card card-2">
+                    <img src="model-shirt.webp" alt="Model wearing shirt" class="card-image">
+                    <div class="card-overlay">
+                        <span class="card-label">Shirt</span>
                     </div>
-                    <div class="fashion-card card-3">
-                        <div class="card-image-placeholder"></div>
-                        <div class="card-overlay">Party</div>
+                </div>
+                <div class="visual-card card-3">
+                    <img src="model-pants.webp" alt="Model wearing pants" class="card-image">
+                    <div class="card-overlay">
+                        <span class="card-label">Pants</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="features" id="features">
+    <section class="features" id="how-it-works">
         <div class="container">
             <div class="section-header">
-                <span class="section-badge">Why Choose Us</span>
-                <h2 class="section-title">Powerful Features for Perfect Style</h2>
-                <p class="section-subtitle">Everything you need to elevate your fashion game</p>
-            </div>
-            
-            <div class="features-grid">
-                <div class="feature-card" data-animate="fade-up">
-                    <div class="feature-icon">
-                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                            <path d="M16 4L20 12L28 14L22 20L24 28L16 24L8 28L10 20L4 14L12 12L16 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="feature-title">AI-Powered Analysis</h3>
-                    <p class="feature-description">Advanced computer vision analyzes your outfit and provides instant, intelligent recommendations</p>
-                </div>
-
-                <div class="feature-card" data-animate="fade-up" data-delay="100">
-                    <div class="feature-icon">
-                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                            <rect x="6" y="6" width="20" height="20" rx="4" stroke="currentColor" stroke-width="2"/>
-                            <path d="M6 14H26M14 6V26" stroke="currentColor" stroke-width="2"/>
-                        </svg>
-                    </div>
-                    <h3 class="feature-title">Body Type Matching</h3>
-                    <p class="feature-description">Get personalized suggestions based on your unique body type and proportions</p>
-                </div>
-
-                <div class="feature-card" data-animate="fade-up" data-delay="200">
-                    <div class="feature-icon">
-                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                            <circle cx="16" cy="12" r="6" stroke="currentColor" stroke-width="2"/>
-                            <path d="M8 28C8 22 11 20 16 20C21 20 24 22 24 28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="feature-title">Occasion-Based</h3>
-                    <p class="feature-description">Perfect recommendations for any event - casual, office, party, or formal</p>
-                </div>
-
-                <div class="feature-card" data-animate="fade-up" data-delay="300">
-                    <div class="feature-icon">
-                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                            <path d="M16 4V16M16 16L24 8M16 16L8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M4 24H28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="feature-title">Smart Wardrobe</h3>
-                    <p class="feature-description">Upload and manage your entire wardrobe for automated outfit combinations</p>
-                </div>
-
-                <div class="feature-card" data-animate="fade-up" data-delay="400">
-                    <div class="feature-icon">
-                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                            <rect x="4" y="4" width="24" height="24" rx="4" stroke="currentColor" stroke-width="2"/>
-                            <path d="M12 16L15 19L20 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="feature-title">Budget-Friendly</h3>
-                    <p class="feature-description">Filter recommendations by budget to find perfect styles within your price range</p>
-                </div>
-
-                <div class="feature-card" data-animate="fade-up" data-delay="500">
-                    <div class="feature-icon">
-                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                            <path d="M16 4C16 4 12 8 12 12C12 14 13.5 16 16 16C18.5 16 20 14 20 12C20 8 16 4 16 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                            <path d="M16 16V28M12 24H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="feature-title">Color Harmony</h3>
-                    <p class="feature-description">AI-powered color matching ensures your outfits always look perfectly coordinated</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works Section -->
-    <section class="how-it-works" id="how-it-works">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-badge">Simple Process</span>
                 <h2 class="section-title">How It Works</h2>
-                <p class="section-subtitle">Get styled in three easy steps</p>
+                <p class="section-subtitle">Advanced AI technology meets fashion expertise</p>
             </div>
-
-            <div class="steps-container">
-                <div class="step" data-animate="fade-right">
-                    <div class="step-number">01</div>
-                    <div class="step-content">
-                        <h3>Upload Your Outfit</h3>
-                        <p>Take a photo or upload an image of your clothing item. Our AI works best with clear, well-lit photos.</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <rect x="12" y="8" width="24" height="32" rx="2" stroke="currentColor" stroke-width="2" />
+                            <path d="M18 16H30M18 22H30M18 28H26" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" />
+                        </svg>
                     </div>
-                    <div class="step-visual">
-                        <div class="visual-placeholder">
-                            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                                <rect x="8" y="16" width="48" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
-                                <circle cx="22" cy="28" r="4" stroke="currentColor" stroke-width="2"/>
-                                <path d="M8 40L20 28L32 40M32 32L44 20L56 32V44" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                    </div>
+                    <h3 class="feature-title">1. Upload Your Outfit</h3>
+                    <p class="feature-description">Simply upload a clear image of your clothing item. Our system works
+                        best with well-lit, single garment photos.</p>
                 </div>
-
-                <div class="step" data-animate="fade-left">
-                    <div class="step-number">02</div>
-                    <div class="step-content">
-                        <h3>Set Your Preferences</h3>
-                        <p>Choose your occasion, body type, budget, and climate. The AI personalizes recommendations just for you.</p>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="14" stroke="currentColor" stroke-width="2" />
+                            <path d="M24 10V24L32 28" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        </svg>
                     </div>
-                    <div class="step-visual">
-                        <div class="visual-placeholder">
-                            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                                <rect x="12" y="12" width="40" height="40" rx="4" stroke="currentColor" stroke-width="2"/>
-                                <path d="M12 24H52M24 12V52" stroke="currentColor" stroke-width="2"/>
-                                <circle cx="32" cy="36" r="8" stroke="currentColor" stroke-width="2"/>
-                            </svg>
-                        </div>
-                    </div>
+                    <h3 class="feature-title">2. Select Context</h3>
+                    <p class="feature-description">Choose your occasion, climate, body type, and budget for personalized
+                        suggestions.</p>
                 </div>
-
-                <div class="step" data-animate="fade-right">
-                    <div class="step-number">03</div>
-                    <div class="step-content">
-                        <h3>Get AI Recommendations</h3>
-                        <p>Receive ranked outfit suggestions with shopping links, styling tips, and confidence scores instantly.</p>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <path d="M8 24H20M28 24H40M24 8V40" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" />
+                            <circle cx="24" cy="24" r="6" stroke="currentColor" stroke-width="2" />
+                        </svg>
                     </div>
-                    <div class="step-visual">
-                        <div class="visual-placeholder">
-                            <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                                <path d="M32 8L38 20L52 22L42 32L44 46L32 40L20 46L22 32L12 22L26 20L32 8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                    </div>
+                    <h3 class="feature-title">3. Get AI Recommendations</h3>
+                    <p class="feature-description">Receive ranked style suggestions with shopping links and grooming
+                        tips.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- AI Styler Section -->
     <section class="styler" id="styler">
         <div class="container">
             <div class="section-header">
-                <span class="section-badge">Try It Now</span>
-                <h2 class="section-title">AI Style Assistant</h2>
-                <p class="section-subtitle">Upload your outfit and get instant AI recommendations</p>
+                <h2 class="section-title">Try AI Stylist Now</h2>
+                <p class="section-subtitle">Upload an outfit and discover your perfect style</p>
             </div>
 
             <div class="styler-container">
-                <!-- Upload & Form Section -->
-                <div class="styler-input">
-                    <div class="upload-zone" id="upload-zone">
-                        <input type="file" id="image-input" accept="image/*" hidden>
-                        <div class="upload-placeholder" id="upload-placeholder">
+                <div class="upload-section">
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="imageInput" accept="image/*" hidden>
+                        <div class="upload-placeholder" id="uploadPlaceholder">
                             <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                                <rect x="8" y="16" width="48" height="36" rx="4" stroke="currentColor" stroke-width="2"/>
-                                <circle cx="22" cy="28" r="4" stroke="currentColor" stroke-width="2"/>
-                                <path d="M8 42L20 30L32 42M32 34L44 22L56 34V48" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <rect x="8" y="16" width="48" height="36" rx="4" stroke="currentColor"
+                                    stroke-width="2" />
+                                <circle cx="22" cy="28" r="4" stroke="currentColor" stroke-width="2" />
+                                <path d="M8 42L20 30L32 42M32 34L44 22L56 34V52" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
-                            <h3>Drop your outfit image here</h3>
-                            <p>or click to browse</p>
-                            <span class="file-types">Supports: JPG, PNG, WEBP (Max 10MB)</span>
+                            <p class="upload-text">Click to upload or drag and drop</p>
+                            <p class="upload-hint">PNG, JPG or JPEG (Max 5MB)</p>
                         </div>
-                        <canvas id="image-canvas" class="image-canvas" hidden></canvas>
-                        <button class="remove-image-btn" id="remove-image" hidden>
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </button>
+                        <canvas id="imageCanvas" class="image-canvas" hidden></canvas>
                     </div>
 
                     <div class="form-section">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Body Type</label>
-                                <select id="body-type" class="form-select">
-                                    <option value="regular">Regular</option>
-                                    <option value="rectangle">Rectangle</option>
-                                    <option value="pear">Pear</option>
-                                    <option value="apple">Apple</option>
-                                    <option value="hourglass">Hourglass</option>
-                                    <option value="inverted-triangle">Inverted Triangle</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Occasion</label>
-                                <select id="occasion" class="form-select">
-                                    <option value="casual">Casual</option>
-                                    <option value="office">Office/Work</option>
-                                    <option value="formal">Formal/Event</option>
-                                    <option value="party">Party/Night Out</option>
-                                    <option value="wedding">Wedding</option>
-                                    <option value="travel">Travel</option>
-                                    <option value="date">Date Night</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Budget Range</label>
-                                <select id="budget" class="form-select">
-                                    <option value="low">Budget (Under $50)</option>
-                                    <option value="medium" selected>Medium ($50-$150)</option>
-                                    <option value="high">Premium ($150+)</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Climate</label>
-                                <select id="climate" class="form-select">
-                                    <option value="hot">Hot & Sunny</option>
-                                    <option value="moderate" selected>Moderate</option>
-                                    <option value="cold">Cold & Rainy</option>
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label for="clothingStyle" class="form-label">Clothing Style</label>
+                            <select id="clothingStyle" class="form-select">
+                                <option value="unisex">Unisex/Any</option>
+                                <option value="womens">Women's</option>
+                                <option value="mens">Men's</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
-                            <label>Gender Style</label>
-                            <div class="radio-group">
-                                <label class="radio-label">
-                                    <input type="radio" name="gender" value="mens" checked>
-                                    <span>Men's</span>
-                                </label>
-                                <label class="radio-label">
-                                    <input type="radio" name="gender" value="womens">
-                                    <span>Women's</span>
-                                </label>
-                                <label class="radio-label">
-                                    <input type="radio" name="gender" value="unisex">
-                                    <span>Unisex</span>
-                                </label>
-                            </div>
+                            <label for="occasion" class="form-label">Occasion</label>
+                            <select id="occasion" class="form-select">
+                                <option value="casual">Casual</option>
+                                <option value="formal">Formal</option>
+                                <option value="party">Party</option>
+                                <option value="ethnic">Ethnic</option>
+                            </select>
                         </div>
 
-                        <button class="btn btn-primary btn-block" id="analyze-btn" disabled>
-                            <span class="btn-text">Analyze Outfit</span>
+                        <div class="form-group" id="occasionSubtypeGroup" hidden>
+                            <label for="occasionSubtype" class="form-label">Occasion Type</label>
+                            <select id="occasionSubtype" class="form-select">
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="climate" class="form-label">Climate</label>
+                            <select id="climate" class="form-select">
+                                <option value="hot">Hot</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="cold">Cold</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bodyType" class="form-label">Body Type</label>
+                            <select id="bodyType" class="form-select">
+                                <option value="regular">Regular</option>
+                                <option value="slim">Slim</option>
+                                <option value="relaxed">Relaxed</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="budget" class="form-label">Budget</label>
+                            <select id="budget" class="form-select">
+                                <option value="low">Low (Under ₹1000)</option>
+                                <option value="medium" selected>Medium (₹1000-2500)</option>
+                                <option value="high">High (Premium)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="detectFace" class="form-label checkbox-label">
+                                <input type="checkbox" id="detectFace" class="checkbox-input">
+                                <span>Detect Face & Skin Tone</span>
+                            </label>
+                            <p class="form-hint">Enable to get personalized grooming recommendations</p>
+                        </div>
+
+                        <button class="btn btn-generate" id="generateBtn" disabled>
+                            <span class="btn-text">Generate Style Recommendations</span>
                             <span class="btn-loader" hidden>
-                                <span class="spinner"></span>
-                                <span>Analyzing...</span>
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"
+                                        opacity="0.3" />
+                                    <path d="M18 10C18 14.4183 14.4183 18 10 18" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" class="spinner" />
+                                </svg>
+                                Analyzing...
                             </span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Results Section -->
-                <div class="styler-results" id="styler-results" hidden>
-                    <!-- AI Analysis Card -->
-                    <div class="result-card analysis-card">
-                        <div class="card-header">
-                            <h3>AI Analysis</h3>
-                            <div class="confidence-badge">
-                                <span id="confidence-score">95%</span>
-                                <span>Confidence</span>
-                            </div>
+                <div class="results-section" id="resultsSection" hidden>
+                    <div class="results-header">
+                        <h3 class="results-title">Your Style Recommendations</h3>
+                    </div>
+
+                    <div class="prediction-card">
+                        <div class="prediction-header">
+                            <h4 class="prediction-title">Image Analysis</h4>
                         </div>
-                        <div class="card-body">
-                            <div class="analysis-item">
-                                <span class="label">Detected Item:</span>
-                                <span class="value" id="detected-item">Casual Shirt</span>
+                        <div class="prediction-content">
+                            <div class="prediction-item">
+                                <span class="prediction-label">Detected Item:</span>
+                                <span class="prediction-value" id="outfitType">-</span>
                             </div>
-                            <div class="analysis-item">
-                                <span class="label">Why This Works:</span>
-                                <p class="explanation" id="explanation-text">
-                                    This outfit creates a balanced silhouette perfect for your body type. 
-                                    The color palette is harmonious and the style matches your selected occasion perfectly.
-                                </p>
+                            <div class="prediction-item">
+                                <span class="prediction-label">Confidence:</span>
+                                <div class="confidence-bar">
+                                    <div class="confidence-fill" id="confidenceFill"></div>
+                                    <span class="confidence-text" id="confidenceText">0%</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Recommendations -->
-                    <div class="recommendations-header">
-                        <h3>Top Recommendations</h3>
-                        <p>Ranked by relevance and style match</p>
+                    <div class="results-header" style="margin-top: 48px;">
+                        <h3 class="results-title">✨ Top 3 Style Recommendations</h3>
+                        <p class="section-subtitle">Ranked by best match</p>
                     </div>
 
-                    <div class="recommendations-grid" id="recommendations-grid">
-                        <!-- Recommendation cards will be inserted here by JavaScript -->
+                    <div id="outfitsContainer" class="outfits-container"></div>
+
+                    <div class="face-detection-card" id="faceDetectionCard" hidden>
+                        <div class="prediction-header">
+                            <h4 class="prediction-title">Face Analysis</h4>
+                        </div>
+                        <div class="prediction-content">
+                            <div class="prediction-item">
+                                <span class="prediction-label">Skin Tone:</span>
+                                <span class="prediction-value" id="skinTone">-</span>
+                            </div>
+                            <div class="prediction-item">
+                                <span class="prediction-label">Color Note:</span>
+                                <span class="prediction-value" id="colorNote">-</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Action Buttons -->
-                    <div class="result-actions">
-                        <button class="btn btn-secondary" id="save-outfit-btn">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M5 7V17H15V7M3 5H17M8 5V3H12V5M8 10H12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span>Save to Wardrobe</span>
-                        </button>
-                        <button class="btn btn-secondary" id="share-btn">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <circle cx="5" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
-                                <circle cx="15" cy="6" r="3" stroke="currentColor" stroke-width="2"/>
-                                <circle cx="15" cy="14" r="3" stroke="currentColor" stroke-width="2"/>
-                                <path d="M7.5 9L12.5 7M7.5 11L12.5 13" stroke="currentColor" stroke-width="2"/>
-                            </svg>
-                            <span>Share Results</span>
-                        </button>
-                        <button class="btn btn-primary" id="try-another-btn">
-                            <span>Try Another Outfit</span>
-                        </button>
+                    <div class="style-tips-card">
+                        <div class="prediction-header">
+                            <h4 class="prediction-title">✨ Style & Care Routine</h4>
+                        </div>
+                        <ul class="recommendation-list" id="styleTipsList"></ul>
                     </div>
+
+                    <button class="btn btn-secondary" id="tryAnotherBtn">Try Another Outfit</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Testimonials Section -->
-    <section class="testimonials" id="testimonials">
+    <section class="about" id="about">
         <div class="container">
             <div class="section-header">
-                <span class="section-badge">Testimonials</span>
-                <h2 class="section-title">Loved by Fashion Enthusiasts</h2>
-                <p class="section-subtitle">Join thousands of satisfied users</p>
+                <h2 class="section-title">Why Choose AI Fashion Stylist Pro?</h2>
+                <p class="section-subtitle">Your personal AI fashion expert, available anytime, anywhere</p>
             </div>
-
-            <div class="testimonials-grid">
-                <div class="testimonial-card" data-animate="fade-up">
-                    <div class="testimonial-rating">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 1L12.5 6.5L18.5 7.5L14.25 11.5L15.25 17.5L10 14.5L4.75 17.5L5.75 11.5L1.5 7.5L7.5 6.5L10 1Z"/>
-                        </svg>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 1L12.5 6.5L18.5 7.5L14.25 11.5L15.25 17.5L10 14.5L4.75 17.5L5.75 11.5L1.5 7.5L7.5 6.5L10 1Z"/>
-                        </svg>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 1L12.5 6.5L18.5 7.5L14.25 11.5L15.25 17.5L10 14.5L4.75 17.5L5.75 11.5L1.5 7.5L7.5 6.5L10 1Z"/>
-                        </svg>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 1L12.5 6.5L18.5 7.5L14.25 11.5L15.25 17.5L10 14.5L4.75 17.5L5.75 11.5L1.5 7.5L7.5 6.5L10 1Z"/>
-                        </svg>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 1L12.5 6.5L18.5 7.5L14.25 11.5L15.25 17.5L10 14.5L4.75 17.5L5.75 11.5L1.5 7.5L7.5 6.5L10 1Z"/>
-                        </svg>
+            <div class="about-content">
+                <div class="about-features">
+                    <div class="about-feature-item">
+                        <div class="feature-number">01</div>
+                        <h3>Smart Style Recognition</h3>
+                        <p>Our advanced AI instantly identifies your clothing and understands its unique characteristics
+                            to provide perfectly tailored recommendations.</p>
                     </div>
-                    <p class="testimonial-text">"This AI stylist has completely transformed my wardrobe! The recommendations are spot-on and I've received so many compliments."</p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">S</div>
-                        <div class="author-info">
-                            <div class="author-name">Sarah Johnson</div>
-                            <div class="author-title">Marketing Director</div>
-                        </div>
+                    <div class="about-feature-item">
+                        <div class="feature-number">02</div>
+                        <h3>Context-Aware Suggestions</h3>
+                        <p>Whether you're dressing for a casual day out or a formal event, our AI adapts recommendations
+                            based on your occasion and local climate.</p>
                     </div>
-                </div>
-
-                <div class="testimonial-card" data-animate="fade-up" data-delay="100">
-                    <div class="testimonial-rating">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 1L12.5 6.5L18.5 7.5L14.25 11.5L15.25 17.5L10 14.5L4.75 17.5L5.75 11.5L1.5 7.5L7.5 6.5L10 1Z"/>
-                        </svg>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 1L12.5 6.5L18.5 7.5L14.25 11.5L15.25 17.5L10 14.5L4.75 17.5L5.75 11.5L1.5 7.5L7.5 6.5L10 1Z"/>
-                        </svg>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 1L12.5 6.5L18.5 7.5L14.25 11.5L15.25 17.5L10 14.5L4.75 17.5L5.75 11.5L1.5 7.5L7.5 6.5L10 1Z"/>
-                        </svg>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 1L12.5 6.5L18.5 7.5L14.25 11.5L15.25 17.5L10 14.5L4.75 17.5L5.75 11.5L1.5 7.5L7.5 6.5L10 1Z"/>
-                        </svg>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 1L12.5 6.5L18.5 7.5L14.25 11.5L15.25 17.5L10 14.5L4.75 17.5L5.75 11.5L1.5 7.5L7.5 6.5L10 1Z"/>
-                        </svg>
+                    <div class="about-feature-item">
+                        <div class="feature-number">03</div>
+                        <h3>Personalized Colors & Accessories</h3>
+                        <p>Get specific color palette recommendations, accessory suggestions, footwear options, and
+                            styling tips that complement your outfit perfectly.</p>
                     </div>
-                    <p class="testimonial-text">"As someone who struggles with fashion, this app is a lifesaver. The body-type specific suggestions really work!"</p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">M</div>
-                        <div class="author-info">
-                            <div class="author-name">Michael Chen</div>
-                            <div class="author-title">Software Engineer</div>
-                        </div>
+                    <div class="about-feature-item">
+                        <div class="feature-number">04</div>
+                        <h3>Privacy-First Approach</h3>
+                        <p>We focus on your clothing and style, not on biometric data. Your privacy is protected while
+                            you get the expert fashion advice you deserve.</p>
+                    </div>
+                    <div class="about-feature-item">
+                        <div class="feature-number">05</div>
+                        <h3>Professional Grade AI</h3>
+                        <p>Built on cutting-edge deep learning technology and trained on extensive fashion datasets for
+                            accurate, reliable recommendations every time.</p>
+                    </div>
+                    <div class="about-feature-item">
+                        <div class="feature-number">06</div>
+                        <h3>Complete Styling Solutions</h3>
+                        <p>Beyond clothes - get hair style suggestions, makeup recommendations, and fabric/pattern
+                            insights for a complete head-to-toe look.</p>
                     </div>
                 </div>
 
-                <div class="testimonial-card" data-animate="fade-up" data-delay="200">
-                    <div class="testimonial-rating">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 1L12.5 6.5L18.5 7.5L14.25 11.5L15.25 17.5L10 14.5L4.75 17.5L5.75 11.5L1.5 7.5L7.5 6.5L10 1Z"/>
-                        </svg>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 1L12.5 6.5L18.5 7.5L14.25 11.5L15.25 17.5L10 14.5L4.75 17.5L5.75 11.5L1.5 7.5L7.5 6.5L10 1Z"/>
-                        </svg>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 1L12.5 6.5L18.5 7.5L14.25 11.5L15.25 17.5L10 14.5L4.75 17.5L5.75 11.5L1.5 7.5L7.5 6.5L10 1Z"/>
-                        </svg>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 1L12.5 6.5L18.5 7.5L14.25 11.5L15.25 17.5L10 14.5L4.75 17.5L5.75 11.5L1.5 7.5L7.5 6.5L10 1Z"/>
-                        </svg>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 1L12.5 6.5L18.5 7.5L14.25 11.5L15.25 17.5L10 14.5L4.75 17.5L5.75 11.5L1.5 7.5L7.5 6.5L10 1Z"/>
-                        </svg>
+                <div class="about-card">
+                    <div class="about-card-header">
+                        <h3>How It Powers Your Style</h3>
                     </div>
-                    <p class="testimonial-text">"The budget filter is perfect! I can look stylish without breaking the bank. Highly recommend!"</p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">E</div>
-                        <div class="author-info">
-                            <div class="author-name">Emma Davis</div>
-                            <div class="author-title">College Student</div>
+                    <div class="about-card-content">
+                        <div class="about-step">
+                            <div class="step-icon">📸</div>
+                            <div class="step-content">
+                                <h4>Capture or Upload</h4>
+                                <p>Choose any outfit from your wardrobe and upload a clear photo.</p>
+                            </div>
+                        </div>
+                        <div class="step-divider"></div>
+                        <div class="about-step">
+                            <div class="step-icon">⚙️</div>
+                            <div class="step-content">
+                                <h4>AI Analysis</h4>
+                                <p>Our intelligent system analyzes the clothing type, colors, style, and patterns
+                                    instantly.</p>
+                            </div>
+                        </div>
+                        <div class="step-divider"></div>
+                        <div class="about-step">
+                            <div class="step-icon">✨</div>
+                            <div class="step-content">
+                                <h4>Expert Recommendations</h4>
+                                <p>Receive personalized styling suggestions tailored to your needs and preferences.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -554,177 +379,33 @@
         </div>
     </section>
 
-    <!-- FAQ Section -->
-    <section class="faq" id="faq">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-badge">FAQ</span>
-                <h2 class="section-title">Frequently Asked Questions</h2>
-                <p class="section-subtitle">Everything you need to know</p>
-            </div>
-
-            <div class="faq-container">
-                <div class="faq-item" data-animate="fade-up">
-                    <button class="faq-question">
-                        <span>How accurate is the AI fashion analysis?</span>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M5 8L10 13L15 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <p>Our AI model has been trained on millions of fashion images and achieves 95%+ accuracy in clothing detection and style matching. The recommendations are based on fashion principles, color theory, and body type science.</p>
-                    </div>
-                </div>
-
-                <div class="faq-item" data-animate="fade-up" data-delay="50">
-                    <button class="faq-question">
-                        <span>Can I save my outfits for later?</span>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M5 8L10 13L15 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <p>Yes! With a free account, you can save unlimited outfits to your personal wardrobe. Our Smart Wardrobe feature also helps you create new combinations from your saved items.</p>
-                    </div>
-                </div>
-
-                <div class="faq-item" data-animate="fade-up" data-delay="100">
-                    <button class="faq-question">
-                        <span>Is my data secure and private?</span>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M5 8L10 13L15 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <p>Absolutely. All uploaded images are processed securely and are never shared with third parties. We use enterprise-grade encryption and you can delete your data anytime.</p>
-                    </div>
-                </div>
-
-                <div class="faq-item" data-animate="fade-up" data-delay="150">
-                    <button class="faq-question">
-                        <span>Do you provide shopping links?</span>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M5 8L10 13L15 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <p>Yes! Each recommendation includes curated shopping links from popular retailers, filtered by your budget preferences. We partner with Amazon, Flipkart, and other trusted stores.</p>
-                    </div>
-                </div>
-
-                <div class="faq-item" data-animate="fade-up" data-delay="200">
-                    <button class="faq-question">
-                        <span>Can I use this for special occasions?</span>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M5 8L10 13L15 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <div class="faq-answer">
-                        <p>Definitely! We have specialized recommendations for weddings, parties, dates, formal events, and more. Just select your occasion and the AI will tailor suggestions accordingly.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta">
-        <div class="container">
-            <div class="cta-content">
-                <h2 class="cta-title">Ready to Transform Your Style?</h2>
-                <p class="cta-subtitle">Join thousands of fashion-forward individuals using AI styling</p>
-                <div class="cta-actions">
-                    <button class="btn btn-primary btn-lg" onclick="scrollToSection('styler')">
-                        <span>Start Styling Now</span>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <button class="btn btn-secondary btn-lg" onclick="window.location.href='/login.html'">
-                        <span>Create Free Account</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <div class="footer-logo">
-                        <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
-                            <path d="M20 2L28 10L36 8L34 16L38 20L34 24L36 32L28 30L20 38L12 30L4 32L6 24L2 20L6 16L4 8L12 10L20 2Z" stroke="currentColor" stroke-width="2" fill="none"/>
-                        </svg>
-                        <span>StyleAI Pro</span>
-                    </div>
-                    <p class="footer-description">AI-powered fashion recommendations for everyone. Elevate your style with intelligent suggestions.</p>
-                    <div class="social-links">
-                        <a href="#" aria-label="Twitter">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M6.29 18.25C13.84 18.25 17.96 12.09 17.96 6.74C17.96 6.56 17.96 6.38 17.95 6.2C18.76 5.62 19.46 4.9 20 4.07C19.26 4.39 18.48 4.6 17.68 4.69C18.51 4.19 19.14 3.39 19.44 2.45C18.65 2.91 17.79 3.24 16.88 3.42C16.13 2.63 15.07 2.13 13.89 2.13C11.66 2.13 9.86 3.93 9.86 6.15C9.86 6.46 9.89 6.77 9.96 7.06C6.54 6.89 3.52 5.3 1.43 2.84C1.09 3.48 0.9 4.2 0.9 4.97C0.9 6.43 1.64 7.72 2.79 8.48C2.11 8.46 1.47 8.28 0.89 7.99V8.05C0.89 9.98 2.27 11.6 4.11 11.97C3.78 12.06 3.42 12.11 3.06 12.11C2.8 12.11 2.55 12.09 2.31 12.04C2.81 13.64 4.29 14.79 6.05 14.82C4.68 15.88 2.95 16.52 1.08 16.52C0.76 16.52 0.45 16.5 0.14 16.47C1.91 17.59 4 18.25 6.29 18.25Z"/>
-                            </svg>
-                        </a>
-                        <a href="#" aria-label="Instagram">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                <rect x="2" y="2" width="16" height="16" rx="4"/>
-                                <circle cx="10" cy="10" r="3.5" fill="none" stroke="white" stroke-width="1.5"/>
-                                <circle cx="15" cy="5" r="1"/>
-                            </svg>
-                        </a>
-                        <a href="#" aria-label="LinkedIn">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M5 3C3.89543 3 3 3.89543 3 5V15C3 16.1046 3.89543 17 5 17H15C16.1046 17 17 16.1046 17 15V5C17 3.89543 16.1046 3 15 3H5ZM6.5 7.5C6.94747 7.5 7.31026 7.13721 7.31026 6.68974C7.31026 6.24226 6.94747 5.87947 6.5 5.87947C6.05253 5.87947 5.68974 6.24226 5.68974 6.68974C5.68974 7.13721 6.05253 7.5 6.5 7.5ZM7.5 8.5H5.5V14.5H7.5V8.5ZM11 8.5H9V14.5H11V11.25C11 10.0074 12.4926 9.86953 13 11.25V14.5H15V10.75C15 7.99263 12.4926 7.74263 11 9.25V8.5Z"/>
-                            </svg>
-                        </a>
-                    </div>
+                    <h4 class="footer-title">AI Fashion Stylist Pro</h4>
+                    <p class="footer-text">Intelligent fashion recommendations powered by deep learning</p>
                 </div>
-
                 <div class="footer-section">
-                    <h4>Product</h4>
-                    <ul>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#pricing">Pricing</a></li>
-                        <li><a href="#styler">Try Now</a></li>
-                        <li><a href="/wardrobe.html">Wardrobe</a></li>
-                    </ul>
+                    <h4 class="footer-title">Project</h4>
+                    <p class="footer-text">Final Year AI Project</p>
+                    <p class="footer-text">Ethical AI · Privacy-First · Context-Aware</p>
                 </div>
-
                 <div class="footer-section">
-                    <h4>Company</h4>
-                    <ul>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#testimonials">Testimonials</a></li>
-                        <li><a href="#faq">FAQ</a></li>
-                        <li><a href="#">Blog</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <ul>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Cookie Policy</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
+                    <h4 class="footer-title">Technology</h4>
+                    <p class="footer-text">TensorFlow · Keras · Flask</p>
+                    <p class="footer-text">CNN · Computer Vision · Style AI</p>
                 </div>
             </div>
-
             <div class="footer-bottom">
-                <p>&copy; 2024 StyleAI Pro. All rights reserved.</p>
-                <p>Made with ❤️ by AI Fashion Innovators</p>
+                <p>&copy; 2026 AI Fashion Stylist Pro. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="js/utils.js"></script>
-    <script src="js/animations.js"></script>
-    <script src="js/theme.js"></script>
-    <script src="js/styler.js"></script>
-    <script src="js/main.js"></script>
+    <!-- ✅ FIXED: Removed the duplicate auth check script that called non-existent initApp() -->
+    <!-- Auth is handled by script.js module -->
+    <script type="module" src="script.js"></script>
 </body>
-</html>
 
+</html>
