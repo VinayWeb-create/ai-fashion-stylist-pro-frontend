@@ -4,13 +4,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Fashion Stylist Pro - Smart Style Recommendations</title>
+    <title>AI Fashion Stylist Pro - Your Personal AI Style Expert</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Elevate your style with AI Fashion Stylist Pro. Get personalized outfit recommendations based on your photos, body type, budget, and context.">
+    <meta name="keywords" content="AI fashion, style advisor, outfit recommendations, smart wardrobe, personal stylist">
+    <meta name="author" content="AI Fashion Stylist Pro">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ai-fashion-stylist.pro/">
+    <meta property="og:title" content="AI Fashion Stylist Pro - Your Personal AI Style Expert">
+    <meta property="og:description"
+        content="Personalized outfit recommendations based on your photos, body type, budget, and context.">
+    <meta property="og:image" content="assets/images/og-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="AI Fashion Stylist Pro - Your Personal AI Style Expert">
+    <meta property="twitter:description"
+        content="Personalized outfit recommendations based on your photos, body type, budget, and context.">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 
 <body>
@@ -31,12 +51,32 @@
                 <a href="#home" class="nav-link active">Home</a>
                 <a href="#styler" class="nav-link">Try Now</a>
                 <a href="#about" class="nav-link">About</a>
-                
+
+                <!-- Theme Toggle -->
+                <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle Dark Mode">
+                    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" style="display: none;">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+
                 <!-- Auth Navigation -->
                 <div id="authNav">
-                    <a href="/login.html" class="nav-link">Login</a>
+                    <a href="/login.html" class="btn btn-secondary btn-sm" style="padding: 8px 20px;">Login</a>
                 </div>
-                
+
                 <!-- User Navigation (hidden by default) -->
                 <div id="userNav" class="user-nav" hidden>
                     <button class="user-menu-btn" id="userMenuBtn">
@@ -70,19 +110,19 @@
             </div>
             <div class="hero-visual">
                 <div class="visual-card card-1">
-                    <img src="model-dress.webp" alt="Model wearing dress" class="card-image">
+                    <img src="assets/images/model-dress.webp" alt="Model wearing dress" class="card-image">
                     <div class="card-overlay">
                         <span class="card-label">Dress</span>
                     </div>
                 </div>
                 <div class="visual-card card-2">
-                    <img src="model-shirt.webp" alt="Model wearing shirt" class="card-image">
+                    <img src="assets/images/model-shirt.webp" alt="Model wearing shirt" class="card-image">
                     <div class="card-overlay">
                         <span class="card-label">Shirt</span>
                     </div>
                 </div>
                 <div class="visual-card card-3">
-                    <img src="model-pants.webp" alt="Model wearing pants" class="card-image">
+                    <img src="assets/images/model-pants.webp" alt="Model wearing pants" class="card-image">
                     <div class="card-overlay">
                         <span class="card-label">Pants</span>
                     </div>
@@ -298,82 +338,72 @@
         </div>
     </section>
 
-    <section class="about" id="about">
+    <section class="testimonials" id="testimonials">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Why Choose AI Fashion Stylist Pro?</h2>
-                <p class="section-subtitle">Your personal AI fashion expert, available anytime, anywhere</p>
+                <h2 class="section-title">What Our Users Say</h2>
+                <p class="section-subtitle">Join thousands of stylish individuals using Fashion Stylist Pro</p>
             </div>
-            <div class="about-content">
-                <div class="about-features">
-                    <div class="about-feature-item">
-                        <div class="feature-number">01</div>
-                        <h3>Smart Style Recognition</h3>
-                        <p>Our advanced AI instantly identifies your clothing and understands its unique characteristics
-                            to provide perfectly tailored recommendations.</p>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"This AI stylist changed how I look at my wardrobe. It suggested combinations I never thought
+                            of!"</p>
                     </div>
-                    <div class="about-feature-item">
-                        <div class="feature-number">02</div>
-                        <h3>Context-Aware Suggestions</h3>
-                        <p>Whether you're dressing for a casual day out or a formal event, our AI adapts recommendations
-                            based on your occasion and local climate.</p>
-                    </div>
-                    <div class="about-feature-item">
-                        <div class="feature-number">03</div>
-                        <h3>Personalized Colors & Accessories</h3>
-                        <p>Get specific color palette recommendations, accessory suggestions, footwear options, and
-                            styling tips that complement your outfit perfectly.</p>
-                    </div>
-                    <div class="about-feature-item">
-                        <div class="feature-number">04</div>
-                        <h3>Privacy-First Approach</h3>
-                        <p>We focus on your clothing and style, not on biometric data. Your privacy is protected while
-                            you get the expert fashion advice you deserve.</p>
-                    </div>
-                    <div class="about-feature-item">
-                        <div class="feature-number">05</div>
-                        <h3>Professional Grade AI</h3>
-                        <p>Built on cutting-edge deep learning technology and trained on extensive fashion datasets for
-                            accurate, reliable recommendations every time.</p>
-                    </div>
-                    <div class="about-feature-item">
-                        <div class="feature-number">06</div>
-                        <h3>Complete Styling Solutions</h3>
-                        <p>Beyond clothes - get hair style suggestions, makeup recommendations, and fabric/pattern
-                            insights for a complete head-to-toe look.</p>
+                    <div class="testimonial-author">
+                        <div class="author-info">
+                            <span class="author-name">Sarah Jenkins</span>
+                            <span class="author-role">Fashion Blogger</span>
+                        </div>
                     </div>
                 </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"Invaluable for morning office prep. I save so much time and always feel confident."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-info">
+                            <span class="author-name">David Chen</span>
+                            <span class="author-role">Creative Director</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"The body-type specific advice is a game-changer. Finally, an app that understands fit!"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-info">
+                            <span class="author-name">Elena Rodriguez</span>
+                            <span class="author-role">Marketing Executive</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                <div class="about-card">
-                    <div class="about-card-header">
-                        <h3>How It Powers Your Style</h3>
-                    </div>
-                    <div class="about-card-content">
-                        <div class="about-step">
-                            <div class="step-icon">📸</div>
-                            <div class="step-content">
-                                <h4>Capture or Upload</h4>
-                                <p>Choose any outfit from your wardrobe and upload a clear photo.</p>
-                            </div>
-                        </div>
-                        <div class="step-divider"></div>
-                        <div class="about-step">
-                            <div class="step-icon">⚙️</div>
-                            <div class="step-content">
-                                <h4>AI Analysis</h4>
-                                <p>Our intelligent system analyzes the clothing type, colors, style, and patterns
-                                    instantly.</p>
-                            </div>
-                        </div>
-                        <div class="step-divider"></div>
-                        <div class="about-step">
-                            <div class="step-icon">✨</div>
-                            <div class="step-content">
-                                <h4>Expert Recommendations</h4>
-                                <p>Receive personalized styling suggestions tailored to your needs and preferences.</p>
-                            </div>
-                        </div>
-                    </div>
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-subtitle">Everything you need to know about Fashion Stylist Pro</p>
+            </div>
+            <div class="faq-accordion">
+                <div class="faq-item">
+                    <div class="faq-question">How does the AI analyze my photos?</div>
+                    <div class="faq-answer">Our advanced computer vision models identify garment types, colors,
+                        textures, and patterns to create a digital signature of your item.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Is my data private?</div>
+                    <div class="faq-answer">Yes, we prioritize your privacy. We analyze your clothing, not your
+                        identity, and your photos are never shared with third parties.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Can I use it for any occasion?</div>
+                    <div class="faq-answer">Absolutely! From casual beach days to high-stakes interviews, our AI adapts
+                        its logic to match the context you provide.</div>
                 </div>
             </div>
         </div>
@@ -405,7 +435,7 @@
 
     <!-- ✅ FIXED: Removed the duplicate auth check script that called non-existent initApp() -->
     <!-- Auth is handled by script.js module -->
-    <script type="module" src="script.js"></script>
+    <script type="module" src="js/script.js"></script>
 </body>
 
 </html>
