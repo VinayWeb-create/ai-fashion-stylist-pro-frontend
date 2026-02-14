@@ -423,6 +423,327 @@
             font-style: italic;
         }
 
+        /* ============================================ */
+        /* MODAL STYLES FOR VIEW DETAILS */
+        /* ============================================ */
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(40px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: var(--spacing-xl);
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+        }
+
+        .modal-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .modal-title-group {
+            flex: 1;
+        }
+
+        .modal-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 6px;
+            line-height: 1.2;
+        }
+
+        .modal-subtitle {
+            font-size: 14px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-close-btn {
+            background: transparent;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
+            flex-shrink: 0;
+        }
+
+        .modal-close-btn:hover {
+            background: var(--bg-lighter);
+            color: var(--primary-color);
+            transform: rotate(90deg);
+        }
+
+        .modal-close-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .modal-body {
+            padding: var(--spacing-xl);
+        }
+
+        .detail-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-section-title {
+            font-family: var(--font-heading);
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .detail-section-title svg {
+            width: 20px;
+            height: 20px;
+            color: var(--accent-color);
+        }
+
+        .detail-row {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+            padding: var(--spacing-sm) 0;
+        }
+
+        .detail-row-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            min-width: 120px;
+            font-size: 14px;
+        }
+
+        .detail-row-value {
+            flex: 1;
+            color: var(--primary-color);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .colors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: var(--spacing-sm);
+        }
+
+        .color-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .color-item-swatch {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--border-radius-sm);
+            border: 2px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .color-item-name {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            padding: 8px 16px;
+            background: var(--bg-lighter);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .shopping-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--spacing-sm);
+        }
+
+        .shop-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all var(--transition-fast);
+        }
+
+        .shop-link:hover {
+            border-color: var(--accent-color);
+            background: var(--bg-lighter);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .shop-link svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .modal-footer {
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            gap: var(--spacing-sm);
+            background: var(--bg-lighter);
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 14px 24px;
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: 2px solid transparent;
+        }
+
+        .modal-btn-primary {
+            background: var(--gradient-accent);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .modal-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .modal-btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border-color: var(--border-color);
+        }
+
+        .modal-btn-secondary:hover {
+            border-color: var(--accent-color);
+            background: var(--bg-lighter);
+        }
+
+        .modal-btn-danger {
+            background: white;
+            color: #e74c3c;
+            border-color: #fee;
+        }
+
+        .modal-btn-danger:hover {
+            background: #fee;
+            border-color: #e74c3c;
+        }
+
+        .status-badge-large {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-badge-large.owned {
+            background: rgba(46, 213, 115, 0.15);
+            color: #27ae60;
+            border: 2px solid rgba(46, 213, 115, 0.3);
+        }
+
+        .status-badge-large.wishlist {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--accent-color);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .status-badge-large svg {
+            width: 16px;
+            height: 16px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .page-title {
@@ -439,6 +760,32 @@
 
             .filters {
                 justify-content: flex-start;
+            }
+
+            .modal-container {
+                max-height: 95vh;
+            }
+
+            .modal-header,
+            .modal-body,
+            .modal-footer {
+                padding: var(--spacing-md);
+            }
+
+            .modal-title {
+                font-size: 1.5rem;
+            }
+
+            .colors-grid {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            }
+
+            .shopping-links {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-footer {
+                flex-direction: column;
             }
         }
     </style>
@@ -559,6 +906,9 @@
         </section>
     </main>
 
+    <!-- Details Modal -->
+    <div id="detailsModal" style="display: none;"></div>
+
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -594,14 +944,13 @@
             'Beige': '#F5F5DC', 'Cream': '#FFFDD0', 'Navy': '#000080', 'Blue': '#0000FF',
             'Red': '#FF0000', 'Pink': '#FFC0CB', 'Green': '#008000', 'Yellow': '#FFFF00',
             'Orange': '#FFA500', 'Purple': '#800080', 'Brown': '#8B4513', 'Gold': '#FFD700',
-            'Silver': '#C0C0C0', 'Bronze': '#CD7F32', 'Maroon': '#800000'
+            'Silver': '#C0C0C0', 'Bronze': '#CD7F32', 'Maroon': '#800000', 'Burgundy': '#800020'
         };
 
         function isValidToken(token) {
             return typeof token === 'string' && token.trim() !== '' && token !== 'undefined' && token !== 'null';
         }
 
-        // ✅ FIXED: Corrected function to check both token keys properly
         function getToken() {
             const primaryToken = localStorage.getItem('fashion_token');
             const legacyToken = localStorage.getItem('token');
@@ -620,7 +969,6 @@
             }
             console.log('✅ Token found, user authenticated');
 
-            // Update user initial
             const user = JSON.parse(localStorage.getItem('fashion_user') || '{}');
             if (user.email) {
                 document.getElementById('userInitial').textContent = user.email.charAt(0).toUpperCase();
@@ -655,9 +1003,283 @@
             return await response.json();
         }
 
+        async function deleteItem(itemId) {
+            const token = getToken();
+            const response = await fetch(`${API_BASE}/wardrobe/remove/${itemId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to delete item`);
+            }
+
+            return await response.json();
+        }
+
+        async function toggleOwnership(itemId, currentOwned) {
+            const token = getToken();
+            const response = await fetch(`${API_BASE}/wardrobe/mark-owned/${itemId}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ owned: !currentOwned })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to update ownership`);
+            }
+
+            return await response.json();
+        }
+
         function getColorCode(colorName) {
             return colorMap[colorName] || '#808080';
         }
+
+        // ============================================
+        // VIEW DETAILS MODAL
+        // ============================================
+
+        function showDetailsModal(item) {
+            const modal = document.getElementById('detailsModal');
+            
+            const colorsHtml = item.colors && item.colors.length > 0
+                ? item.colors.map(color => `
+                    <div class="color-item">
+                        <div class="color-item-swatch" style="background-color: ${getColorCode(color)}"></div>
+                        <div class="color-item-name">${color}</div>
+                    </div>
+                `).join('')
+                : '<p class="no-data-message">No colors specified</p>';
+
+            const occasionsHtml = item.occasions && item.occasions.length > 0
+                ? item.occasions.map(occ => `<span class="tag">${occ}</span>`).join('')
+                : '<span class="no-data-message">Any occasion</span>';
+
+            const seasonsHtml = item.season && item.season.length > 0
+                ? item.season.map(s => `<span class="tag">${s}</span>`).join('')
+                : '<span class="no-data-message">All seasons</span>';
+
+            const tagsHtml = item.tags && item.tags.length > 0
+                ? item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')
+                : '<span class="no-data-message">No tags</span>';
+
+            const shoppingLinksHtml = item.shopping_links && Object.keys(item.shopping_links).length > 0
+                ? Object.entries(item.shopping_links).map(([store, url]) => `
+                    <a href="${url}" target="_blank" rel="noopener noreferrer" class="shop-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        ${store.charAt(0).toUpperCase() + store.slice(1)}
+                    </a>
+                `).join('')
+                : '<p class="no-data-message">No shopping links available</p>';
+
+            modal.innerHTML = `
+                <div class="modal-overlay" onclick="closeDetailsModal(event)">
+                    <div class="modal-container" onclick="event.stopPropagation()">
+                        <div class="modal-header">
+                            <div class="modal-title-row">
+                                <div class="modal-title-group">
+                                    <h2 class="modal-title">${item.name || 'Untitled Item'}</h2>
+                                    <p class="modal-subtitle">${item.category || 'Other'}</p>
+                                </div>
+                                <button class="modal-close-btn" onclick="closeDetailsModal()">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div>
+                                <span class="status-badge-large ${item.owned ? 'owned' : 'wishlist'}">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        ${item.owned 
+                                            ? '<path d="M20 6L9 17l-5-5"/>' 
+                                            : '<path d="M12 5v14M5 12h14"/>'}
+                                    </svg>
+                                    ${item.owned ? 'Owned' : 'Wishlist'}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="modal-body">
+                            <!-- Colors Section -->
+                            <div class="detail-section">
+                                <h3 class="detail-section-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                                    </svg>
+                                    Colors
+                                </h3>
+                                <div class="colors-grid">${colorsHtml}</div>
+                            </div>
+
+                            <!-- Details Section -->
+                            <div class="detail-section">
+                                <h3 class="detail-section-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                    </svg>
+                                    Details
+                                </h3>
+                                ${item.brand ? `
+                                <div class="detail-row">
+                                    <div class="detail-row-label">Brand:</div>
+                                    <div class="detail-row-value">${item.brand}</div>
+                                </div>
+                                ` : ''}
+                                <div class="detail-row">
+                                    <div class="detail-row-label">Category:</div>
+                                    <div class="detail-row-value">${item.category || 'Other'}</div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-row-label">Added on:</div>
+                                    <div class="detail-row-value">${new Date(item.created_at || Date.now()).toLocaleDateString('en-US', { 
+                                        year: 'numeric', 
+                                        month: 'long', 
+                                        day: 'numeric' 
+                                    })}</div>
+                                </div>
+                            </div>
+
+                            <!-- Occasions Section -->
+                            <div class="detail-section">
+                                <h3 class="detail-section-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                        <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+                                        <line x1="3" y1="10" x2="21" y2="10"/>
+                                    </svg>
+                                    Occasions
+                                </h3>
+                                <div class="tags-container">${occasionsHtml}</div>
+                            </div>
+
+                            <!-- Seasons Section -->
+                            <div class="detail-section">
+                                <h3 class="detail-section-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="5"/>
+                                        <line x1="12" y1="1" x2="12" y2="3"/>
+                                        <line x1="12" y1="21" x2="12" y2="23"/>
+                                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                                        <line x1="1" y1="12" x2="3" y2="12"/>
+                                        <line x1="21" y1="12" x2="23" y2="12"/>
+                                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                                    </svg>
+                                    Seasons
+                                </h3>
+                                <div class="tags-container">${seasonsHtml}</div>
+                            </div>
+
+                            <!-- Tags Section -->
+                            <div class="detail-section">
+                                <h3 class="detail-section-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                                        <line x1="7" y1="7" x2="7.01" y2="7"/>
+                                    </svg>
+                                    Tags
+                                </h3>
+                                <div class="tags-container">${tagsHtml}</div>
+                            </div>
+
+                            <!-- Shopping Links Section -->
+                            ${item.shopping_links && Object.keys(item.shopping_links).length > 0 ? `
+                            <div class="detail-section">
+                                <h3 class="detail-section-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                    </svg>
+                                    Shop Similar Items
+                                </h3>
+                                <div class="shopping-links">${shoppingLinksHtml}</div>
+                            </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="modal-btn modal-btn-primary" onclick="toggleItemOwnership('${item._id}', ${item.owned})">
+                                ${item.owned ? '📦 Move to Wishlist' : '✅ Mark as Owned'}
+                            </button>
+                            <button class="modal-btn modal-btn-secondary" onclick="closeDetailsModal()">
+                                Close
+                            </button>
+                            <button class="modal-btn modal-btn-danger" onclick="confirmDeleteItem('${item._id}')">
+                                🗑️ Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        window.closeDetailsModal = function(event) {
+            if (event && event.target.className !== 'modal-overlay') {
+                return;
+            }
+            const modal = document.getElementById('detailsModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        };
+
+        window.toggleItemOwnership = async function(itemId, currentOwned) {
+            try {
+                await toggleOwnership(itemId, currentOwned);
+                closeDetailsModal();
+                
+                // Reload wardrobe
+                const data = await fetchWardrobe();
+                allItems = data.items;
+                updateStats(allItems);
+                renderWardrobe(allItems);
+                
+                alert(`Item ${currentOwned ? 'moved to wishlist' : 'marked as owned'}!`);
+            } catch (error) {
+                alert('Failed to update item: ' + error.message);
+            }
+        };
+
+        window.confirmDeleteItem = async function(itemId) {
+            if (!confirm('Are you sure you want to remove this item from your wardrobe?')) {
+                return;
+            }
+
+            try {
+                await deleteItem(itemId);
+                closeDetailsModal();
+                
+                // Reload wardrobe
+                const data = await fetchWardrobe();
+                allItems = data.items;
+                updateStats(allItems);
+                renderWardrobe(allItems);
+                
+                alert('Item removed successfully!');
+            } catch (error) {
+                alert('Failed to delete item: ' + error.message);
+            }
+        };
+
+        // ============================================
+        // WARDROBE CARD CREATION
+        // ============================================
 
         function createWardrobeCard(item) {
             const card = document.createElement('div');
@@ -704,10 +1326,30 @@
                     ` : ''}
                 </div>
                 <div class="card-footer">
-                    <button class="btn-small" onclick="alert('View details - Coming soon!')">View Details</button>
-                    <button class="btn-small btn-remove" onclick="alert('Remove item - Coming soon!')">Remove</button>
+                    <button class="btn-small btn-view-details">View Details</button>
+                    <button class="btn-small btn-remove">Remove</button>
                 </div>
             `;
+
+            // Add event listeners
+            card.querySelector('.btn-view-details').addEventListener('click', () => {
+                showDetailsModal(item);
+            });
+
+            card.querySelector('.btn-remove').addEventListener('click', async () => {
+                if (confirm('Are you sure you want to remove this item?')) {
+                    try {
+                        await deleteItem(item._id);
+                        const data = await fetchWardrobe();
+                        allItems = data.items;
+                        updateStats(allItems);
+                        renderWardrobe(allItems);
+                        alert('Item removed successfully!');
+                    } catch (error) {
+                        alert('Failed to remove item: ' + error.message);
+                    }
+                }
+            });
 
             return card;
         }
@@ -821,6 +1463,13 @@
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
                 window.location.replace('/login.html');
+            }
+        });
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeDetailsModal();
             }
         });
 
