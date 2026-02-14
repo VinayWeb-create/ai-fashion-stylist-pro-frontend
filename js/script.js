@@ -40,8 +40,7 @@ import * as Auth from './auth.js';
 
 let uploadedImage = null;
 let currentPrediction = null;
-const API_URL = 'https://ai-fashion-stylist-pro-production.up.railway.app/predict
-    ';
+const API_URL = 'https://ai-fashion-stylist-pro-production.up.railway.app/predict';
 
 // ============================================================================
 // DOM ELEMENT REFERENCES
@@ -394,6 +393,47 @@ function handleImageUpload(file) {
         img.src = e.target.result;
     };
     reader.readAsDataURL(file);
+}
+
+// ============================================================================
+// API COMMUNICATION
+// ============================================================================
+
+async function getAIRecommendation(formData) {
+    try {
+        // Add authentication token if user is logged in
+        const headers = {};
+        if (Auth.isLoggedIn()) {
+            const token = Auth.getToken();
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+        }
+
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            body: formData,
+            headers: headers
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `Server error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.status === 'success' && data.prediction) {
+            displayResults(data.prediction);
+        } else {
+            throw new Error(data.message || 'Failed to generate recommendations');
+        }
+
+    } catch (error) {
+        console.error('API Error:', error);
+        alert(`Error: ${error.message}\n\nPlease check:\n1. Backend server is running\n2. API URL is correct: ${API_URL}\n3. Internet connection is stable`);
+        throw error;
+    }
 }
 
 // ============================================================================
