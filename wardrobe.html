@@ -631,38 +631,181 @@
             font-weight: 500;
         }
 
-        .shopping-links {
+        /* ============================================ */
+        /* ENHANCED SHOPPING SECTION WITH ORDER BUTTON */
+        /* ============================================ */
+
+        .shopping-section {
+            background: linear-gradient(135deg, #f8f9ff 0%, #fff5e6 100%);
+            border: 2px solid var(--accent-color);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-md);
+        }
+
+        .shopping-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .shopping-header svg {
+            width: 24px;
+            height: 24px;
+            color: var(--accent-color);
+        }
+
+        .shopping-header h4 {
+            font-family: var(--font-heading);
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .shopping-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: var(--spacing-sm);
         }
 
-        .shop-link {
+        .shop-card {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            padding: var(--spacing-md);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shop-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-accent);
+            transform: scaleX(0);
+            transition: transform var(--transition-fast);
+        }
+
+        .shop-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .shop-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2);
+        }
+
+        .shop-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .shop-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 15px;
+        }
+
+        .shop-logo svg {
+            width: 20px;
+            height: 20px;
+            color: var(--accent-color);
+        }
+
+        .shop-badge {
+            background: var(--gradient-accent);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .shop-features {
+            list-style: none;
+            padding: 0;
+            margin: var(--spacing-sm) 0;
+        }
+
+        .shop-features li {
+            font-size: 12px;
+            color: var(--text-secondary);
+            padding: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .shop-features li::before {
+            content: '✓';
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .order-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--gradient-accent);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 12px 20px;
-            background: white;
-            border: 2px solid var(--border-color);
-            border-radius: var(--border-radius-sm);
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 14px;
-            transition: all var(--transition-fast);
+            margin-top: var(--spacing-sm);
         }
 
-        .shop-link:hover {
-            border-color: var(--accent-color);
-            background: var(--bg-lighter);
+        .order-btn:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
         }
 
-        .shop-link svg {
-            width: 18px;
-            height: 18px;
+        .order-btn:active {
+            transform: translateY(0);
+        }
+
+        .order-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Price comparison */
+        .price-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(46, 213, 115, 0.1);
+            color: #27ae60;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: var(--spacing-xs);
+        }
+
+        .price-tag svg {
+            width: 14px;
+            height: 14px;
         }
 
         .modal-footer {
@@ -780,7 +923,7 @@
                 grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
             }
 
-            .shopping-links {
+            .shopping-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -807,7 +950,7 @@
             </a>
             <nav class="nav">
                 <a href="/index.html" class="nav-link">Home</a>
-                
+                <a href="/dashboard.html" class="nav-link">Dashboard</a>
                 <a href="/wardrobe.html" class="nav-link active">Wardrobe</a>
 
                 <!-- User Navigation -->
@@ -816,7 +959,7 @@
                         <span id="userInitial">U</span>
                     </button>
                     <div class="user-dropdown" id="userDropdown" hidden>
-                        
+                        <a href="/index.html">Dashboard</a>
                         <a href="/wardrobe.html">My Wardrobe</a>
                         <button id="logoutBtn" class="logout-btn">Logout</button>
                     </div>
@@ -830,7 +973,7 @@
         <section class="wardrobe-hero">
             <div class="container">
                 <h1 class="page-title">My Wardrobe</h1>
-                <p class="page-subtitle">Manage your fashion collection and style preferences</p>
+                <p class="page-subtitle">Manage your fashion collection and shop directly</p>
             </div>
         </section>
 
@@ -947,6 +1090,34 @@
             'Silver': '#C0C0C0', 'Bronze': '#CD7F32', 'Maroon': '#800000', 'Burgundy': '#800020'
         };
 
+        // Shopping site configurations
+        const SHOPPING_SITES = {
+            amazon: {
+                name: 'Amazon',
+                badge: 'Fast Delivery',
+                features: ['Prime eligible', 'Easy returns', 'Trusted seller'],
+                icon: '📦'
+            },
+            flipkart: {
+                name: 'Flipkart',
+                badge: 'Best Prices',
+                features: ['Cash on delivery', 'Plus benefits', 'Great offers'],
+                icon: '🛍️'
+            },
+            meesho: {
+                name: 'Meesho',
+                badge: 'Lowest Price',
+                features: ['Budget friendly', 'Free delivery', 'No minimum order'],
+                icon: '💰'
+            },
+            myntra: {
+                name: 'Myntra',
+                badge: 'Fashion',
+                features: ['Latest trends', 'Style guarantee', 'Easy exchange'],
+                icon: '👗'
+            }
+        };
+
         function isValidToken(token) {
             return typeof token === 'string' && token.trim() !== '' && token !== 'undefined' && token !== 'null';
         }
@@ -1043,7 +1214,36 @@
         }
 
         // ============================================
-        // VIEW DETAILS MODAL
+        // DIRECT ORDER PLACEMENT FUNCTION
+        // ============================================
+
+        window.placeOrder = function(storeName, url, itemName) {
+            const store = SHOPPING_SITES[storeName] || { name: storeName };
+            
+            // Show confirmation
+            const confirmed = confirm(
+                `🛒 Order Item from ${store.name}\n\n` +
+                `Item: ${itemName}\n\n` +
+                `You will be redirected to ${store.name} to complete your purchase.\n\n` +
+                `Click OK to proceed.`
+            );
+
+            if (confirmed) {
+                // Track the order attempt (you can integrate analytics here)
+                console.log(`Order placed via ${storeName} for item: ${itemName}`);
+                
+                // Open in new tab
+                window.open(url, '_blank', 'noopener,noreferrer');
+                
+                // Show success message
+                setTimeout(() => {
+                    alert(`✅ Redirected to ${store.name}!\n\nComplete your purchase on their website.`);
+                }, 500);
+            }
+        };
+
+        // ============================================
+        // VIEW DETAILS MODAL WITH ORDER BUTTONS
         // ============================================
 
         function showDetailsModal(item) {
@@ -1070,17 +1270,47 @@
                 ? item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')
                 : '<span class="no-data-message">No tags</span>';
 
-            const shoppingLinksHtml = item.shopping_links && Object.keys(item.shopping_links).length > 0
-                ? Object.entries(item.shopping_links).map(([store, url]) => `
-                    <a href="${url}" target="_blank" rel="noopener noreferrer" class="shop-link">
+            // Enhanced shopping section with order buttons
+            const shoppingHtml = item.shopping_links && Object.keys(item.shopping_links).length > 0
+                ? `<div class="shopping-section">
+                    <div class="shopping-header">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
                             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                         </svg>
-                        ${store.charAt(0).toUpperCase() + store.slice(1)}
-                    </a>
-                `).join('')
-                : '<p class="no-data-message">No shopping links available</p>';
+                        <h4>🛒 Order This Item Now</h4>
+                    </div>
+                    <div class="shopping-grid">
+                        ${Object.entries(item.shopping_links).map(([store, url]) => {
+                            const siteInfo = SHOPPING_SITES[store] || { name: store, badge: 'Shop', features: [], icon: '🛍️' };
+                            return `
+                                <div class="shop-card">
+                                    <div class="shop-card-header">
+                                        <div class="shop-logo">
+                                            <span>${siteInfo.icon}</span>
+                                            <span>${siteInfo.name}</span>
+                                        </div>
+                                        <span class="shop-badge">${siteInfo.badge}</span>
+                                    </div>
+                                    ${siteInfo.features.length > 0 ? `
+                                        <ul class="shop-features">
+                                            ${siteInfo.features.map(f => `<li>${f}</li>`).join('')}
+                                        </ul>
+                                    ` : ''}
+                                    <button class="order-btn" onclick="placeOrder('${store}', '${url}', '${item.name.replace(/'/g, "\\'")}')">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                            <rect x="2" y="9" width="4" height="12"/>
+                                            <circle cx="4" cy="4" r="2"/>
+                                        </svg>
+                                        Order from ${siteInfo.name}
+                                    </button>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>`
+                : '<p class="no-data-message" style="text-align: center; padding: 20px;">No shopping links available for this item</p>';
 
             modal.innerHTML = `
                 <div class="modal-overlay" onclick="closeDetailsModal(event)">
@@ -1196,19 +1426,17 @@
                                 <div class="tags-container">${tagsHtml}</div>
                             </div>
 
-                            <!-- Shopping Links Section -->
-                            ${item.shopping_links && Object.keys(item.shopping_links).length > 0 ? `
+                            <!-- Shopping Section with Direct Order Buttons -->
                             <div class="detail-section">
                                 <h3 class="detail-section-title">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
                                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                                     </svg>
-                                    Shop Similar Items
+                                    Shop This Item
                                 </h3>
-                                <div class="shopping-links">${shoppingLinksHtml}</div>
+                                ${shoppingHtml}
                             </div>
-                            ` : ''}
                         </div>
 
                         <div class="modal-footer">
@@ -1244,7 +1472,6 @@
                 await toggleOwnership(itemId, currentOwned);
                 closeDetailsModal();
                 
-                // Reload wardrobe
                 const data = await fetchWardrobe();
                 allItems = data.items;
                 updateStats(allItems);
@@ -1265,7 +1492,6 @@
                 await deleteItem(itemId);
                 closeDetailsModal();
                 
-                // Reload wardrobe
                 const data = await fetchWardrobe();
                 allItems = data.items;
                 updateStats(allItems);
@@ -1276,10 +1502,6 @@
                 alert('Failed to delete item: ' + error.message);
             }
         };
-
-        // ============================================
-        // WARDROBE CARD CREATION
-        // ============================================
 
         function createWardrobeCard(item) {
             const card = document.createElement('div');
@@ -1326,12 +1548,11 @@
                     ` : ''}
                 </div>
                 <div class="card-footer">
-                    <button class="btn-small btn-view-details">View Details</button>
+                    <button class="btn-small btn-view-details">🛍️ Shop Now</button>
                     <button class="btn-small btn-remove">Remove</button>
                 </div>
             `;
 
-            // Add event listeners
             card.querySelector('.btn-view-details').addEventListener('click', () => {
                 showDetailsModal(item);
             });
@@ -1440,14 +1661,12 @@
             }
         }
 
-        // User dropdown menu
         document.getElementById('userMenuBtn')?.addEventListener('click', (e) => {
             e.stopPropagation();
             const dropdown = document.getElementById('userDropdown');
             dropdown.hidden = !dropdown.hidden;
         });
 
-        // Close dropdown when clicking outside
         document.addEventListener('click', () => {
             const dropdown = document.getElementById('userDropdown');
             if (dropdown && !dropdown.hidden) {
@@ -1455,7 +1674,6 @@
             }
         });
 
-        // Logout functionality
         document.getElementById('logoutBtn')?.addEventListener('click', () => {
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('fashion_token');
@@ -1466,14 +1684,12 @@
             }
         });
 
-        // Close modal on ESC key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeDetailsModal();
             }
         });
 
-        // Initialize the page
         init();
     </script>
 </body>
