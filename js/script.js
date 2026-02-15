@@ -229,14 +229,6 @@ function initAuthUI() {
     const userMenuBtn = document.getElementById('userMenuBtn');
     const userDropdown = document.getElementById('userDropdown');
     const logoutBtn = document.getElementById('logoutBtn');
-    const userInitial = document.getElementById('userInitial');
-
-    function initAuthUI() {
-    const authNav = document.getElementById('authNav');
-    const userNav = document.getElementById('userNav');
-    const userMenuBtn = document.getElementById('userMenuBtn');
-    const userDropdown = document.getElementById('userDropdown');
-    const logoutBtn = document.getElementById('logoutBtn');
 
     const avatarSmall = document.getElementById("userAvatarImg");
     const avatarLarge = document.getElementById("userAvatarLarge");
@@ -252,11 +244,13 @@ function initAuthUI() {
             if(user){
                 const name = user.name || user.email || "User";
 
+                // show username
                 if(userNameText) userNameText.innerText = name;
 
+                // avatar logic
                 const avatarUrl =
-                user.profile_pic ||
-                `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=111&color=fff`;
+                    user.profile_pic ||
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=111&color=fff&size=128`;
 
                 if(avatarSmall) avatarSmall.src = avatarUrl;
                 if(avatarLarge) avatarLarge.src = avatarUrl;
@@ -269,22 +263,24 @@ function initAuthUI() {
         }
     }
 
-    // dropdown
+    // avatar click dropdown
     userMenuBtn?.addEventListener('click', (e)=>{
         e.stopPropagation();
-        userDropdown.hidden = !userDropdown.hidden;
+        if(userDropdown) userDropdown.hidden = !userDropdown.hidden;
     });
 
-    // outside click close
-    document.addEventListener("click",()=>{
-        if(userDropdown) userDropdown.hidden=true;
+    // click outside close
+    document.addEventListener("click",(e)=>{
+        if(userDropdown && !userMenuBtn.contains(e.target)){
+            userDropdown.hidden=true;
+        }
     });
 
     // logout
     logoutBtn?.addEventListener("click", ()=>{
-        if(confirm("Logout?")){
+        if(confirm("Logout now?")){
             Auth.logout();
-            location.reload();
+            window.location.href="/";
         }
     });
 
