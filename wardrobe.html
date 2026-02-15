@@ -1234,9 +1234,23 @@
             console.log('✅ Token found, user authenticated');
 
             const user = JSON.parse(localStorage.getItem('fashion_user') || '{}');
-            if (user.email) {
-                document.getElementById('userInitial').textContent = user.email.charAt(0).toUpperCase();
-            }
+
+if(user){
+    const name = user.name || user.email || "User";
+
+    const avatarUrl =
+        user.profile_pic ||
+        `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=111&color=fff`;
+
+    const avatarSmall = document.getElementById("userAvatarImg");
+    const avatarLarge = document.getElementById("userAvatarLarge");
+    const userNameText = document.getElementById("userNameText");
+
+    if(avatarSmall) avatarSmall.src = avatarUrl;
+    if(avatarLarge) avatarLarge.src = avatarUrl;
+    if(userNameText) userNameText.innerText = name;
+}
+
 
             return true;
         }
