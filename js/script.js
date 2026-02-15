@@ -1,3 +1,48 @@
+// ===== USER PROFILE SYSTEM =====
+document.addEventListener("DOMContentLoaded", () => {
+
+    const token = localStorage.getItem("token");
+    const username = localStorage.getItem("username");
+    const profilePic = localStorage.getItem("profilePic");
+
+    if(token){
+        document.getElementById("authNav").style.display="none";
+        document.getElementById("userNav").hidden=false;
+
+        // name
+        if(username){
+            document.getElementById("userNameText").innerText=username;
+        }
+
+        // avatar
+        if(profilePic){
+            document.getElementById("userAvatarImg").src = profilePic;
+            document.getElementById("userAvatarLarge").src = profilePic;
+        }else if(username){
+            const avatar=`https://ui-avatars.com/api/?name=${username}&background=111&color=fff`;
+            document.getElementById("userAvatarImg").src = avatar;
+            document.getElementById("userAvatarLarge").src = avatar;
+        }
+    }
+
+    // dropdown toggle
+    const btn=document.getElementById("userMenuBtn");
+    const drop=document.getElementById("userDropdown");
+
+    btn.addEventListener("click", ()=>{
+        drop.hidden=!drop.hidden;
+    });
+
+    // logout
+    document.getElementById("logoutBtn").addEventListener("click",()=>{
+        localStorage.clear();
+        window.location.href="/login.html";
+    });
+
+});
+
+
+
 // Toast Notification System
 function showToast(message, type = 'success') {
     const container = document.getElementById('toastContainer') || createToastContainer();
