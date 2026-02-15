@@ -1,45 +1,3 @@
-// ===== USER PROFILE SYSTEM =====
-document.addEventListener("DOMContentLoaded", () => {
-
-    const token = localStorage.getItem("token");
-    const username = localStorage.getItem("username");
-    const profilePic = localStorage.getItem("profilePic");
-
-    if(token){
-        document.getElementById("authNav").style.display="none";
-        document.getElementById("userNav").hidden=false;
-
-        // name
-        if(username){
-            document.getElementById("userNameText").innerText=username;
-        }
-
-        // avatar
-        if(profilePic){
-            document.getElementById("userAvatarImg").src = profilePic;
-            document.getElementById("userAvatarLarge").src = profilePic;
-        }else if(username){
-            const avatar=`https://ui-avatars.com/api/?name=${username}&background=111&color=fff`;
-            document.getElementById("userAvatarImg").src = avatar;
-            document.getElementById("userAvatarLarge").src = avatar;
-        }
-    }
-
-    // dropdown toggle
-    const btn=document.getElementById("userMenuBtn");
-    const drop=document.getElementById("userDropdown");
-
-    btn.addEventListener("click", ()=>{
-        drop.hidden=!drop.hidden;
-    });
-
-    // logout
-    document.getElementById("logoutBtn").addEventListener("click",()=>{
-        localStorage.clear();
-        window.location.href="/login.html";
-    });
-
-});
 
 
 
@@ -273,15 +231,37 @@ function initAuthUI() {
     const logoutBtn = document.getElementById('logoutBtn');
     const userInitial = document.getElementById('userInitial');
 
+    function initAuthUI() {
+    const authNav = document.getElementById('authNav');
+    const userNav = document.getElementById('userNav');
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    const avatarSmall = document.getElementById("userAvatarImg");
+    const avatarLarge = document.getElementById("userAvatarLarge");
+    const userNameText = document.getElementById("userNameText");
+
     function updateAuthUI() {
         if (Auth.isLoggedIn()) {
             const user = Auth.getUser();
+
             if (authNav) authNav.hidden = true;
             if (userNav) userNav.hidden = false;
 
-            if (user && user.email && userInitial) {
-                userInitial.textContent = user.email.charAt(0).toUpperCase();
+            if(user){
+                const name = user.name || user.email || "User";
+
+                if(userNameText) userNameText.innerText = name;
+
+                const avatarUrl =
+                user.profile_pic ||
+                `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=111&color=fff`;
+
+                if(avatarSmall) avatarSmall.src = avatarUrl;
+                if(avatarLarge) avatarLarge.src = avatarUrl;
             }
+
         } else {
             if (authNav) authNav.hidden = false;
             if (userNav) userNav.hidden = true;
@@ -289,36 +269,29 @@ function initAuthUI() {
         }
     }
 
-    // Toggle dropdown
-    userMenuBtn?.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (userDropdown) {
-            userDropdown.hidden = !userDropdown.hidden;
-        }
+    // dropdown
+    userMenuBtn?.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        userDropdown.hidden = !userDropdown.hidden;
     });
 
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-        if (userMenuBtn && !userMenuBtn.contains(e.target) && userDropdown && !userDropdown.contains(e.target)) {
-            userDropdown.hidden = true;
-        }
+    // outside click close
+    document.addEventListener("click",()=>{
+        if(userDropdown) userDropdown.hidden=true;
     });
 
-    // Logout handler
-    logoutBtn?.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (confirm('Are you sure you want to logout?')) {
+    // logout
+    logoutBtn?.addEventListener("click", ()=>{
+        if(confirm("Logout?")){
             Auth.logout();
-            window.location.href = '/';
+            location.reload();
         }
     });
 
-    // Listen for auth state changes
-    window.addEventListener('authStateChanged', updateAuthUI);
-
-    // Initial UI update
+    window.addEventListener("authStateChanged", updateAuthUI);
     updateAuthUI();
 }
+
 
 // ============================================================================
 // OCCASION SUBTYPE HANDLING
