@@ -31,9 +31,431 @@
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
+    
+    <style>
+        /* ============================================ */
+        /* 3D ENHANCEMENTS - PRESERVING ALL EXISTING FUNCTIONALITY */
+        /* ============================================ */
+        
+        /* 3D Floating Background Shapes */
+        .floating-3d-shapes {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .shape-3d {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(244, 228, 193, 0.03));
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 50%;
+            backdrop-filter: blur(10px);
+            animation: float-3d 25s infinite ease-in-out;
+        }
+
+        .shape-3d:nth-child(1) {
+            width: 350px;
+            height: 350px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+            animation-duration: 30s;
+        }
+
+        .shape-3d:nth-child(2) {
+            width: 250px;
+            height: 250px;
+            top: 50%;
+            right: 8%;
+            animation-delay: 5s;
+            animation-duration: 35s;
+        }
+
+        .shape-3d:nth-child(3) {
+            width: 180px;
+            height: 180px;
+            bottom: 15%;
+            left: 45%;
+            animation-delay: 10s;
+            animation-duration: 25s;
+        }
+
+        @keyframes float-3d {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+                opacity: 0.6;
+            }
+            33% {
+                transform: translate(40px, -40px) rotate(120deg) scale(1.15);
+                opacity: 0.8;
+            }
+            66% {
+                transform: translate(-30px, 30px) rotate(240deg) scale(0.85);
+                opacity: 0.7;
+            }
+        }
+
+        /* Enhanced Header with 3D depth */
+        .header {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            z-index: 100;
+        }
+
+        .logo {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+
+        .logo:hover {
+            transform: translateZ(15px) rotateY(5deg);
+        }
+
+        .logo svg {
+            animation: logo-rotate-3d 15s infinite linear;
+        }
+
+        @keyframes logo-rotate-3d {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        /* Enhanced Nav Links with 3D */
+        .nav-link {
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover {
+            transform: translateY(-3px) translateZ(10px);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Title with 3D Depth */
+        .hero-title {
+            transform-style: preserve-3d;
+            animation: title-entrance 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes title-entrance {
+            from {
+                opacity: 0;
+                transform: translateY(50px) rotateX(-15deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        .title-line.accent {
+            position: relative;
+            display: inline-block;
+        }
+
+        .title-line.accent::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
+            filter: blur(20px);
+            opacity: 0.3;
+            animation: glow-pulse 3s infinite;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Enhanced Hero Buttons with 3D */
+        .btn {
+            transform-style: preserve-3d;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px) translateZ(20px);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.5);
+        }
+
+        /* 3D Visual Cards Enhancement */
+        .visual-card {
+            transform-style: preserve-3d;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .visual-card::before {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), transparent);
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: -1;
+        }
+
+        .visual-card:hover {
+            transform: translateY(-15px) translateZ(30px) rotateY(5deg);
+        }
+
+        .visual-card:hover::before {
+            opacity: 1;
+        }
+
+        /* 3D Feature Cards */
+        .feature-card {
+            transform-style: preserve-3d;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), transparent);
+            transform: translateY(100%);
+            transition: transform 0.5s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) rotateX(5deg) translateZ(20px);
+        }
+
+        .feature-card:hover::after {
+            transform: translateY(0);
+        }
+
+        .feature-icon {
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: rotateY(360deg) scale(1.1);
+        }
+
+        /* 3D Upload Area */
+        .upload-area {
+            transform-style: preserve-3d;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 2px dashed rgba(212, 175, 55, 0);
+            border-radius: inherit;
+            transition: all 0.4s ease;
+            transform: translateZ(-10px);
+        }
+
+        .upload-area:hover::before {
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateZ(0) scale(1.02);
+        }
+
+        .upload-area.drag-over {
+            transform: scale(1.02) translateZ(10px);
+        }
+
+        /* Generate Button 3D Enhancement */
+        .btn-generate {
+            transform-style: preserve-3d;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .btn-generate:not(:disabled):hover {
+            transform: translateY(-5px) translateZ(20px);
+            box-shadow: 0 20px 50px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Outfit Cards 3D Effect */
+        .outfit-card {
+            transform-style: preserve-3d;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .outfit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-light));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .outfit-card:hover {
+            transform: translateY(-12px) translateZ(25px) rotateX(2deg);
+        }
+
+        .outfit-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Testimonial Cards 3D */
+        .testimonial-card {
+            transform-style: preserve-3d;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .testimonial-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(212, 175, 55, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-8px) translateZ(20px) rotateY(2deg);
+        }
+
+        .testimonial-card:hover::after {
+            opacity: 1;
+        }
+
+        /* FAQ Items 3D */
+        .faq-item {
+            transform-style: preserve-3d;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .faq-item:hover {
+            transform: translateX(10px) translateZ(10px);
+        }
+
+        /* Smooth Scroll Enhancement */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Parallax Enhancement for Sections */
+        .section-header {
+            animation: fade-in-up 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading Animation Enhancement */
+        .spinner {
+            animation: spin-3d 1s linear infinite;
+        }
+
+        @keyframes spin-3d {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Card Tilt Effect on Mouse Move */
+        .tilt-effect {
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Responsive 3D Adjustments */
+        @media (max-width: 768px) {
+            .shape-3d {
+                display: none; /* Hide floating shapes on mobile for performance */
+            }
+
+            .visual-card:hover,
+            .feature-card:hover,
+            .outfit-card:hover {
+                transform: translateY(-8px) translateZ(10px); /* Reduced 3D on mobile */
+            }
+        }
+
+        /* Preserve all existing animations and ensure no conflicts */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <!-- 3D Floating Shapes Background -->
+    <div class="floating-3d-shapes">
+        <div class="shape-3d"></div>
+        <div class="shape-3d"></div>
+        <div class="shape-3d"></div>
+    </div>
+
     <div class="bg-gradient"></div>
     <div class="bg-pattern"></div>
 
@@ -85,7 +507,6 @@
                         </div>
                     </button>
                     <div class="user-dropdown" id="userDropdown" hidden>
-                        
                         <a href="/wardrobe.html" class="dropdown-item">My Wardrobe</a>
                         <button id="logoutBtn" class="dropdown-item logout-btn">Logout</button>
                     </div>
@@ -433,10 +854,71 @@
         </div>
     </footer>
 
-    <!-- ✅ FIXED: Removed the duplicate auth check script that called non-existent initApp() -->
-    <!-- Auth is handled by script.js module -->
     <script type="module" src="js/script.js"></script>
+    
+    <script>
+        // 3D Card Tilt Effect on Mouse Move
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.visual-card, .feature-card, .outfit-card, .testimonial-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = (y - centerY) / 15;
+                    const rotateY = (centerX - x) / 15;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${-rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+                });
+            });
+
+            // Parallax effect for floating shapes
+            document.addEventListener('mousemove', (e) => {
+                const shapes = document.querySelectorAll('.shape-3d');
+                const mouseX = e.clientX / window.innerWidth;
+                const mouseY = e.clientY / window.innerHeight;
+                
+                shapes.forEach((shape, index) => {
+                    const speed = (index + 1) * 0.03;
+                    const x = (mouseX - 0.5) * 40 * speed;
+                    const y = (mouseY - 0.5) * 40 * speed;
+                    shape.style.transform = `translate(${x}px, ${y}px)`;
+                });
+            });
+
+            // Intersection Observer for scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all cards for entrance animations
+            document.querySelectorAll('.feature-card, .testimonial-card').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                observer.observe(el);
+            });
+        });
+    </script>
 </body>
 
 </html>
-
