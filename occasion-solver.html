@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Occasion Solver – AI Fashion Stylist Pro</title>
+    <meta name="description"
+        content="Get the perfect outfit for any occasion — college, office, interview, wedding, casual or date night.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        /* ====== OCCASION SOLVER STYLES ====== */
+        .occ-hero {
+            background: linear-gradient(135deg, #1a1412 0%, #2c1810 60%, #14101a 100%);
+            padding: 70px 0 50px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .occ-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 60%, rgba(212, 175, 55, 0.18) 0%, transparent 55%);
+        }
+
+        .occ-hero-title {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fff;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .occ-hero-title span {
+            background: linear-gradient(90deg, #d4af37, #f4e4c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .occ-hero-sub {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        /* Gender Toggle */
+        .occ-gender-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 32px 0 16px;
+        }
+
+        .occ-gender-btn {
+            padding: 10px 28px;
+            border-radius: 24px;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.25s;
+            border: 2px solid var(--border-color);
+            background: #fff;
+            color: var(--text-secondary);
+        }
+
+        .occ-gender-btn.active {
+            background: var(--gradient-accent);
+            border-color: var(--accent-color);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4);
+        }
+
+        .occ-gender-btn:hover:not(.active) {
+            border-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        /* Occasion Cards Grid */
+        .occ-grid-section {
+            padding: 16px 0 32px;
+        }
+
+        .occ-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .occ-card {
+            background: #fff;
+            border: 2px solid var(--border-light);
+            border-radius: 18px;
+            padding: 28px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .occ-card:hover,
+        .occ-card.active {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(212, 175, 55, 0.25);
+            border-color: var(--accent-color);
+        }
+
+        .occ-card.active {
+            background: linear-gradient(135deg, #fffdf5 0%, #fff5d6 100%);
+        }
+
+        .occ-card-emoji {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .occ-card-label {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--primary-color);
+        }
+
+        .occ-card-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Result Area */
+        .occ-result-area {
+            padding: 16px 0 60px;
+        }
+
+        .occ-loading {
+            text-align: center;
+            padding: 60px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .occ-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(212, 175, 55, 0.2);
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .occ-loading p {
+            color: var(--text-secondary);
+        }
+
+        /* Result Card */
+        .occ-result-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 34px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-light);
+            animation: fadeUp 0.5s ease;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .occ-result-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .occ-result-emoji {
+            font-size: 3rem;
+        }
+
+        .occ-result-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+
+        .occ-result-desc {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .occ-weather-badge {
+            margin-left: auto;
+            background: linear-gradient(135deg, #1a1412, #2c1810);
+            color: #d4af37;
+            padding: 10px 18px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .occ-weather-emoji {
+            font-size: 1.4rem;
+        }
+
+        .occ-section {
+            margin-bottom: 26px;
+        }
+
+        .occ-section-title {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .occ-outfit-text {
+            background: linear-gradient(135deg, #faf9fc, #f0eef5);
+            border: 1px solid var(--border-light);
+            border-left: 4px solid var(--accent-color);
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .occ-colours {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .occ-colour-tag {
+            padding: 6px 14px;
+            background: var(--bg-lighter);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--primary-color);
+        }
+
+        .occ-text {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .occ-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .occ-list li {
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .occ-budget-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #d4af37, #c49a20);
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 24px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .occ-link-btn {
+            display: inline-block;
+            padding: 10px 22px;
+            background: var(--bg-lighter);
+            border: 1.5px solid var(--border-color);
+            border-radius: 24px;
+            font-size: 14px;
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .occ-link-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .occ-weather-section {
+            background: linear-gradient(135deg, #fffdf5, #fff5d6);
+            border: 1.5px solid rgba(212, 175, 55, 0.3);
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .occ-tip {
+            margin-top: 24px;
+            padding: 18px 22px;
+            background: var(--bg-lighter);
+            border-radius: 12px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .occ-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .occ-hero-title {
+                font-size: 2rem;
+            }
+
+            .occ-result-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .occ-weather-badge {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .occ-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-pattern"></div>
+
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2" />
+                    <path d="M15 12L25 12L28 20L25 28L15 28L12 20L15 12Z" stroke="currentColor" stroke-width="2"
+                        fill="none" />
+                </svg>
+                <span class="logo-text">Fashion Stylist Pro</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="occasion-solver.html" class="nav-link active">Occasion</a>
+                <a href="budget-stylist.html" class="nav-link">Budget</a>
+                <a href="virtual-tryon.html" class="nav-link">Try-On</a>
+                <a href="premium.html" class="nav-link">Premium ⭐</a>
+                <a href="wardrobe.html" class="nav-link">Wardrobe</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="occ-hero">
+        <div class="container">
+            <h1 class="occ-hero-title">Choose Your <span>Occasion</span></h1>
+            <p class="occ-hero-sub">Get a complete, weather-aware outfit recommendation in seconds</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section style="background: var(--bg-light); padding-bottom: 60px;">
+        <div class="container">
+            <!-- Gender Toggle -->
+            <div class="occ-gender-row">
+                <button class="occ-gender-btn active" data-gender="mens">👔 Men's Style</button>
+                <button class="occ-gender-btn" data-gender="womens">👗 Women's Style</button>
+            </div>
+
+            <!-- Occasion Cards -->
+            <div class="occ-grid-section">
+                <div class="occ-grid">
+                    <div class="occ-card" data-occasion="college">
+                        <span class="occ-card-emoji">🎓</span>
+                        <div class="occ-card-label">College</div>
+                        <div class="occ-card-desc">Campus casual vibes</div>
+                    </div>
+                    <div class="occ-card" data-occasion="office">
+                        <span class="occ-card-emoji">💼</span>
+                        <div class="occ-card-label">Office</div>
+                        <div class="occ-card-desc">Professional & polished</div>
+                    </div>
+                    <div class="occ-card" data-occasion="interview">
+                        <span class="occ-card-emoji">🤝</span>
+                        <div class="occ-card-label">Interview</div>
+                        <div class="occ-card-desc">First impression matters</div>
+                    </div>
+                    <div class="occ-card" data-occasion="wedding">
+                        <span class="occ-card-emoji">💍</span>
+                        <div class="occ-card-label">Wedding</div>
+                        <div class="occ-card-desc">Elegant & festive</div>
+                    </div>
+                    <div class="occ-card" data-occasion="casual">
+                        <span class="occ-card-emoji">😎</span>
+                        <div class="occ-card-label">Casual</div>
+                        <div class="occ-card-desc">Everyday relaxed style</div>
+                    </div>
+                    <div class="occ-card" data-occasion="date">
+                        <span class="occ-card-emoji">❤️</span>
+                        <div class="occ-card-label">Date Night</div>
+                        <div class="occ-card-desc">Charming & confident</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result -->
+            <div class="occ-result-area">
+                <div id="occ-result">
+                    <div style="text-align:center; padding: 50px 20px; color: var(--text-secondary);">
+                        <div style="font-size:3.5rem; margin-bottom: 16px;">👆</div>
+                        <h3
+                            style="font-family: var(--font-heading); font-size:1.5rem; color: var(--primary-color); margin-bottom: 8px;">
+                            Select an Occasion Above</h3>
+                        <p>Click any occasion card to get your personalised outfit recommendation with weather-based
+                            tips.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>© 2026 AI Fashion Stylist Pro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="js/chat.js"></script>
+    <script type="module" src="js/occasion-solver.js"></script>
+</body>
+
+</html>

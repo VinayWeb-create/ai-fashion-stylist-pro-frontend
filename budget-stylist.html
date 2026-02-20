@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Stylist – AI Fashion Stylist Pro</title>
+    <meta name="description"
+        content="Find stylish outfits within your budget — ₹500, ₹1000, ₹3000 or custom. Shop on Amazon, Flipkart, Meesho.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        /* ====== BUDGET STYLIST STYLES ====== */
+        .budget-hero {
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b2838 60%, #0d1b2a 100%);
+            padding: 70px 0 50px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .budget-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 60% 40%, rgba(46, 213, 115, 0.12) 0%, transparent 60%);
+        }
+
+        .budget-hero-title {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fff;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .budget-hero-title span {
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .budget-hero-sub {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        /* Budget Tier Selector */
+        .budget-selector {
+            padding: 36px 0 20px;
+        }
+
+        .budget-selector-label {
+            text-align: center;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .budget-tier-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .budget-tier-btn {
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.25s;
+            border: 2px solid var(--border-color);
+            background: #fff;
+            color: var(--text-secondary);
+        }
+
+        .budget-tier-btn .tier-emoji {
+            font-size: 1.2rem;
+            margin-right: 6px;
+        }
+
+        .budget-tier-btn.active {
+            background: linear-gradient(135deg, #1b2838, #0d1b2a);
+            border-color: #2ecc71;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(46, 213, 115, 0.3);
+        }
+
+        .budget-tier-btn:hover:not(.active) {
+            border-color: #27ae60;
+            color: var(--primary-color);
+        }
+
+        #budget-custom-input {
+            display: none;
+            margin-top: 14px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            font-family: var(--font-body);
+            font-size: 16px;
+            width: 220px;
+            text-align: center;
+            color: var(--primary-color);
+            transition: border-color 0.2s;
+        }
+
+        #budget-custom-input.visible {
+            display: inline-block;
+        }
+
+        #budget-custom-input:focus {
+            border-color: #27ae60;
+            outline: none;
+        }
+
+        .custom-input-wrap {
+            text-align: center;
+        }
+
+        /* Gender Filter */
+        .budget-gender-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 0 28px;
+        }
+
+        .budget-gender-btn {
+            padding: 8px 22px;
+            border-radius: 20px;
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1.5px solid var(--border-color);
+            background: #fff;
+            color: var(--text-secondary);
+        }
+
+        .budget-gender-btn.active {
+            background: var(--gradient-accent);
+            border-color: var(--accent-color);
+            color: #fff;
+        }
+
+        .budget-gender-btn:hover:not(.active) {
+            border-color: var(--accent-color);
+        }
+
+        /* Results Grid */
+        .budget-results-section {
+            background: var(--bg-light);
+            padding: 0 0 70px;
+        }
+
+        #budget-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .budget-loading,
+        .budget-empty {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 60px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .budget-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(46, 213, 115, 0.2);
+            border-top-color: #2ecc71;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Budget Card */
+        .budget-card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 26px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: fadeUp 0.4s ease both;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .budget-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+            border-color: var(--accent-color);
+        }
+
+        .budget-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .budget-card-title {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+
+        .budget-card-occasion {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .budget-price-badge {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 13px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .budget-items {
+            margin-bottom: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .budget-item {
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .budget-colours {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .budget-colour-tag {
+            padding: 4px 10px;
+            background: var(--bg-lighter);
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            font-size: 12px;
+            color: var(--primary-color);
+        }
+
+        .budget-tip {
+            background: linear-gradient(135deg, #fffdf5, #fff5d6);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .budget-shop-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .budget-shop-btn {
+            flex: 1;
+            padding: 10px 6px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 12px;
+            text-align: center;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .btn-amazon-budget {
+            background: #ff9900;
+            color: #fff;
+        }
+
+        .btn-amazon-budget:hover {
+            background: #e68900;
+            transform: translateY(-2px);
+        }
+
+        .btn-flipkart-budget {
+            background: #2874f0;
+            color: #fff;
+        }
+
+        .btn-flipkart-budget:hover {
+            background: #1a5ec0;
+            transform: translateY(-2px);
+        }
+
+        .btn-meesho-budget {
+            background: linear-gradient(135deg, #f43f5e, #e11d48);
+            color: #fff;
+        }
+
+        .btn-meesho-budget:hover {
+            background: #c81e41;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .budget-hero-title {
+                font-size: 2rem;
+            }
+
+            .budget-tier-btn {
+                padding: 10px 18px;
+                font-size: 14px;
+            }
+
+            #budget-results {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-pattern"></div>
+
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2" />
+                    <path d="M15 12L25 12L28 20L25 28L15 28L12 20L15 12Z" stroke="currentColor" stroke-width="2"
+                        fill="none" />
+                </svg>
+                <span class="logo-text">Fashion Stylist Pro</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="occasion-solver.html" class="nav-link">Occasion</a>
+                <a href="budget-stylist.html" class="nav-link active">Budget</a>
+                <a href="virtual-tryon.html" class="nav-link">Try-On</a>
+                <a href="premium.html" class="nav-link">Premium ⭐</a>
+                <a href="wardrobe.html" class="nav-link">Wardrobe</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="budget-hero">
+        <div class="container">
+            <h1 class="budget-hero-title">Budget <span>Smart Styling</span></h1>
+            <p class="budget-hero-sub">Real outfits for real budgets — with direct shopping links to Amazon, Flipkart &
+                Meesho</p>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section style="background: #fff; padding-bottom: 0;">
+        <div class="container">
+            <!-- Budget Tiers -->
+            <div class="budget-selector">
+                <div class="budget-selector-label">Select Your Budget</div>
+                <div class="budget-tier-row">
+                    <button class="budget-tier-btn" data-tier="500">
+                        <span class="tier-emoji">💵</span> Under ₹500
+                    </button>
+                    <button class="budget-tier-btn active" data-tier="1000">
+                        <span class="tier-emoji">💰</span> Under ₹1000
+                    </button>
+                    <button class="budget-tier-btn" data-tier="3000">
+                        <span class="tier-emoji">💎</span> Under ₹3000
+                    </button>
+                    <button class="budget-tier-btn" data-tier="custom">
+                        <span class="tier-emoji">✏️</span> Custom
+                    </button>
+                </div>
+                <div class="custom-input-wrap">
+                    <input type="number" id="budget-custom-input" placeholder="Enter ₹ amount" min="100" max="50000">
+                </div>
+            </div>
+
+            <!-- Gender Filter -->
+            <div class="budget-gender-row">
+                <button class="budget-gender-btn active" data-gender="all">👫 All</button>
+                <button class="budget-gender-btn" data-gender="mens">👔 Men's</button>
+                <button class="budget-gender-btn" data-gender="womens">👗 Women's</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results -->
+    <section class="budget-results-section">
+        <div class="container">
+            <div id="budget-results">
+                <div class="budget-loading">
+                    <div class="budget-spinner"></div>
+                    <p>Loading outfits…</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Affiliate Notice -->
+    <section style="background: var(--bg-lighter); padding: 24px 0; border-top: 1px solid var(--border-light);">
+        <div class="container" style="text-align:center;">
+            <p style="font-size: 13px; color: var(--text-secondary);">
+                🛍️ Shopping links open on Amazon, Flipkart & Meesho. Affiliate links coming soon — helping us keep this
+                service free!
+            </p>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>© 2026 AI Fashion Stylist Pro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="js/chat.js"></script>
+    <script type="module" src="js/budget-stylist.js"></script>
+</body>
+
+</html>

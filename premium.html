@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Plans – AI Fashion Stylist Pro</title>
+    <meta name="description"
+        content="Upgrade to Premium for unlimited AI styling, exclusive features, and priority recommendations.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        /* ====== PREMIUM PAGE STYLES ====== */
+        .prem-hero {
+            background: linear-gradient(135deg, #0f0a1e 0%, #1a1412 50%, #0f0a1e 100%);
+            padding: 90px 0 70px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prem-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 30% 50%, rgba(212, 175, 55, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 75% 30%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+        }
+
+        .prem-hero-tag {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: #d4af37;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 22px;
+            position: relative;
+        }
+
+        .prem-hero-title {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #fff;
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .prem-hero-title .gold {
+            background: linear-gradient(90deg, #d4af37, #f4e4c1, #d4af37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .prem-hero-sub {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 1.15rem;
+            max-width: 540px;
+            margin: 0 auto;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        /* Pricing Table */
+        .prem-pricing {
+            background: var(--bg-light);
+            padding: 80px 0;
+        }
+
+        .prem-section-title {
+            text-align: center;
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .prem-section-sub {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            margin-bottom: 50px;
+        }
+
+        .prem-plans {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            align-items: start;
+        }
+
+        .prem-plan {
+            background: #fff;
+            border-radius: 22px;
+            padding: 36px 30px;
+            border: 2px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .prem-plan:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .prem-plan.featured {
+            background: linear-gradient(135deg, #1a1412, #2c1810);
+            border-color: #d4af37;
+            color: #fff;
+            transform: scale(1.04);
+            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.3);
+        }
+
+        .prem-plan.featured:hover {
+            transform: scale(1.04) translateY(-8px);
+        }
+
+        .prem-plan-tag {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #d4af37, #f4e4c1);
+            color: #3d2c2c;
+            padding: 5px 18px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .prem-plan-name {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .featured .prem-plan-name {
+            color: #d4af37;
+        }
+
+        .prem-plan-sub {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 22px;
+        }
+
+        .featured .prem-plan-sub {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .prem-price {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            margin-bottom: 28px;
+        }
+
+        .prem-price-currency {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .prem-price-amount {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            line-height: 1;
+        }
+
+        .featured .prem-price-amount {
+            color: #fff;
+        }
+
+        .prem-price-period {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .featured .prem-price-period {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .prem-divider {
+            height: 1px;
+            background: var(--border-light);
+            margin-bottom: 24px;
+        }
+
+        .featured .prem-divider {
+            background: rgba(212, 175, 55, 0.2);
+        }
+
+        .prem-features-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .prem-features-list li {
+            display: flex;
+            gap: 10px;
+            font-size: 14px;
+            align-items: flex-start;
+        }
+
+        .prem-feat-tick {
+            flex-shrink: 0;
+            color: #2ecc71;
+            font-size: 16px;
+        }
+
+        .prem-feat-cross {
+            flex-shrink: 0;
+            color: #ccc;
+            font-size: 16px;
+        }
+
+        .prem-feat-text {
+            color: var(--text-primary);
+        }
+
+        .featured .prem-feat-text {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .prem-feat-locked {
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .prem-cta {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            border: none;
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.25s;
+        }
+
+        .prem-cta-free {
+            background: var(--bg-lighter);
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .prem-cta-free:hover {
+            border-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        .prem-cta-premium {
+            background: linear-gradient(135deg, #d4af37, #c49a20);
+            color: #fff;
+            box-shadow: 0 6px 24px rgba(212, 175, 55, 0.45);
+        }
+
+        .prem-cta-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
+        }
+
+        .prem-cta-pro {
+            background: linear-gradient(135deg, #7b5fe0, #5a43c0);
+            color: #fff;
+            box-shadow: 0 4px 18px rgba(123, 95, 224, 0.35);
+        }
+
+        .prem-cta-pro:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(123, 95, 224, 0.5);
+        }
+
+        /* Feature Comparison */
+        .prem-compare {
+            background: #fff;
+            padding: 80px 0;
+        }
+
+        .prem-compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+
+        .prem-compare-table th,
+        .prem-compare-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .prem-compare-table th:first-child,
+        .prem-compare-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .prem-compare-table th {
+            background: var(--bg-lighter);
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .prem-compare-table th.featured-col {
+            background: linear-gradient(135deg, #1a1412, #2c1810);
+            color: #d4af37;
+        }
+
+        .prem-compare-table tr:hover td {
+            background: var(--bg-lighter);
+        }
+
+        .check-yes {
+            color: #2ecc71;
+            font-size: 18px;
+        }
+
+        .check-no {
+            color: #ccc;
+            font-size: 18px;
+        }
+
+        /* FAQ */
+        .prem-faq {
+            background: var(--bg-light);
+            padding: 80px 0;
+        }
+
+        .prem-faq-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 36px;
+        }
+
+        .prem-faq-item {
+            background: #fff;
+            border-radius: 14px;
+            padding: 22px 26px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .prem-faq-q {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .prem-faq-a {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* CTA Banner */
+        .prem-cta-banner {
+            background: linear-gradient(135deg, #1a1412, #2c1810);
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .prem-cta-banner h2 {
+            font-family: var(--font-heading);
+            font-size: 2.8rem;
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .prem-cta-banner h2 span {
+            background: linear-gradient(90deg, #d4af37, #f4e4c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .prem-cta-banner p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.1rem;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 900px) {
+            .prem-plans {
+                grid-template-columns: 1fr;
+            }
+
+            .prem-plan.featured {
+                transform: none;
+            }
+
+            .prem-hero-title {
+                font-size: 2.2rem;
+            }
+
+            .prem-compare-table {
+                font-size: 12px;
+            }
+
+            .prem-faq-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-pattern"></div>
+
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2" />
+                    <path d="M15 12L25 12L28 20L25 28L15 28L12 20L15 12Z" stroke="currentColor" stroke-width="2"
+                        fill="none" />
+                </svg>
+                <span class="logo-text">Fashion Stylist Pro</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="occasion-solver.html" class="nav-link">Occasion</a>
+                <a href="budget-stylist.html" class="nav-link">Budget</a>
+                <a href="virtual-tryon.html" class="nav-link">Try-On</a>
+                <a href="premium.html" class="nav-link active">Premium ⭐</a>
+                <a href="wardrobe.html" class="nav-link">Wardrobe</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="prem-hero">
+        <div class="container">
+            <div class="prem-hero-tag">⭐ Premium Membership</div>
+            <h1 class="prem-hero-title">Dress Like You Mean It<br><span class="gold">Upgrade to Premium</span></h1>
+            <p class="prem-hero-sub">Unlock unlimited AI styling, full virtual try-on, priority recommendations, and
+                exclusive Indian fashion collections.</p>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="prem-pricing">
+        <div class="container">
+            <div class="prem-section-title">Simple, Honest Pricing</div>
+            <div class="prem-section-sub">Start free. Upgrade whenever you're ready.</div>
+
+            <div class="prem-plans">
+                <!-- Free -->
+                <div class="prem-plan">
+                    <div class="prem-plan-name">Free</div>
+                    <div class="prem-plan-sub">Try the basics</div>
+                    <div class="prem-price">
+                        <span class="prem-price-currency">₹</span>
+                        <span class="prem-price-amount">0</span>
+                        <span class="prem-price-period">/month</span>
+                    </div>
+                    <hr class="prem-divider">
+                    <ul class="prem-features-list">
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">5 AI outfit
+                                recommendations/month</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">Occasion Solver (3
+                                occasions)</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">Budget Stylist
+                                (₹500–₹1000)</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">Basic virtual try-on (6
+                                outfits)</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">Wardrobe (up to 10
+                                items)</span></li>
+                        <li><span class="prem-feat-cross">✗</span><span class="prem-feat-text"
+                                style="color:var(--text-light);">Unlimited AI requests</span></li>
+                        <li><span class="prem-feat-cross">✗</span><span class="prem-feat-text"
+                                style="color:var(--text-light);">Weather-aware styling</span></li>
+                        <li><span class="prem-feat-cross">✗</span><span class="prem-feat-text"
+                                style="color:var(--text-light);">Priority recommendations</span></li>
+                    </ul>
+                    <a href="index.html" class="prem-cta prem-cta-free">Continue Free</a>
+                </div>
+
+                <!-- Premium (Featured) -->
+                <div class="prem-plan featured">
+                    <div class="prem-plan-tag">⭐ MOST POPULAR</div>
+                    <div class="prem-plan-name">Premium</div>
+                    <div class="prem-plan-sub">For fashion-forward individuals</div>
+                    <div class="prem-price">
+                        <span class="prem-price-currency">₹</span>
+                        <span class="prem-price-amount">199</span>
+                        <span class="prem-price-period">/month</span>
+                    </div>
+                    <hr class="prem-divider">
+                    <ul class="prem-features-list">
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">Unlimited AI outfit
+                                recommendations</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">All 6 occasions in
+                                Occasion Solver</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">Full Budget Stylist (all
+                                ranges)</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">AI-enhanced virtual
+                                try-on</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">Unlimited wardrobe
+                                storage</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">Live weather-based daily
+                                tip</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">Priority AI
+                                recommendations</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">Exclusive Indian designer
+                                collections</span></li>
+                    </ul>
+                    <button class="prem-cta prem-cta-premium" onclick="premiumSignup('premium')">Get Premium —
+                        ₹199/mo</button>
+                </div>
+
+                <!-- Pro -->
+                <div class="prem-plan">
+                    <div class="prem-plan-name">Pro</div>
+                    <div class="prem-plan-sub">For stylists & fashion enthusiasts</div>
+                    <div class="prem-price">
+                        <span class="prem-price-currency">₹</span>
+                        <span class="prem-price-amount">499</span>
+                        <span class="prem-price-period">/month</span>
+                    </div>
+                    <hr class="prem-divider">
+                    <ul class="prem-features-list">
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">Everything in
+                                Premium</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">Full body-mapped AI
+                                try-on</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">Style client profiles (up
+                                to 5)</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">Local shop partnerships &
+                                deals</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">Personalised trend
+                                reports</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">PDF style
+                                portfolios</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">WhatsApp stylist bot
+                                access</span></li>
+                        <li><span class="prem-feat-tick">✓</span><span class="prem-feat-text">Dedicated support</span>
+                        </li>
+                    </ul>
+                    <button class="prem-cta prem-cta-pro" onclick="premiumSignup('pro')">Get Pro — ₹499/mo</button>
+                </div>
+            </div>
+
+            <!-- Disclaimer -->
+            <p style="text-align:center; color: var(--text-light); font-size: 13px; margin-top: 32px;">
+                💳 Payment integration coming soon. Join the waitlist by clicking any plan above. No charge until
+                launch.
+            </p>
+        </div>
+    </section>
+
+    <!-- Feature Comparison -->
+    <section class="prem-compare">
+        <div class="container">
+            <div class="prem-section-title">Full Feature Comparison</div>
+            <table class="prem-compare-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Free</th>
+                        <th class="featured-col">Premium</th>
+                        <th>Pro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>AI Outfit Recommendations</td>
+                        <td>5/month</td>
+                        <td><span class="check-yes">Unlimited</span></td>
+                        <td><span class="check-yes">Unlimited</span></td>
+                    </tr>
+                    <tr>
+                        <td>Occasion Solver</td>
+                        <td>3 occasions</td>
+                        <td><span class="check-yes">All 6</span></td>
+                        <td><span class="check-yes">All 6</span></td>
+                    </tr>
+                    <tr>
+                        <td>Budget Stylist</td>
+                        <td>₹500–₹1000</td>
+                        <td><span class="check-yes">All ranges</span></td>
+                        <td><span class="check-yes">All ranges</span></td>
+                    </tr>
+                    <tr>
+                        <td>Virtual Try-On</td>
+                        <td>Basic overlay</td>
+                        <td>AI-enhanced</td>
+                        <td>Full body-mapped</td>
+                    </tr>
+                    <tr>
+                        <td>Wardrobe Storage</td>
+                        <td>10 items</td>
+                        <td>Unlimited</td>
+                        <td>Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td>Weather Styling</td>
+                        <td><span class="check-no">✗</span></td>
+                        <td><span class="check-yes">✓</span></td>
+                        <td><span class="check-yes">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>Chat AI Stylist</td>
+                        <td>Basic</td>
+                        <td>Advanced</td>
+                        <td>Advanced</td>
+                    </tr>
+                    <tr>
+                        <td>Client Profiles</td>
+                        <td><span class="check-no">✗</span></td>
+                        <td><span class="check-no">✗</span></td>
+                        <td>Up to 5</td>
+                    </tr>
+                    <tr>
+                        <td>PDF Style Portfolios</td>
+                        <td><span class="check-no">✗</span></td>
+                        <td><span class="check-no">✗</span></td>
+                        <td><span class="check-yes">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>Priority Support</td>
+                        <td><span class="check-no">✗</span></td>
+                        <td>Email</td>
+                        <td>Dedicated</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="prem-faq">
+        <div class="container">
+            <div class="prem-section-title">Frequently Asked Questions</div>
+            <div class="prem-faq-grid">
+                <div class="prem-faq-item">
+                    <div class="prem-faq-q">Is there a free trial for Premium?</div>
+                    <div class="prem-faq-a">Yes! Premium users will get a 7-day free trial on launch. No credit card
+                        required to join the waitlist.</div>
+                </div>
+                <div class="prem-faq-item">
+                    <div class="prem-faq-q">Can I cancel anytime?</div>
+                    <div class="prem-faq-a">Absolutely. There are no lock-in contracts. Cancel anytime from your
+                        dashboard and you'll retain access until the billing period ends.</div>
+                </div>
+                <div class="prem-faq-item">
+                    <div class="prem-faq-q">Is this service targeted for Indian users?</div>
+                    <div class="prem-faq-a">Yes! We focus on Indian fashion, climate, occasions (weddings, pujas,
+                        college, work), and budget ranges. All shopping links are to Indian e-commerce platforms.</div>
+                </div>
+                <div class="prem-faq-item">
+                    <div class="prem-faq-q">When does payment launch?</div>
+                    <div class="prem-faq-a">We're integrating Razorpay for INR payments. Expected to launch Q2 2026.
+                        Join the waitlist now — early members get a founding discount!</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="prem-cta-banner">
+        <div class="container">
+            <h2>Ready to Level Up<br>Your <span>Style Game?</span></h2>
+            <p>Join thousands of fashion-forward Indians who style smarter with AI.</p>
+            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                <button class="prem-cta prem-cta-premium" style="display:inline-block; width:auto; padding: 16px 36px;"
+                    onclick="premiumSignup('premium')">⭐ Join Premium Waitlist</button>
+                <a href="index.html#styler" class="prem-cta prem-cta-free"
+                    style="display:inline-block; width:auto; padding: 16px 36px; background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: #fff;">Try
+                    Free First →</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>© 2026 AI Fashion Stylist Pro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="js/chat.js"></script>
+    <script>
+        /**
+         * Premium signup handler — stores waitlist signup in localStorage
+         * Replace with real payment gateway (e.g. Razorpay) when ready.
+         */
+        function premiumSignup(plan) {
+            const existing = localStorage.getItem('fsp_waitlist_plan');
+            if (existing) {
+                alert(`✅ You're already on the ${existing.toUpperCase()} waitlist!\n\nWe'll email you when payment goes live.`);
+                return;
+            }
+            localStorage.setItem('fsp_waitlist_plan', plan);
+            const price = plan === 'pro' ? '₹499' : '₹199';
+            alert(`🎉 You've joined the ${plan.charAt(0).toUpperCase() + plan.slice(1)} (${price}/month) waitlist!\n\nWe'll notify you when payments launch. Early members get a founding discount!`);
+        }
+    </script>
+</body>
+
+</html>

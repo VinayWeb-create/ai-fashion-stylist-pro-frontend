@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Try-On – AI Fashion Stylist Pro</title>
+    <meta name="description"
+        content="Upload your photo and virtually try on different outfits using AI overlay technology.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        /* ====== VIRTUAL TRY-ON STYLES ====== */
+        .tryon-hero {
+            background: linear-gradient(135deg, #0a0518 0%, #1a0f2e 50%, #0a0518 100%);
+            padding: 70px 0 50px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tryon-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 40% 60%, rgba(120, 80, 240, 0.2) 0%, transparent 60%),
+                radial-gradient(circle at 70% 30%, rgba(212, 175, 55, 0.12) 0%, transparent 50%);
+        }
+
+        .tryon-hero-title {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fff;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .tryon-hero-title span {
+            background: linear-gradient(90deg, #7b5fe0, #d4af37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tryon-hero-sub {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        .tryon-hero-badge {
+            display: inline-block;
+            margin-top: 18px;
+            background: rgba(123, 95, 224, 0.2);
+            border: 1px solid rgba(123, 95, 224, 0.4);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            position: relative;
+        }
+
+        /* Main layout */
+        .tryon-body {
+            background: var(--bg-light);
+            padding: 48px 0 80px;
+        }
+
+        .tryon-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 28px;
+            align-items: start;
+        }
+
+        /* Upload Area */
+        .tryon-upload-panel {
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tryon-panel-title {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 6px;
+        }
+
+        .tryon-panel-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .tryon-photo-area {
+            border: 2px dashed #c4b0f0;
+            border-radius: 16px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            background: linear-gradient(135deg, #f9f7ff, #f0ecfd);
+            transition: all 0.25s;
+            position: relative;
+            min-height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tryon-photo-area:hover,
+        .tryon-photo-area.drag {
+            border-color: #7b5fe0;
+            background: linear-gradient(135deg, #f3f0ff, #e8e2fa);
+        }
+
+        #tryon-photo-input {
+            display: none;
+        }
+
+        .tryon-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: #7b5fe0;
+            pointer-events: none;
+        }
+
+        .tryon-placeholder-icon {
+            font-size: 3rem;
+        }
+
+        .tryon-placeholder-text {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--primary-color);
+        }
+
+        .tryon-placeholder-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Canvas */
+        #tryon-canvas {
+            max-width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(123, 95, 224, 0.2);
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Result Label */
+        #tryon-result-label {
+            text-align: center;
+            margin-top: 14px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Action Buttons */
+        #tryon-action-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .tryon-action-btn {
+            padding: 11px 26px;
+            border-radius: 24px;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.25s;
+        }
+
+        .tryon-download-btn {
+            background: linear-gradient(135deg, #7b5fe0, #5a43c0);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(123, 95, 224, 0.35);
+        }
+
+        .tryon-download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 22px rgba(123, 95, 224, 0.5);
+        }
+
+        .tryon-reset-btn {
+            background: var(--bg-lighter);
+            color: var(--text-secondary);
+            border: 1.5px solid var(--border-color);
+        }
+
+        .tryon-reset-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        /* Outfit Options Panel */
+        .tryon-options-panel {
+            background: #fff;
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 90px;
+        }
+
+        .tryon-options-title {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+
+        .tryon-options-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        #tryon-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tryon-option-card {
+            background: var(--bg-lighter);
+            border: 2px solid var(--border-light);
+            border-radius: 14px;
+            padding: 14px 18px;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-align: left;
+            font-family: var(--font-body);
+            width: 100%;
+        }
+
+        .tryon-option-card:hover,
+        .tryon-option-card.active {
+            border-color: #7b5fe0;
+            background: linear-gradient(135deg, #f9f7ff, #f0ecfd);
+            transform: translateX(4px);
+        }
+
+        .tryon-option-emoji {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .tryon-option-label {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--primary-color);
+        }
+
+        .tryon-option-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Instructions */
+        .tryon-instructions {
+            background: linear-gradient(135deg, #f9f7ff, #f0ecfd);
+            border: 1px solid rgba(123, 95, 224, 0.2);
+            border-radius: 14px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .tryon-inst-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #7b5fe0;
+            margin-bottom: 10px;
+        }
+
+        .tryon-inst-steps {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .tryon-inst-steps li {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 900px) {
+            .tryon-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .tryon-options-panel {
+                position: static;
+            }
+
+            #tryon-options {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .tryon-option-card {
+                flex: 1;
+                min-width: 140px;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .tryon-hero-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-pattern"></div>
+
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2" />
+                    <path d="M15 12L25 12L28 20L25 28L15 28L12 20L15 12Z" stroke="currentColor" stroke-width="2"
+                        fill="none" />
+                </svg>
+                <span class="logo-text">Fashion Stylist Pro</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="occasion-solver.html" class="nav-link">Occasion</a>
+                <a href="budget-stylist.html" class="nav-link">Budget</a>
+                <a href="virtual-tryon.html" class="nav-link active">Try-On</a>
+                <a href="premium.html" class="nav-link">Premium ⭐</a>
+                <a href="wardrobe.html" class="nav-link">Wardrobe</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="tryon-hero">
+        <div class="container">
+            <h1 class="tryon-hero-title">Virtual <span>Try-On</span></h1>
+            <p class="tryon-hero-sub">Upload your photo, pick an outfit — see it on you instantly</p>
+            <div class="tryon-hero-badge">📸 Browser-based · No uploads to server · Privacy first</div>
+        </div>
+    </section>
+
+    <!-- Try-On Area -->
+    <section class="tryon-body">
+        <div class="container">
+            <div class="tryon-layout">
+
+                <!-- Left: Upload + Canvas -->
+                <div class="tryon-upload-panel">
+                    <div class="tryon-panel-title">🪞 Your Photo</div>
+                    <div class="tryon-panel-subtitle">Upload a clear, well-lit front-facing photo for best results</div>
+
+                    <!-- Upload Drop Zone -->
+                    <div class="tryon-photo-area" id="tryon-photo-area">
+                        <input type="file" id="tryon-photo-input" accept="image/*">
+                        <div class="tryon-placeholder" id="tryon-placeholder">
+                            <div class="tryon-placeholder-icon">📷</div>
+                            <div class="tryon-placeholder-text">Click or drag & drop your photo</div>
+                            <div class="tryon-placeholder-hint">JPG, PNG, WEBP · Max 8MB</div>
+                        </div>
+                        <canvas id="tryon-canvas" hidden></canvas>
+                    </div>
+
+                    <p id="tryon-result-label"></p>
+
+                    <!-- Action Buttons (shown after photo loaded) -->
+                    <div id="tryon-action-row" hidden>
+                        <button class="tryon-action-btn tryon-download-btn" id="tryon-download-btn">⬇ Save
+                            Image</button>
+                        <button class="tryon-action-btn tryon-reset-btn" id="tryon-reset-btn">↺ Reset</button>
+                    </div>
+                </div>
+
+                <!-- Right: Outfit Options + Instructions -->
+                <div>
+                    <div class="tryon-options-panel">
+                        <div class="tryon-options-title">👗 Choose an Outfit</div>
+                        <div class="tryon-options-subtitle">Select to overlay on your photo</div>
+                        <div id="tryon-options">
+                            <!-- injected by virtual-tryon.js -->
+                        </div>
+                    </div>
+
+                    <!-- How It Works -->
+                    <div class="tryon-instructions"
+                        style="margin-top: 20px; background: #fff; border: 1px solid var(--border-light); border-radius: 18px; padding: 22px;">
+                        <div class="tryon-inst-title">💡 How it works</div>
+                        <ol class="tryon-inst-steps" style="list-style: decimal; padding-left: 16px;">
+                            <li>Upload a front-facing photo of yourself</li>
+                            <li>Pick any outfit from the panel on the right</li>
+                            <li>A styled colour overlay previews the look on you</li>
+                            <li>Download the result or try another outfit!</li>
+                        </ol>
+                        <div style="margin-top: 12px; font-size: 12px; color: var(--text-light);">
+                            ℹ️ This is a creative preview tool using CSS/canvas overlays. Full AI body-detection try-on
+                            is a Premium feature coming soon.
+                        </div>
+                    </div>
+
+                    <!-- Premium Upsell -->
+                    <div
+                        style="background: linear-gradient(135deg,#1a1412,#2c1810); border-radius: 18px; padding: 22px; margin-top: 18px; color: #fff;">
+                        <div style="font-size: 1.5rem; margin-bottom: 8px;">⭐</div>
+                        <div
+                            style="font-family: var(--font-heading); font-size: 1.1rem; color: #d4af37; font-weight: 700; margin-bottom: 6px;">
+                            Premium Try-On</div>
+                        <div style="font-size: 13px; color: rgba(255,255,255,0.65); margin-bottom: 14px;">Full AI
+                            body-mapped try-on with realistic draping and fitting — coming in Premium!</div>
+                        <a href="premium.html"
+                            style="display: inline-block; background: linear-gradient(135deg,#d4af37,#c49a20); color: #fff; padding: 10px 22px; border-radius: 20px; text-decoration: none; font-weight: 700; font-size: 13px;">See
+                            Premium Plans →</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>© 2026 AI Fashion Stylist Pro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="js/chat.js"></script>
+    <script type="module" src="js/virtual-tryon.js"></script>
+</body>
+
+</html>
