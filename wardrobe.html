@@ -1187,6 +1187,42 @@
 
         const API_BASE = 'https://ai-fashion-stylist-pro-production.up.railway.app';
 
+        // Show/hide states
+        function showLoadingState() {
+            document.getElementById('loadingSection').style.display = 'block';
+            document.getElementById('wardrobeGrid').style.display = 'none';
+            document.getElementById('statsSection').style.display = 'none';
+            document.getElementById('filtersSection').style.display = 'none';
+            document.getElementById('emptySection').style.display = 'none';
+            document.getElementById('errorSection').style.display = 'none';
+        }
+
+        function showContentState(hasItems) {
+            document.getElementById('loadingSection').style.display = 'none';
+            if (hasItems) {
+                document.getElementById('wardrobeGrid').style.display = 'grid';
+                document.getElementById('statsSection').style.display = 'block';
+                document.getElementById('filtersSection').style.display = 'block';
+                document.getElementById('emptySection').style.display = 'none';
+            } else {
+                document.getElementById('wardrobeGrid').style.display = 'none';
+                document.getElementById('statsSection').style.display = 'none';
+                document.getElementById('filtersSection').style.display = 'none';
+                document.getElementById('emptySection').style.display = 'block';
+            }
+            document.getElementById('errorSection').style.display = 'none';
+        }
+
+        function showErrorState(msg) {
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('wardrobeGrid').style.display = 'none';
+            document.getElementById('statsSection').style.display = 'none';
+            document.getElementById('filtersSection').style.display = 'none';
+            document.getElementById('emptySection').style.display = 'none';
+            document.getElementById('errorSection').style.display = 'block';
+            document.getElementById('errorMessage').textContent = msg || 'Please try again later';
+        }
+
         async function initializePage() {
             initAuthUI();
 
@@ -1197,12 +1233,22 @@
 
             try {
                 showLoadingState();
-                const wardrobeItems = await fetchWardrobe();
-                renderWardrobe(wardrobeItems);
-                updateStats(wardrobeItems);
-                showContentState();
+                console.log('Fetching wardrobe data...');
+                const data = await fetchWardrobe();
+                console.log('✅ Wardrobe data received:', data);
+
+                allItems = data.items || [];
+
+                if (allItems.length === 0) {
+                    showContentState(false);
+                } else {
+                    updateStats(allItems);
+                    renderWardrobe(allItems);
+                    setupFilters();
+                    showContentState(true);
+                }
             } catch (error) {
-                console.error('Error initializing wardrobe:', error);
+                console.error('❌ Error loading wardrobe:', error);
                 showErrorState(error.message);
             }
         }
@@ -1234,7 +1280,7 @@
         }
 
         async function deleteItem(itemId) {
-            const token = getToken();
+            const token = Auth.getToken();
             const response = await fetch(`${API_BASE}/wardrobe/remove/${itemId}`, {
                 method: 'DELETE',
                 headers: {
@@ -1251,7 +1297,7 @@
         }
 
         async function toggleOwnership(itemId, currentOwned) {
-            const token = getToken();
+            const token = Auth.getToken();
             const response = await fetch(`${API_BASE}/wardrobe/mark-owned/${itemId}`, {
                 method: 'PUT',
                 headers: {
@@ -1681,45 +1727,6 @@
             });
         }
 
-        async function init() {
-            console.log('🚀 Initializing wardrobe page');
-
-            if (!checkAuth()) return;
-
-            const loadingSection = document.getElementById('loadingSection');
-            const emptySection = document.getElementById('emptySection');
-            const errorSection = document.getElementById('errorSection');
-            const wardrobeGrid = document.getElementById('wardrobeGrid');
-            const statsSection = document.getElementById('statsSection');
-            const filtersSection = document.getElementById('filtersSection');
-
-            try {
-                console.log('Fetching wardrobe data...');
-                const data = await fetchWardrobe();
-                console.log('✅ Wardrobe data received:', data);
-
-                loadingSection.style.display = 'none';
-
-                if (!data.items || data.items.length === 0) {
-                    emptySection.style.display = 'block';
-                } else {
-                    allItems = data.items;
-                    updateStats(allItems);
-                    renderWardrobe(allItems);
-
-                    statsSection.style.display = 'block';
-                    filtersSection.style.display = 'block';
-                    wardrobeGrid.style.display = 'grid';
-                    setupFilters();
-                }
-            } catch (error) {
-                console.error('❌ Error loading wardrobe:', error);
-                loadingSection.style.display = 'none';
-                errorSection.style.display = 'block';
-                document.getElementById('errorMessage').textContent = error.message || 'Please try again later';
-            }
-        }
-
         document.getElementById('userMenuBtn')?.addEventListener('click', (e) => {
             e.stopPropagation();
             const dropdown = document.getElementById('userDropdown');
@@ -1735,88 +1742,12 @@
 
         document.getElementById('logoutBtn')?.addEventListener('click', () => {
             if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('fashion_token');
-                localStorage.removeItem('fashion_user');
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                window.location.replace('/login.html');
+                Auth.logout();
+                window.location.replace('login.html');
             }
         });
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeDetailsModal();
-            }
-        });
-
-        init();
-    </script>
-    <script>
-        function initAuthUI() {
-            const authNav = document.getElementById('authNav');
-            const userNav = document.getElementById('userNav');
-            const userMenuBtn = document.getElementById('userMenuBtn');
-            const userDropdown = document.getElementById('userDropdown');
-            const logoutBtn = document.getElementById('logoutBtn');
-
-            const avatarSmall = document.getElementById("userAvatarImg");
-            const avatarLarge = document.getElementById("userAvatarLarge");
-            const userNameText = document.getElementById("userNameText");
-
-            function updateAuthUI() {
-                if (Auth.isLoggedIn()) {
-                    const user = Auth.getUser();
-
-                    if (authNav) authNav.hidden = true;
-                    if (userNav) userNav.hidden = false;
-
-                    if (user) {
-                        const name = user.name || user.email || "User";
-
-                        // show username
-                        if (userNameText) userNameText.innerText = name;
-
-                        // avatar logic
-                        const avatarUrl =
-                            user.profile_pic ||
-                            `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=111&color=fff&size=128`;
-
-                        if (avatarSmall) avatarSmall.src = avatarUrl;
-                        if (avatarLarge) avatarLarge.src = avatarUrl;
-                    }
-
-                } else {
-                    if (authNav) authNav.hidden = false;
-                    if (userNav) userNav.hidden = true;
-                    if (userDropdown) userDropdown.hidden = true;
-                }
-            }
-
-            // avatar click dropdown
-            userMenuBtn?.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (userDropdown) userDropdown.hidden = !userDropdown.hidden;
-            });
-
-            // click outside close
-            document.addEventListener("click", (e) => {
-                if (userDropdown && !userMenuBtn.contains(e.target)) {
-                    userDropdown.hidden = true;
-                }
-            });
-
-            // logout
-            logoutBtn?.addEventListener("click", () => {
-                if (confirm("Logout now?")) {
-                    Auth.logout();
-                    window.location.href = "/";
-                }
-            });
-
-            window.addEventListener("authStateChanged", updateAuthUI);
-            updateAuthUI();
-        }
-
+        initializePage();
     </script>
     <!-- AI Chat Stylist Widget -->
     <script type="module" src="js/chat.js"></script>
