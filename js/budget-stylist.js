@@ -1,8 +1,4 @@
-/**
- * budget-stylist.js — AI Fashion Stylist Pro
- * Logic for the Budget Stylist page.
- * Filters outfit recommendations by budget tier.
- */
+import { initAuthUI } from './auth-ui.js';
 
 // ============================================================================
 // BUDGET OUTFIT DATA (Indian context)
@@ -238,6 +234,7 @@ function renderBudgetOutfits(tier, gender, customAmount = null) {
 // ============================================================================
 
 function initBudgetStylist() {
+    initAuthUI();
     // Budget tier buttons
     document.querySelectorAll('.budget-tier-btn').forEach(btn => {
         btn.addEventListener('click', () => {
