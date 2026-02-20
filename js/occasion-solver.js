@@ -4,10 +4,14 @@
  * Maps selected occasion to outfit recommendations, accessories, budget, and weather tip.
  */
 
+import * as Auth from './auth.js';
 import { getWeather } from './weather.js';
+import { initAuthUI } from './auth-ui.js';
+
+// Auth UI is now handled by shared initAuthUI from auth-ui.js
 
 // ============================================================================
-// OCCASION DATA
+// RENDER FUNCTIONS
 // ============================================================================
 
 /**
@@ -268,6 +272,7 @@ function renderOccasionResult(occasionKey, gender, weather) {
 // ============================================================================
 
 async function initOccasionSolver() {
+    initAuthUI();
     // Occasion card click
     document.querySelectorAll('.occ-card').forEach(card => {
         card.addEventListener('click', () => {
