@@ -204,7 +204,10 @@ function downloadResult() {
 // PAGE INIT
 // ============================================================================
 
+import { initAuthUI } from './auth-ui.js';
+
 function initVirtualTryOn() {
+    initAuthUI();
     // Render outfit option cards
     const optionsContainer = document.getElementById('tryon-options');
     if (optionsContainer) {
