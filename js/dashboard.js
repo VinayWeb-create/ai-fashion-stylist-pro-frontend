@@ -7,18 +7,19 @@
 
 import { getWeather } from './weather.js';
 import * as Auth from './auth.js';
+import { initAuthUI } from './auth-ui.js';
 
 // ============================================================================
 // QUICK ACTION LINKS
 // ============================================================================
 
 const QUICK_ACTIONS = [
-    { icon: '🎯', label: 'Occasion Solver', href: 'occasion-solver.html', desc: 'Get outfit by occasion' },
-    { icon: '💰', label: 'Budget Stylist', href: 'budget-stylist.html', desc: 'Filter by price range' },
-    { icon: '🪞', label: 'Virtual Try-On', href: 'virtual-tryon.html', desc: 'Preview looks on you' },
-    { icon: '👗', label: 'My Wardrobe', href: 'wardrobe.html', desc: 'Manage your clothes' },
-    { icon: '✨', label: 'AI Stylist', href: 'index.html#styler', desc: 'Generate outfit ideas' },
-    { icon: '⭐', label: 'Go Premium', href: 'premium.html', desc: 'Unlock all features' },
+  { icon: '🎯', label: 'Occasion Solver', href: 'occasion-solver.html', desc: 'Get outfit by occasion' },
+  { icon: '💰', label: 'Budget Stylist', href: 'budget-stylist.html', desc: 'Filter by price range' },
+  { icon: '🪞', label: 'Virtual Try-On', href: 'virtual-tryon.html', desc: 'Preview looks on you' },
+  { icon: '👗', label: 'My Wardrobe', href: 'wardrobe.html', desc: 'Manage your clothes' },
+  { icon: '✨', label: 'AI Stylist', href: 'index.html#styler', desc: 'Generate outfit ideas' },
+  { icon: '⭐', label: 'Go Premium', href: 'premium.html', desc: 'Unlock all features' },
 ];
 
 // ============================================================================
@@ -26,19 +27,19 @@ const QUICK_ACTIONS = [
 // ============================================================================
 
 function getDashboardStats() {
-    try {
-        const wardrobe = JSON.parse(localStorage.getItem('fashion_wardrobe') || '[]');
-        const saved = JSON.parse(localStorage.getItem('fsp_saved_outfits') || '[]');
-        const tryons = JSON.parse(localStorage.getItem('fsp_tryon_history') || '[]');
-        return {
-            wardrobeCount: wardrobe.length,
-            savedCount: saved.length,
-            tryonCount: tryons.length,
-            isPremium: localStorage.getItem('fsp_premium') === 'true',
-        };
-    } catch {
-        return { wardrobeCount: 0, savedCount: 0, tryonCount: 0, isPremium: false };
-    }
+  try {
+    const wardrobe = JSON.parse(localStorage.getItem('fashion_wardrobe') || '[]');
+    const saved = JSON.parse(localStorage.getItem('fsp_saved_outfits') || '[]');
+    const tryons = JSON.parse(localStorage.getItem('fsp_tryon_history') || '[]');
+    return {
+      wardrobeCount: wardrobe.length,
+      savedCount: saved.length,
+      tryonCount: tryons.length,
+      isPremium: localStorage.getItem('fsp_premium') === 'true',
+    };
+  } catch {
+    return { wardrobeCount: 0, savedCount: 0, tryonCount: 0, isPremium: false };
+  }
 }
 
 // ============================================================================
@@ -46,11 +47,11 @@ function getDashboardStats() {
 // ============================================================================
 
 function renderWeatherSection(weather) {
-    const section = document.getElementById('dash-weather-section');
-    if (!section) return;
+  const section = document.getElementById('dash-weather-section');
+  if (!section) return;
 
-    if (!weather || weather.temperature === null) {
-        section.innerHTML = `
+  if (!weather || weather.temperature === null) {
+    section.innerHTML = `
       <div class="dash-weather-card dash-weather-unavailable">
         <div class="dash-weather-icon">🌡️</div>
         <div>
@@ -58,10 +59,10 @@ function renderWeatherSection(weather) {
           <div class="dash-weather-tip">Grant location access and refresh the page for weather-based styling tips.</div>
         </div>
       </div>`;
-        return;
-    }
+    return;
+  }
 
-    section.innerHTML = `
+  section.innerHTML = `
     <div class="dash-weather-card">
       <div class="dash-weather-emoji">${weather.emoji}</div>
       <div class="dash-weather-info">
@@ -84,20 +85,20 @@ function renderWeatherSection(weather) {
 // ============================================================================
 
 function renderStatsSection(stats) {
-    const el = id => document.getElementById(id);
-    if (el('dash-stat-wardrobe')) el('dash-stat-wardrobe').textContent = stats.wardrobeCount;
-    if (el('dash-stat-saved')) el('dash-stat-saved').textContent = stats.savedCount;
-    if (el('dash-stat-tryon')) el('dash-stat-tryon').textContent = stats.tryonCount;
+  const el = id => document.getElementById(id);
+  if (el('dash-stat-wardrobe')) el('dash-stat-wardrobe').textContent = stats.wardrobeCount;
+  if (el('dash-stat-saved')) el('dash-stat-saved').textContent = stats.savedCount;
+  if (el('dash-stat-tryon')) el('dash-stat-tryon').textContent = stats.tryonCount;
 
-    // Premium badge
-    const premiumBadge = el('dash-premium-badge');
-    if (premiumBadge) {
-        if (stats.isPremium) {
-            premiumBadge.innerHTML = '<span class="dash-badge-premium">⭐ Premium Member</span>';
-        } else {
-            premiumBadge.innerHTML = '<span class="dash-badge-free">Free Plan &nbsp;<a href="premium.html" class="dash-upgrade-link">Upgrade →</a></span>';
-        }
+  // Premium badge
+  const premiumBadge = el('dash-premium-badge');
+  if (premiumBadge) {
+    if (stats.isPremium) {
+      premiumBadge.innerHTML = '<span class="dash-badge-premium">⭐ Premium Member</span>';
+    } else {
+      premiumBadge.innerHTML = '<span class="dash-badge-free">Free Plan &nbsp;<a href="premium.html" class="dash-upgrade-link">Upgrade →</a></span>';
     }
+  }
 }
 
 // ============================================================================
@@ -105,9 +106,9 @@ function renderStatsSection(stats) {
 // ============================================================================
 
 function renderQuickActions() {
-    const container = document.getElementById('dash-quick-actions');
-    if (!container) return;
-    container.innerHTML = QUICK_ACTIONS.map(a => `
+  const container = document.getElementById('dash-quick-actions');
+  if (!container) return;
+  container.innerHTML = QUICK_ACTIONS.map(a => `
     <a href="${a.href}" class="dash-quick-card">
       <div class="dash-quick-icon">${a.icon}</div>
       <div class="dash-quick-label">${a.label}</div>
@@ -121,13 +122,13 @@ function renderQuickActions() {
 // ============================================================================
 
 function renderGreeting() {
-    const el = document.getElementById('dash-greeting');
-    if (!el) return;
-    const user = Auth.getUser();
-    const hour = new Date().getHours();
-    const part = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-    const name = user ? (user.name || user.email?.split('@')[0] || 'Stylist') : 'Stylist';
-    el.textContent = `${part}, ${name}! 👋`;
+  const el = document.getElementById('dash-greeting');
+  if (!el) return;
+  const user = Auth.getUser();
+  const hour = new Date().getHours();
+  const part = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  const name = user ? (user.name || user.email?.split('@')[0] || 'Stylist') : 'Stylist';
+  el.textContent = `${part}, ${name}! 👋`;
 }
 
 // ============================================================================
@@ -135,28 +136,28 @@ function renderGreeting() {
 // ============================================================================
 
 function renderRecentActivity() {
-    const container = document.getElementById('dash-activity');
-    if (!container) return;
+  const container = document.getElementById('dash-activity');
+  if (!container) return;
 
-    const activities = [];
+  const activities = [];
 
-    try {
-        const wardrobe = JSON.parse(localStorage.getItem('fashion_wardrobe') || '[]');
-        wardrobe.slice(-3).reverse().forEach(item => {
-            activities.push({ icon: '👗', text: `Added <b>${item.name || 'Item'}</b> to wardrobe`, time: 'Recently' });
-        });
-    } catch { }
+  try {
+    const wardrobe = JSON.parse(localStorage.getItem('fashion_wardrobe') || '[]');
+    wardrobe.slice(-3).reverse().forEach(item => {
+      activities.push({ icon: '👗', text: `Added <b>${item.name || 'Item'}</b> to wardrobe`, time: 'Recently' });
+    });
+  } catch { }
 
-    if (activities.length === 0) {
-        container.innerHTML = `
+  if (activities.length === 0) {
+    container.innerHTML = `
       <div class="dash-activity-empty">
         <p>No recent activity yet.</p>
         <a href="index.html#styler" class="dash-activity-cta">Generate your first outfit →</a>
       </div>`;
-        return;
-    }
+    return;
+  }
 
-    container.innerHTML = activities.map(a => `
+  container.innerHTML = activities.map(a => `
     <div class="dash-activity-item">
       <div class="dash-activity-icon">${a.icon}</div>
       <div class="dash-activity-text">${a.text}</div>
@@ -169,33 +170,36 @@ function renderRecentActivity() {
 // MAIN INIT
 // ============================================================================
 
+// Auth UI is now handled by shared initAuthUI from auth-ui.js
+
 async function initDashboard() {
-    // If not logged in, show a gentle message but still show dashboard content
-    const isLoggedIn = Auth.isLoggedIn();
-    const loginBanner = document.getElementById('dash-login-banner');
-    if (loginBanner) {
-        loginBanner.hidden = isLoggedIn;
-    }
+  // If not logged in, show a gentle message but still show dashboard content
+  const isLoggedIn = Auth.isLoggedIn();
+  const loginBanner = document.getElementById('dash-login-banner');
+  if (loginBanner) {
+    loginBanner.hidden = isLoggedIn;
+  }
 
-    renderGreeting();
-    renderQuickActions();
-    renderRecentActivity();
+  initAuthUI();
+  renderGreeting();
+  renderQuickActions();
+  renderRecentActivity();
 
-    const stats = getDashboardStats();
-    renderStatsSection(stats);
+  const stats = getDashboardStats();
+  renderStatsSection(stats);
 
-    // Fetch weather async
-    try {
-        const weather = await getWeather();
-        renderWeatherSection(weather);
-    } catch {
-        renderWeatherSection(null);
-    }
+  // Fetch weather async
+  try {
+    const weather = await getWeather();
+    renderWeatherSection(weather);
+  } catch {
+    renderWeatherSection(null);
+  }
 }
 
 // Auto-init on DOM ready
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initDashboard);
+  document.addEventListener('DOMContentLoaded', initDashboard);
 } else {
-    initDashboard();
+  initDashboard();
 }
