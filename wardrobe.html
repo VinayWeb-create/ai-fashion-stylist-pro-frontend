@@ -1187,6 +1187,36 @@
 
         const API_BASE = 'https://ai-fashion-stylist-pro-production.up.railway.app';
 
+        // State & Config
+        let allItems = [];
+        let currentFilter = 'all';
+
+        const colorMap = {
+            'Black': '#000000', 'White': '#FFFFFF', 'Gray': '#808080', 'Grey': '#808080',
+            'Beige': '#F5F5DC', 'Cream': '#FFFDD0', 'Ivory': '#FFFFF0', 'Tan': '#D2B48C',
+            'Brown': '#8B4513', 'Camel': '#C19A6B', 'Navy': '#000080', 'Navy Blue': '#000080',
+            'Royal Blue': '#4169E1', 'Sky Blue': '#87CEEB', 'Light Blue': '#ADD8E6',
+            'Turquoise': '#40E0D0', 'Teal': '#008080', 'Cobalt': '#0047AB', 'Red': '#FF0000',
+            'Burgundy': '#800020', 'Maroon': '#800000', 'Wine': '#722F37', 'Pink': '#FFC0CB',
+            'Hot Pink': '#FF69B4', 'Rose': '#FF007F', 'Coral': '#FF7F50', 'Green': '#008000',
+            'Olive': '#808000', 'Emerald': '#50C878', 'Forest Green': '#228B22', 'Sage': '#BCB88A',
+            'Mint': '#98FF98', 'Lime': '#00FF00', 'Yellow': '#FFFF00', 'Gold': '#FFD700',
+            'Mustard': '#FFDB58', 'Orange': '#FFA500', 'Burnt Orange': '#CC5500', 'Peach': '#FFE5B4',
+            'Purple': '#800080', 'Lavender': '#E6E6FA', 'Plum': '#DDA0DD', 'Violet': '#8F00FF',
+            'Mauve': '#E0B0FF', 'Silver': '#C0C0C0', 'Champagne': '#F7E7CE', 'Blush': '#DE5D83',
+            'Charcoal': '#36454F', 'Floral Print': '#FFB6C1', 'Denim Blue': '#1560BD',
+            'Khaki': '#C3B091', 'Blue': '#0000FF'
+        };
+
+        const SHOPPING_SITES = {
+            amazon: { name: 'Amazon', icon: '📦', badge: 'Fast Delivery', features: ['Prime', 'Easy Returns'] },
+            flipkart: { name: 'Flipkart', icon: '🛒', badge: 'Best Value', features: ['Pay Later', 'Assured'] },
+            myntra: { name: 'Myntra', icon: '👗', badge: 'Fashion Expert', features: ['Insider', 'Try & Buy'] },
+            ajio: { name: 'Ajio', icon: '🕶️', badge: 'Trends', features: ['Reliance', 'Exclusive'] },
+            tata_cliq: { name: 'Tata CLiQ', icon: '👔', badge: 'Luxury', features: ['Tata Trust', 'Verified'] },
+            meesho: { name: 'Meesho', icon: '🛍️', badge: 'Lowest Price', features: ['COD', 'Social'] }
+        };
+
         // Show/hide states
         function showLoadingState() {
             document.getElementById('loadingSection').style.display = 'block';
