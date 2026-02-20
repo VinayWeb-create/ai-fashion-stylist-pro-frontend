@@ -389,6 +389,32 @@
                 <a href="virtual-tryon.html" class="nav-link">Try-On</a>
                 <a href="premium.html" class="nav-link">Premium ⭐</a>
                 <a href="wardrobe.html" class="nav-link">Wardrobe</a>
+
+                <!-- Auth Navigation -->
+                <div id="authNav">
+                    <a href="login.html" class="btn btn-secondary btn-sm"
+                        style="padding: 8px 18px; font-size: 14px;">Login</a>
+                </div>
+
+                <!-- User Navigation -->
+                <div id="userNav" class="user-nav" hidden>
+                    <button class="user-menu-btn" id="userMenuBtn">
+                        <img id="userAvatarImg"
+                            src="https://ui-avatars.com/api/?name=User&background=111&color=fff&size=128"
+                            class="user-avatar-img" />
+                    </button>
+
+                    <div class="user-dropdown" id="userDropdown" hidden>
+                        <div class="user-info">
+                            <img id="userAvatarLarge"
+                                src="https://ui-avatars.com/api/?name=User&background=111&color=fff&size=128"
+                                class="user-avatar-large">
+                            <p id="userNameText">User</p>
+                        </div>
+                        <a href="wardrobe.html" class="dropdown-item">👕 My Wardrobe</a>
+                        <button id="logoutBtn" class="dropdown-item logout-btn">🚪 Logout</button>
+                    </div>
+                </div>
             </nav>
         </div>
     </header>
