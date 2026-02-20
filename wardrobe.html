@@ -1023,7 +1023,7 @@
 
     <header class="header">
         <div class="container">
-            <a href="/index.html" class="logo">
+            <a href="index.html" class="logo">
                 <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
                     <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2" />
                     <path d="M15 12L25 12L28 20L25 28L15 28L12 20L15 12Z" stroke="currentColor" stroke-width="2"
@@ -1032,14 +1032,20 @@
                 <span class="logo-text">Fashion Stylist Pro</span>
             </a>
             <nav class="nav">
-                <a href="/index.html" class="nav-link">Home</a>
-                <a href="/dashboard.html" class="nav-link">Dashboard</a>
-                <a href="/occasion-solver.html" class="nav-link">Occasion</a>
-                <a href="/budget-stylist.html" class="nav-link">Budget</a>
-                <a href="/virtual-tryon.html" class="nav-link">Try-On</a>
-                <a href="/premium.html" class="nav-link" style="color:var(--accent-color);font-weight:700;">Premium
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="occasion-solver.html" class="nav-link">Occasion</a>
+                <a href="budget-stylist.html" class="nav-link">Budget</a>
+                <a href="virtual-tryon.html" class="nav-link">Try-On</a>
+                <a href="premium.html" class="nav-link" style="color:var(--accent-color);font-weight:700;">Premium
                     ⭐</a>
-                <a href="/wardrobe.html" class="nav-link active">Wardrobe</a>
+                <a href="wardrobe.html" class="nav-link active">Wardrobe</a>
+
+                <!-- Auth Navigation -->
+                <div id="authNav" hidden>
+                    <a href="login.html" class="btn btn-secondary btn-sm"
+                        style="padding: 8px 18px; font-size: 14px;">Login</a>
+                </div>
 
                 <!-- User Navigation -->
                 <!-- User Navigation -->
@@ -1176,93 +1182,33 @@
     </footer>
 
     <script type="module">
+        import * as Auth from './auth.js';
+        import { initAuthUI } from './js/auth-ui.js';
+
         const API_BASE = 'https://ai-fashion-stylist-pro-production.up.railway.app';
 
-        let allItems = [];
-        let currentFilter = 'all';
+        async function initializePage() {
+            initAuthUI();
 
-        const colorMap = {
-            'Black': '#000000', 'White': '#FFFFFF', 'Gray': '#808080', 'Grey': '#808080',
-            'Beige': '#F5F5DC', 'Cream': '#FFFDD0', 'Navy': '#000080', 'Blue': '#0000FF',
-            'Red': '#FF0000', 'Pink': '#FFC0CB', 'Green': '#008000', 'Yellow': '#FFFF00',
-            'Orange': '#FFA500', 'Purple': '#800080', 'Brown': '#8B4513', 'Gold': '#FFD700',
-            'Silver': '#C0C0C0', 'Bronze': '#CD7F32', 'Maroon': '#800000', 'Burgundy': '#800020'
-        };
-
-        // Shopping site configurations
-        const SHOPPING_SITES = {
-            amazon: {
-                name: 'Amazon',
-                badge: 'Fast Delivery',
-                features: ['Prime eligible', 'Easy returns', 'Trusted seller'],
-                icon: '📦'
-            },
-            flipkart: {
-                name: 'Flipkart',
-                badge: 'Best Prices',
-                features: ['Cash on delivery', 'Plus benefits', 'Great offers'],
-                icon: '🛍️'
-            },
-            meesho: {
-                name: 'Meesho',
-                badge: 'Lowest Price',
-                features: ['Budget friendly', 'Free delivery', 'No minimum order'],
-                icon: '💰'
-            },
-            myntra: {
-                name: 'Myntra',
-                badge: 'Fashion',
-                features: ['Latest trends', 'Style guarantee', 'Easy exchange'],
-                icon: '👗'
-            }
-        };
-
-        function isValidToken(token) {
-            return typeof token === 'string' && token.trim() !== '' && token !== 'undefined' && token !== 'null';
-        }
-
-        function getToken() {
-            const primaryToken = localStorage.getItem('fashion_token');
-            const legacyToken = localStorage.getItem('token');
-
-            if (isValidToken(primaryToken)) return primaryToken;
-            if (isValidToken(legacyToken)) return legacyToken;
-            return null;
-        }
-
-        function checkAuth() {
-            const token = getToken();
-            if (!token) {
-                console.log('No valid token found, redirecting to login');
-                window.location.replace('/login.html');
-                return false;
-            }
-            console.log('✅ Token found, user authenticated');
-
-            const user = JSON.parse(localStorage.getItem('fashion_user') || '{}');
-
-            if (user) {
-                const name = user.name || user.email || "User";
-
-                const avatarUrl =
-                    user.profile_pic ||
-                    `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=111&color=fff`;
-
-                const avatarSmall = document.getElementById("userAvatarImg");
-                const avatarLarge = document.getElementById("userAvatarLarge");
-                const userNameText = document.getElementById("userNameText");
-
-                if (avatarSmall) avatarSmall.src = avatarUrl;
-                if (avatarLarge) avatarLarge.src = avatarUrl;
-                if (userNameText) userNameText.innerText = name;
+            if (!Auth.isLoggedIn()) {
+                window.location.replace('login.html');
+                return;
             }
 
-
-            return true;
+            try {
+                showLoadingState();
+                const wardrobeItems = await fetchWardrobe();
+                renderWardrobe(wardrobeItems);
+                updateStats(wardrobeItems);
+                showContentState();
+            } catch (error) {
+                console.error('Error initializing wardrobe:', error);
+                showErrorState(error.message);
+            }
         }
 
         async function fetchWardrobe() {
-            const token = getToken();
+            const token = Auth.getToken();
             const response = await fetch(`${API_BASE}/wardrobe/items`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
