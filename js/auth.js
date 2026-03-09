@@ -3,7 +3,7 @@
  * Handles user registration, login, JWT tokens, and wardrobe operations
  */
 
-const API_BASE_URL = 'https://ai-fashion-stylist-pro-production.up.railway.app';
+const API_BASE_URL = 'https://ai-fashion-stylist-pro-production-5bde.up.railway.app/';
 
 // ============================================================================
 // STORAGE KEYS
