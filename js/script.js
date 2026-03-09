@@ -44,7 +44,7 @@ import { initAuthUI } from './auth-ui.js';
 
 let uploadedImage = null;
 let currentPrediction = null;
-const API_URL = 'https://ai-fashion-stylist-pro-production.up.railway.app/predict';
+const API_URL = 'https://ai-fashion-stylist-pro-production-5bde.up.railway.app/predict';
 
 // ============================================================================
 // DOM ELEMENT REFERENCES
